@@ -1,0 +1,366 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-12">
+        <div class="header-section-title">
+          <img src="assets/icon/icon-stations-blue.png" />
+          <div>Stations</div>
+        </div>
+        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+      </div>
+
+      <div class="header-location">
+        <div class="montserrat">Localisation actuelle</div>
+        <img src="assets/icon/icon-geolocation.png" />
+      </div>
+
+      <input type="text" placeholder="Chercher stations..." class="montserrat mt-12 header-input-search" />
+
+    </div>
+
+    <div class="padding-wrapper">
+
+      <!--Title selector-->
+      <div class="flex-title-selector mt-12 mb-8 cursor-pointer" (click)="goTo('stations-list')">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-heart.png" />
+          </div>
+          <div class="flex-title-selector-text">
+            Favorites
+          </div>
+        </div>
+        <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
+      </div>
+
+      <div class="list-box-selector">
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!--Title selector-->
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('stations-list')">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-location-white.png" />
+          </div>
+          <div class="flex-title-selector-text">
+            Proche de toi
+          </div>
+        </div>
+        <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
+      </div>
+
+      <div class="list-box-selector">
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box-fixed" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+      </div>
+  
+    </div>
+
+    <div class="padding-wrapper background-color-dark">
+
+      <!--Column boxes-->
+      <div class="list-box-selector-row mt-24">
+
+        <div class="station-box" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/icon/icon-no-image.png" class="station-box-img-none" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+        <div class="station-box" (click)="goTo('station')">
+          <div class="station-box-img-wrapper">
+            <img src="assets/images/test-station.jpg" class="station-box-img" />
+            <div class="station-box-img-data">
+              <img src="assets/icon/icon-sun.png" />
+              <div class="montserrat">10º</div>
+            </div>
+            <img src="assets/icon/icon-heart-full.png" class="station-box-img-data-b" />
+          </div>
+          <div class="station-box-text">
+            <div class="montserrat station-box-title">
+              Les Paccots
+            </div>
+            <div class="montserrat color-light station-box-subtitle">
+              Châtel-Saint-Denis
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <img src="assets/icon/icon-filter.png" class="filter-floating" (click)="toggleFilter()" />
+  
+</ion-content>
+
+<app-footer section="stations"></app-footer>
+
+
+
+<div [@slideInOut]="filterState" class="content-size padding-wrapper dark-background filter-modal status-bar-overlap-wrapper">
+  <div class="header-filter no-margin">
+    <img src="assets/icon/arrow-left.svg" class="filter-side-img cursor-pointer" (click)="toggleFilter()" />
+    <div class="filter-title">
+      Filtres (3)
+    </div>
+    <div class="montserrat filter-side color-light cursor-pointer">
+      Réinitialiser
+    </div>
+  </div>
+
+  <div class="filter-section-text mt-24 mb-8">
+    Location
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Distance
+  </div>
+
+  <ion-range [(ngModel)]="distanceValue" [ticks]="true" [snaps]="true" step="10" [min]="10" [max]="100"></ion-range>
+  
+  <div class="filter-section-text-sub montserrat color-primary mb-8">
+    {{ distanceValue === 100 ? 'Unlimited' : distanceValue + ' Km' }}
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Canton
+  </div>
+
+  <div class="input-form-icon background-color-dark">
+    <select class="montserrat" placeholder="Sélectionnez">
+      <option value="Canton">Canton</option>
+    </select>
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Langue
+  </div>
+
+  <div class="input-form-icon background-color-dark">
+    <select class="montserrat" placeholder="Sélectionnez">
+      <option value="Langue">Langue</option>
+    </select>
+  </div>
+
+  <div class="filter-section-text-sub filter-section-flex montserrat mt-24 mb-12">
+    <div>Seulement stations favorites</div>
+    <ion-toggle [checked]="false"></ion-toggle>
+  </div>
+
+  <div class="filter-section-text mt-24 mb-8">
+    Activités
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Hivern
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Été
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Autres
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <button (click)="toggleFilter()" class="content-button mt-32 btn-back-primary montserrat mb-32">
+    Appliquer les filtres
+  </button>
+
+</div>

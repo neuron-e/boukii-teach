@@ -1,0 +1,208 @@
+<ion-content>
+  <div class="content-wrapper dark-background status-bar-overlap-wrapper">
+    
+      <div class="header-top mb-12">
+        <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('home')" />
+        <div class="header-section-title">
+          <img src="assets/icon/icon-notification-blue.png" />
+          <div>Notifications</div>
+        </div>
+      </div>
+
+      <div class="mt-24 mb-32 flex-buttons">
+        <div [ngClass]="{'btn-back-primary': showCalendar, 'btn-back-grey': !showCalendar}" class="montserrat flex-buttons-button cursor-pointer" (click)="showCalendar=true;showActivities=false;">
+          Agenda
+        </div>
+        <div [ngClass]="{'btn-back-primary': showActivities, 'btn-back-grey': !showActivities}" class="montserrat flex-buttons-button cursor-pointer" (click)="showCalendar=false;showActivities=true;">
+          Activité
+        </div>
+      </div>
+
+      <!--CALENDAR-->
+      <div *ngIf="showCalendar" class="list-box-selector-c">
+        <!--1-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              16 Janvier, 10:00-12:00
+            </div>
+            <div class="box-bullet"></div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced <span class="box-selector-title-level">ROI RED</span>
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Collectif Ski</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-primary box-selector-date-small">
+            1h
+          </div>
+        </div>
+
+        <!--2-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              16 Janvier, 10:00-12:00
+            </div>
+            <div class="box-bullet"></div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced <span class="box-selector-title-level">ROI RED</span>
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Collectif Ski</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-primary box-selector-date-small">
+            2h
+          </div>
+        </div>
+
+        <!--3-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              16 Janvier, 10:00-12:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-other-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Nom activité
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-light box-selector-date-small">
+            01/01/2023
+          </div>
+        </div>
+
+        <!--4-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              16 Janvier, 10:00-12:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-private-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Privé Basic <span class="box-selector-title-level">ROI RED</span>
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Nom · Privé Ski</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-light box-selector-date-small">
+            01/01/2023
+          </div>
+        </div>
+
+        <!--5-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              16 Janvier, 10:00-12:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced <span class="box-selector-title-level">ROI RED</span>
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Collectif Ski</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-light box-selector-date-small">
+            01/01/2023
+          </div>
+        </div>
+
+      </div>
+
+      <!--ACTIVITES-->
+      <div *ngIf="showActivities" class="list-box-selector-c">
+        <!--1-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-middle-b">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/images/test-course.jpg" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat color-light box-selector-subtitle">
+                  <div>Ess les paccots a accepté votre invitation</div>
+                </div>
+              </div>
+            </div>
+            <div class="box-bullet"></div>
+          </div>
+          <div class="montserrat color-primary box-selector-date-small">
+            1h
+          </div>
+        </div>
+
+        <!--2-->
+        <div class="box-selector cursor-pointer pb-12">
+          <div class="box-selector-middle-b">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/images/test-course.jpg" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat color-light box-selector-subtitle">
+                  <div>Ess les paccots a accepté votre invitation</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="montserrat color-light box-selector-date-small">
+            01/01/2023
+          </div>
+        </div>
+
+      </div>
+
+  </div>
+</ion-content>

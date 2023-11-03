@@ -1,0 +1,180 @@
+<ion-content>
+  <div class="content-size dark-background status-bar-overlap">
+    <div class="padding-wrapper">
+      <div>
+        <div class="header-content no-margin">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('calendar')">
+            Cancel
+          </div>
+          <div class="level-title">
+            Détail réservation
+          </div>
+        </div>
+      </div>
+    
+      <img src="assets/images/test-station.jpg" class="mt-32 mb-12 content-image" />
+    
+        <div class="mt-8 mb-12" class="content-introduction cursor-pointer" (click)="goTo('station')">
+            <img src="assets/images/test-course.jpg" class="content-introduction-image" />
+            <div class="content-introduction-text">
+              <div class="content-introduction-subtitle">
+                <div class="color-light">LES PACCOTS</div>
+                <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+              </div>
+              <div class="content-introduction-title">ESS Les Paccots</div>
+            </div>
+        </div>
+    
+        <!--
+        <div class="montserrat mt-24 mb-12 content-title-a">
+          Seleccionar participante
+        </div>
+    
+        <div class="mb-24 box-background box-fit-content cursor-pointer">
+          <img src="assets/icon/icon-add-member.png" />
+          <div class="montserrat">Ajouter Membre</div>
+        </div>
+        -->
+    
+        <div class="background-color-dark montserrat mt-24 mb-24 user-booking">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+          <div class="user-booking-content">
+            <div class="user-booking-header">
+              <div class="user-booking-title">Nom</div>
+              <div class="user-booking-icons">
+                <div class="box-selector-level">
+                  ROI RED
+                </div>
+              </div>
+            </div>
+            <div class="color-light user-booking-subheader">
+              <img src="assets/icon/main_ski_on.png" />
+              <div>Sport</div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="mb-12 content-title-c">
+          RESERVATION
+        </div>
+
+        <div class="background-color-dark course-wrapper mb-24">
+          <div class="course-wrapper-left">
+            <div class="course-wrapper-header">
+              <img src="assets/icon/collectif_ski2x.png" />
+              <div class="course-wrapper-header-text">
+                <div class="course-wrapper-header-title">Flexidates Adultes</div>
+                <div class="montserrat color-light course-wrapper-header-subtitle">Collectif Ski - Les Paccots</div>
+              </div>
+            </div>
+            <div class="course-wrapper-content">
+              <div>24/10/2023 08:00 - 09:00</div>
+              <div>25/10/2023 08:00 - 09:00</div>
+              <div>26/10/2023 08:00 - 09:00</div>
+            </div>
+          </div>
+          <div class="course-wrapper-right">
+            <div class="course-wrapper-image">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+          </div>
+        </div>
+        
+        <!--
+        <div class="background-color-dark course-wrapper mb-24">
+          <div class="course-wrapper-left">
+            <div class="course-wrapper-header">
+              <img src="assets/icon/prive_ski2x.png" />
+              <div class="course-wrapper-header-text">
+                <div class="course-wrapper-header-title">Cours privés</div>
+                <div class="montserrat color-light course-wrapper-header-subtitle">Privé Ski - Les Paccots</div>
+              </div>
+            </div>
+            <div class="course-wrapper-content">
+              <div>23/12/2023</div>
+              <div>09:00 - 10:30</div>
+              <div>2 personnes</div>
+            </div>
+          </div>
+          <div class="course-wrapper-right">
+            <div class="course-wrapper-image">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+          </div>
+        </div>
+        -->
+    
+        <div class="mb-12 content-title-c">
+          PROFESSEUR
+        </div>
+
+        <div class="background-color-dark montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
+          <img src="assets/icon/icons-outline-default-avatar.svg" class="user-booking-img">
+          <div class="user-booking-content">
+            <div class="user-booking-header">
+              <div class="user-booking-title">Nom</div>
+            </div>
+            <div class="color-light user-booking-subheader">
+              French, English
+            </div>
+          </div>
+        </div>
+
+
+        <div class="title-section-flex mt-24 mb-12 border-top-separator pt-24">
+          <div class="title-section-text">
+            Services
+          </div>
+          <div class="title-section-side cursor-pointer">
+            <div class="montserrat color-light">Voir plus</div>
+            <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+          </div>
+        </div>
+        <div class="list-boxes background-color-dark list-padding">
+
+          <div class="pb-12 mb-12 list-boxes-item-b">
+            <div class="box-item-b-text">
+              <div class="montserrat box-item-b-subtitle">Reparation · Vente · Location</div>
+              <div class="montserrat box-item-b-title">SportYves</div>
+            </div>
+            <div class="box-item-b-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-more-box.png" />
+            </div>
+          </div>
+
+          <div class="pb-12 mb-12 list-boxes-item-b no-border">
+            <div class="box-item-b-text">
+              <div class="montserrat box-item-b-subtitle">Restaurant</div>
+              <div class="montserrat box-item-b-title">Le Tsale</div>
+            </div>
+            <div class="box-item-b-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-more-box.png" />
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <div class="background-color-dark padding-wrapper mt-12">
+      <div class="cart-title">
+        Résumé
+      </div>
+      <div class="cart-content-flex">
+        <div>SOUS-TOTAL</div>
+        <div class="font-weight-500">100,00 CHF</div>
+      </div>
+      <div class="cart-content-flex">
+        <div>8% VAT</div>
+        <div class="font-weight-500">8,00 CHF</div>
+      </div>
+
+      <div class="cart-content-flex-resume">
+        <div>Total à payer</div>
+        <div>108,00 CHF</div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

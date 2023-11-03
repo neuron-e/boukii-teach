@@ -1,0 +1,75 @@
+.content-size {
+    width:100%;min-height:100%;
+}
+.padding-wrapper {
+    padding:20px 16px;
+}
+.header-section-content {
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;
+}
+.header-section-title {
+    display:flex;gap:10px;align-items:center;justify-content:center;
+}
+.header-section-title img {
+    width:24px;
+}
+.header-section-title div {
+    color:#fff;font-size:16px;font-weight:600;
+}
+.header-input-search {
+    width:100%;text-align:center;padding:10px;background:#2b303b;color:#fff;border:none;outline:0;border-radius:40px;
+}
+.header-section-menu {
+    position:absolute;right:0;top: 50%;transform: translateY(-50%);width:22px;display:flex;align-items:center;justify-content:center;
+}
+
+.box-message {
+    display:flex;align-items:center;gap:10px;width:100%;padding:16px;border-radius:8px;
+}
+.box-message-img-wrapper {
+    width:44px;min-width:44px;height:44px;border-radius:44px;position:relative;background:#41454e;
+}
+.box-message-img {
+    object-fit:cover;width:100%;height:100%;border-radius:100%;
+}
+.box-message-img-none {
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;
+}
+.box-message-content {
+    display:flex;flex-direction:column;gap:4px;width:100%;
+}
+.box-message-name-flex {
+    display:flex;align-items:center;gap:4px;
+}
+.box-message-name-flex img {
+    width:24px;
+}
+.box-message-name {
+    font-size:16px;font-weight:500;
+}
+.box-message-number {
+    width:18px;height:18px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:12px;background:var(--ion-color-primary);color:#fff;font-weight:600;
+}
+.box-message-text {
+    font-size:13px;
+}
+.box-message-date {
+    font-size:11px;width:100%;text-align:right;
+}
+  
+.filter-floating {
+    width: 54px;position: fixed;right: 12px;bottom:102px;cursor: pointer;
+}
+
+.flex-sections {
+    display: flex; align-items: flex-start; gap: 32px;
+}
+.section-title {
+    color:#c8c8c8;font-size:17px;position:relative;height:38px;font-weight:500;cursor:pointer;
+}
+.section-selected {
+    color:#fff;font-size:17px;position:relative;height:38px;font-weight:500;cursor:pointer;
+}
+.section-bullet {
+    background:var(--ion-color-primary);width:8px;height:8px;border-radius:8px;position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+}

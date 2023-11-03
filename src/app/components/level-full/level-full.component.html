@@ -1,0 +1,49 @@
+<div class="flex-circle">
+  <div class="circle-container" [style.width.px]="size" [style.height.px]="size">
+      <!--Levels-->
+      <svg [attr.width]="size" [attr.height]="size" [attr.viewBox]="viewBox" xmlns="http://www.w3.org/2000/svg">
+        <path *ngFor="let level of dataLevels; let i = index" 
+              [attr.d]="getCirclePath(i)" 
+              [attr.stroke]="getCircleColor(i, selectLevel)" 
+              fill="none" 
+              [attr.stroke-width]="strokeWidth">
+        </path>
+        <!-- Marker for selected Level-->
+        <circle [attr.cx]="getMarkerPosition().x" [attr.cy]="getMarkerPosition().y" [attr.r]="markerRadius" fill="var(--ion-color-primary)" />
+      </svg>      
+      <!--Info level-->
+      <div class="level-info" [style.width.px]="infoSize" [style.height.px]="infoSize" [style.border-radius.px]="infoSize" [ngStyle]="{'padding': infoPaddingV + 'px ' + infoPaddingH + 'px'}">
+        
+        <div class="level-flex">
+
+          <div class="level-interior-flex">
+            <div class="montserrat font-size-medium" [ngStyle]="{'color': allLevels[selectLevel].inactive_color}">
+              {{allLevels[selectLevel].level}}
+            </div>
+            <div class="font-size-subtitle" [ngStyle]="{'color': allLevels[selectLevel].inactive_color}">
+              {{allLevels[selectLevel].percentage}}%
+            </div>
+          </div>
+          <div class="font-size-title">
+            {{allLevels[selectLevel].name}}
+          </div>
+          <div class="level-interior-flex">
+            <div class="level-border"></div>
+            <div class="montserrat font-size-small color-light">
+              NEXT LEVEL
+            </div>
+            <div class="font-size-subtitle color-light">
+              <ng-container *ngIf="selectLevel < allLevels.length -1">
+                {{allLevels[selectLevel+1].name}}
+              </ng-container>
+              <ng-container *ngIf="selectLevel >= allLevels.length -1">
+                -
+              </ng-container>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+  </div>
+</div>

@@ -1,0 +1,410 @@
+<ion-content>
+  <div class="content-wrapper no-padding content-background-image">
+
+    <!-- STEP 1 -->
+    <ng-container *ngIf="showStep1">
+      <div class="header-full-progress padding-wrapper background-color-dark status-bar-overlap-wrapper">
+        <div class="header-progress">
+          <div class="header-back-flex mr-16 cursor-pointer" (click)="goTo('home')">
+            <img src="assets/icon/arrow-left.svg" class="header-back-icon" />
+          </div>
+          <div class="progress-bar-33"></div>
+          <div class="cursor-pointer" (click)="goTo('home')">
+            Cancel
+          </div>
+        </div>
+
+        <div class="content-title-c">
+          Inscription moniteurs
+        </div>
+      </div>
+
+      <div class="padding-wrapper">
+
+        <div class="content-title-b mb-24">
+          Information de travail
+        </div>
+
+        <div class="pb-24">
+          <div class="input-label color-light montserrat">
+            Nº AVS
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Permis de travail
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Coordonnées bancaires
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Nationalité
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <select class="montserrat">
+              <option value="Suisse">Suisse</option>
+            </select>
+          </div>
+          <div class="input-label color-light montserrat">
+            Nº enfants
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="0" min="0" step="1" type="number" />
+          </div>
+
+        </div>
+        <button (click)="showStep1=false;showStep2=true;" class="content-button btn-back-primary montserrat">
+          Continue
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- STEP 2 -->
+    <ng-container *ngIf="showStep2">
+      <div class="header-full-progress padding-wrapper background-color-dark status-bar-overlap-wrapper">
+        <div class="header-progress">
+          <div class="header-back-flex mr-16 cursor-pointer" (click)="showStep1=true;showStep2=false;">
+            <img src="assets/icon/arrow-left.svg" class="header-back-icon" />
+          </div>
+          <div class="progress-bar-66"></div>
+          <div class="cursor-pointer" (click)="goTo('home')">
+            Cancel
+          </div>
+        </div>
+
+        <div class="content-title-c">
+          Inscription moniteurs
+        </div>
+      </div>
+
+      <div class="padding-wrapper">
+
+        <div class="content-title-b mb-24">
+          Etat civil
+        </div>
+
+        <div class="pb-24">
+          <div class="input-label color-light montserrat">
+            Quel est votre etat civil?
+          </div>
+          <div class="list-chip mt-12">
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=true;isSingle=false;">
+              <img *ngIf="isMarried" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Mariée</div>
+            </div>
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=false;isSingle=true;">
+              <img *ngIf="isSingle" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Single</div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isMarried">
+            <div class="input-label color-light montserrat mt-24">
+              Permis travail du conjoint
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+            </div>
+
+            <div class="input-label color-light montserrat">
+              Conjoint travaille?
+            </div>
+            <div class="list-chip mt-12">
+              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=true;isWorkNo=false;">
+                <img *ngIf="isWorkYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+                <div class="montserrat chip-box-text">Oui</div>
+              </div>
+              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=false;isWorkNo=true;">
+                <img *ngIf="isWorkNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+                <div class="montserrat chip-box-text">Non</div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="isWorkYes">
+              <div class="input-label color-light montserrat mt-24">
+                Pourcentage du conjoint (%)
+              </div>
+              <div class="input-form-icon background-color-dark">
+                <input class="montserrat" placeholder="XX" min="0" type="number" />
+              </div>
+            </ng-container>
+
+          </ng-container>
+          
+          <div class="border-separator mt-24 mb-24"></div>
+
+          <div class="input-label color-light montserrat">
+            Demande d'allocation familiales?
+          </div>
+          <div class="list-chip mt-12">
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=true;isChildNo=false;">
+              <img *ngIf="isChildYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Oui</div>
+            </div>
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=false;isChildNo=true;">
+              <img *ngIf="isChildNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Non</div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isChildYes">
+            <div class="input-label color-light montserrat mt-24">
+              DONNÉES DE LES ENFANTS
+            </div>
+            <div class="background-color-dark box-childs">
+              <div class="mb-12 pb-12 box-new-child">
+                <div class="box-new-child-top">
+                  <div class="montserrat box-new-child-title">Nom</div>
+                  <div class="box-new-child-icons">
+                    <img src="assets/icon/icons-outline-edit-white.svg" class="cursor-pointer" />
+                    <img src="assets/icon/icons-outline-trash-white.svg" class="cursor-pointer" />
+                  </div>
+                </div>
+                <div class="montserrat color-light box-new-child-subtitle">
+                  Date naissance
+                </div>
+              </div>
+
+              <div class="box-add-child">
+                <img src="assets/icon/icon-add-square.png" class="cursor-pointer" />
+                <div class="montserrat">Ajouter enfant</div>
+              </div>
+            </div>
+          </ng-container>
+          
+
+        </div>
+        <button [disabled]="disableChildButton()" (click)="showStep2=false;showStep3=true;" class="content-button btn-back-primary montserrat mb-32">
+          Continue
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- STEP 3 -->
+    <ng-container *ngIf="showStep3">
+      <ng-container *ngIf="!showStation">
+        <div class="header-full-progress padding-wrapper background-color-dark status-bar-overlap-wrapper">
+          <div class="header-progress">
+            <div class="header-back-flex mr-16 cursor-pointer" (click)="showStep2=true;showStep3=false;">
+              <img src="assets/icon/arrow-left.svg" class="header-back-icon" />
+            </div>
+            <div class="progress-bar-100"></div>
+            <div class="cursor-pointer" (click)="goTo('home')">
+              Cancel
+            </div>
+          </div>
+
+          <div class="content-title-c">
+            Inscription moniteurs
+          </div>
+        </div>
+
+        <div class="padding-wrapper">
+
+          <div class="content-title-b mb-24">
+            Ajouter école
+          </div>
+
+          <input type="text" placeholder="Chercher stations..." class="montserrat mb-24 header-input-search" />
+
+          <!--Column boxes-->
+          <div class="list-box-selector-row">
+
+            <div class="station-box" (click)="showStation=true;">
+              <div class="station-box-img-wrapper">
+                <img src="assets/images/test-station.jpg" class="station-box-img" />
+                <div class="station-box-img-data">
+                  <img src="assets/icon/ecoles-white.svg" />
+                  <div class="montserrat">3</div>
+                </div>
+              </div>
+              <div class="station-box-text">
+                <div class="montserrat station-box-title">
+                  Les Paccots
+                </div>
+                <div class="montserrat color-light station-box-subtitle">
+                  Châtel-Saint-Denis
+                </div>
+              </div>
+            </div>
+
+            <div class="station-box" (click)="showStation=true;">
+              <div class="station-box-img-wrapper">
+                <img src="assets/icon/icon-no-image.png" class="station-box-img-none" />
+                <div class="station-box-img-data">
+                  <img src="assets/icon/ecoles-white.svg" />
+                  <div class="montserrat">2</div>
+                </div>
+              </div>
+              <div class="station-box-text">
+                <div class="montserrat station-box-title">
+                  Les Paccots
+                </div>
+                <div class="montserrat color-light station-box-subtitle">
+                  Châtel-Saint-Denis
+                </div>
+              </div>
+            </div>
+
+            <div class="station-box" (click)="showStation=true;">
+              <div class="station-box-img-wrapper">
+                <img src="assets/images/test-station.jpg" class="station-box-img" />
+                <div class="station-box-img-data">
+                  <img src="assets/icon/ecoles-white.svg" />
+                  <div class="montserrat">1</div>
+                </div>
+              </div>
+              <div class="station-box-text">
+                <div class="montserrat station-box-title">
+                  Les Paccots
+                </div>
+                <div class="montserrat color-light station-box-subtitle">
+                  Châtel-Saint-Denis
+                </div>
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
+      </ng-container>
+
+      <!-- STATION - (inside Step 3) -->
+      <ng-container >
+        <div class="dark-background status-bar-overlap" [hidden]="!showStation">
+          
+          <div class="content-img-wrapper">
+            <div class="wrapper-back"></div>
+            <img src="assets/images/test-station.jpg" class="content-img-back" />
+            <div class="box-icon-left cursor-pointer" (click)="showStation=false;">
+              <img src="assets/icon/arrow-left.svg" />
+            </div>
+    
+            <div class="content-img-text">
+              <div class="content-img-title">Les Paccots</div>
+              <div class="content-img-text-flex">
+                <img src="assets/icon/icon-location-blue.png" />
+                <div class="montserrat">Châtel-Saint-Denis, Suisse</div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="padding-wrapper">
+    
+            <div class="list-boxes pt-8">
+              
+              <div class="input-label color-light mb-12">
+                3 ECOLÉS
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <!--<img src="assets/icon/icon-no-image.png" class="box-item-img-none" />-->
+                      <img src="assets/images/test-course.jpg" class="box-item-img" />
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="custom-radio">
+                    <label class="simple-check-option">
+                        <input type="checkbox" />
+                        <div class="custom-check"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                </div>
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <img src="assets/icon/icon-no-image.png" class="box-item-img-none" />
+                      <!--<img [src]="image" class="box-item-img" />-->
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="custom-radio">
+                    <label class="simple-check-option">
+                        <input type="checkbox" />
+                        <div class="custom-check"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                </div>
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <img src="assets/icon/icon-no-image.png" class="box-item-img-none" />
+                      <!--<img [src]="image" class="box-item-img" />-->
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="custom-radio">
+                    <label class="simple-check-option">
+                        <input type="checkbox" />
+                        <div class="custom-check"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                </div>
+              </div>
+    
+            </div>
+
+
+            <button (click)="goTo('home')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+              Confirmer
+            </button>
+        
+          </div>
+
+        </div>
+      </ng-container>
+
+    </ng-container>
+
+  </div>
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "boukii-teach",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

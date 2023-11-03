@@ -1,0 +1,81 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-top">
+        <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('home')" />
+        <div class="header-top-title">
+          <img src="assets/icon/icon-offer.png" />
+          <div>Offres et promotions</div>
+        </div>
+      </div>
+
+      <input type="text" placeholder="Chercher..." class="montserrat mt-24 header-input-search" />
+
+    </div>
+
+    <div class="padding-wrapper">
+      
+      <div class="flex-sections mb-24">
+        <div [ngClass]="showAll ? 'section-selected' : 'section-title'" (click)="showAll=true;showOffers=false;showEvents=false;">
+          Tout
+          <div *ngIf="showAll" class="section-bullet"></div>
+        </div>
+        <div [ngClass]="showOffers ? 'section-selected' : 'section-title'" (click)="showAll=false;showOffers=true;showEvents=false;">
+          Promotions
+          <div *ngIf="showOffers" class="section-bullet"></div>
+        </div>
+        <div [ngClass]="showEvents ? 'section-selected' : 'section-title'" (click)="showAll=false;showOffers=false;showEvents=true;">
+          Événements
+          <div *ngIf="showEvents" class="section-bullet"></div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-12 box-message cursor-pointer">
+        <div class="box-message-img-wrapper">
+          <!--<img src="assets/images/test-photo.jpg" class="box-message-img" />-->
+          <img src="assets/icon/icon-no-image.png" class="box-message-img-none" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Title</div>
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</div>
+          <div class="montserrat color-light box-message-date">01/01/2023</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-12 box-message cursor-pointer">
+        <div class="box-message-img-wrapper">
+          <!--<img src="assets/images/test-photo.jpg" class="box-message-img" />-->
+          <img src="assets/icon/icon-no-image.png" class="box-message-img-none" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Title</div>
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</div>
+          <div class="montserrat color-light box-message-date">01/01/2023</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-12 box-message cursor-pointer">
+        <div class="box-message-img-wrapper">
+          <!--<img src="assets/images/test-photo.jpg" class="box-message-img" />-->
+          <img src="assets/icon/icon-no-image.png" class="box-message-img-none" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Title</div>
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</div>
+          <div class="montserrat color-light box-message-date">01/01/2023</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  
+</ion-content>

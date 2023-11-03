@@ -1,0 +1,62 @@
+<ion-content>
+  <div class="content-wrapper content-background-image status-bar-overlap-wrapper">
+
+    <div class="header-content">
+      <div class="header-back background-color-dark cursor-pointer" (click)="showLogin ? goTo('start') : showLogin=true">
+        <img src="assets/icon/arrow-left.svg" class="header-back-icon" />
+      </div>
+      <img src="assets/images/boukii-logo.png" class="header-logo" />
+    </div>
+
+    <div *ngIf="showLogin">
+      <div class="content-title">
+        Login
+      </div>
+      <div class="pb-24">
+        <div class="input-label color-light montserrat">
+          Email
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-mail.png" />
+          <input class="montserrat" type="text" />
+        </div>
+        <div class="input-label color-light montserrat">
+          Password
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-password.png" />
+          <input class="montserrat" [type]="showPassword ? 'text' : 'password'" />
+          <img class="cursor-pointer" src="assets/icon/icon-eye.png" (click)="togglePassword()" />
+        </div>
+      </div>
+      <button (click)="goTo('home')" class="content-button btn-back-primary montserrat">
+        Login
+      </button>
+      <div class="content-footer cursor-pointer montserrat" (click)="showLogin=false">
+        Forgot your password?
+      </div>
+    </div>
+
+    <div *ngIf="!showLogin">
+      <div class="content-title-b">
+        Recover your password
+      </div>
+      <div class="content-subtitle color-light montserrat">
+        Lorem ipsum dolor sit amet, consectetur
+      </div>
+      <div>
+        <div class="input-label color-light montserrat">
+          Email
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-mail.png" />
+          <input class="montserrat" type="text" />
+        </div>
+      </div>
+      <button (click)="showLogin=true" class="content-button btn-back-primary montserrat">
+        Reset password
+      </button>
+    </div>
+
+  </div>
+</ion-content>

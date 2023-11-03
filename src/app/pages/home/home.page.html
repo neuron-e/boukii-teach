@@ -1,0 +1,207 @@
+<ion-content>
+  <div class="content-size dark-background">
+
+      <div class="content-img-wrapper">
+        <div class="wrapper-back"></div>
+        <img src="assets/images/test-station.jpg" class="content-img-back" />
+        <img src="assets/images/boukii-logo.png" class="box-icon-logo" />
+        <div class="box-icon-left cursor-pointer" (click)="toggleMenu()">
+          <img src="assets/icon/icon-menu.png" />
+        </div>
+        <div class="box-icon-right cursor-pointer" (click)="goTo('notifications')">
+          <img src="assets/icon/icon-notification.png" />
+          <div class="bullet-notification"></div>
+        </div>
+
+        <div class="content-img-text cursor-pointer" (click)="goTo('monitor-detail')">
+          <div class="content-img-text-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="flex-user-text">
+            <div class="color-light flex-user-subtitle" >ESS LES PACCOTS</div>
+            <div class="flex-user-title">
+              <div>Marco Raymond</div>
+              <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="padding-wrapper">
+
+      <div class="mb-24 content-title-day">
+        <div class="content-title-day-subheader">
+          <img src="assets/icon/icons-outline-calendar-1-blue.svg" />
+          <div class="montserrat">Lundi, 15 Janvier</div>
+        </div>
+        <div class="content-title-day-header">La journee</div>
+      </div>
+      
+      <div class="montserrat mb-8 color-light title-selector-small">
+        MÉTÉO
+      </div>
+
+      <div class="background-color-dark box-radius flex-weather">
+        <div *ngFor="let day of weatherWeek" class="flex-weather-item">
+          <div class="color-light montserrat">{{day.hour}}</div>
+          <img [src]="day.img" />
+          <div class="montserrat">{{day.degrees}}º</div>
+        </div>
+      </div>
+
+      <!--Title selector-->
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('calendar')">
+        <div class="flex-title-selector-interior">
+          <div class="flex-title-selector-text">
+            Agenda
+          </div>
+        </div>
+        <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
+      </div>
+
+      <div class="list-box-selector-b mb-12">
+        <!--1-->
+        <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <img src="assets/icon/course-collective-box.png" />
+          <div class="montserrat color-light">Collectif</div>
+          <span>1</span>
+        </div>
+        <!--2-->
+        <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <img src="assets/icon/course-private-box.png" />
+          <div class="montserrat color-light">Privés</div>
+          <span>1</span>
+        </div>
+        <!--3-->
+        <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <img src="assets/icon/course-other-box.png" />
+          <div class="montserrat color-light">Autres</div>
+          <span>1</span>
+        </div>
+
+      </div>
+
+
+      <!--Selectors-->
+      <div class="list-box-selector mt-24">
+        <!--1-->
+        <div class="background-color-dark box-selector cursor-pointer" (click)="goTo('booking-detail')">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              10:00-12:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Collectif Ski</span>
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="box-selector-bottom-wrapper">
+            <div class="box-selector-bottom-left">
+              <div class="montserrat color-light box-selector-bottom">
+                <img src="assets/icon/icon-user-tick.png" class="box-selector-location" />
+                <span>5/6</span>
+              </div>
+              <div class="montserrat color-light box-selector-bottom">
+                <img src="assets/icon/icon-calendar-tick.png" class="box-selector-location" />
+                <span>3/6</span>
+              </div>
+            </div>
+            <div class="box-selector-bottom-right">
+              <div class="montserrat box-selector-bottom-number">1</div>
+              <div class="box-selector-bottom-users">
+                <div>
+                  <img src="assets/icon/icons-outline-default-avatar.svg" />
+                </div>
+                <div>
+                  <img src="assets/icon/icons-outline-default-avatar.svg" />
+                </div>
+                <div>
+                  <img src="assets/images/test-photo.jpg" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--2-->
+        
+        <div class="background-color-dark box-selector cursor-pointer" (click)="goTo('booking-detail')">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              14:00-16:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-private-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Privé Ski</span>
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="box-selector-bottom-wrapper">
+            <div class="box-selector-bottom-left">
+              <div class="montserrat color-light box-selector-bottom">
+                <img src="assets/icon/icon-user-tick.png" class="box-selector-location" />
+                <span>5/6</span>
+              </div>
+              <div class="montserrat color-light box-selector-bottom">
+                <img src="assets/icon/icon-calendar-tick.png" class="box-selector-location" />
+                <span>3/6</span>
+              </div>
+            </div>
+            <div class="box-selector-bottom-right">
+              <div class="montserrat box-selector-bottom-number">1</div>
+              <div class="box-selector-bottom-users">
+                <div>
+                  <img src="assets/icon/icons-outline-default-avatar.svg" />
+                </div>
+                <div>
+                  <img src="assets/icon/icons-outline-default-avatar.svg" />
+                </div>
+                <div>
+                  <img src="assets/images/test-photo.jpg" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+</ion-content>
+
+<app-footer section="home"></app-footer>

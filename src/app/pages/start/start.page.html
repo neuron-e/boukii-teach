@@ -1,0 +1,82 @@
+<ion-content (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)">
+  <div class="header-start status-bar-overlap">
+    <img src="assets/images/boukii-logo.png" class="header-logo" />
+  </div>
+  <div #swiperWrapper class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="wrapper-back"></div>
+        <img src="assets/images/grafico1.png" class="swiper-img"/>
+          <div class="swiper-content">
+            <div class="swiper-content-wrapper">
+              <div class="pagination">
+                <button (click)="goToSlide(0)" [ngClass]="{'active back-primary': currentSlide === 0}"></button>
+                <button (click)="goToSlide(1)" [ngClass]="{'active back-primary': currentSlide === 1}"></button>
+                <button (click)="goToSlide(2)" [ngClass]="{'active back-primary': currentSlide === 2}"></button>
+              </div>
+              <div class="swiper-title">
+                Lorem Ipsum (Ecole)
+              </div>
+              <div class="swiper-text montserrat">
+                Remplis tes données personelles, afin que lorsque tu voudras réserver ou participer à une activité, le processus soit très facile.
+              </div>
+              <button (click)="goTo('register')" class="swiper-button btn-back-primary montserrat">
+                Get started
+              </button>
+              <div class="swiper-footer montserrat">
+                Already have an account? <span (click)="goTo('login')" class="color-primary cursor-pointer">Login</span>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="wrapper-back"></div>
+        <img src="assets/images/grafico2.png" class="swiper-img"/>
+          <div class="swiper-content">
+            <div class="swiper-content-wrapper">
+              <div class="pagination">
+                <button (click)="goToSlide(0)" [ngClass]="{'active back-primary': currentSlide === 0}"></button>
+                <button (click)="goToSlide(1)" [ngClass]="{'active back-primary': currentSlide === 1}"></button>
+                <button (click)="goToSlide(2)" [ngClass]="{'active back-primary': currentSlide === 2}"></button>
+              </div>
+              <div class="swiper-title">
+                Lorem Ipsum (Cours)
+              </div>
+              <div class="swiper-text montserrat">
+                Remplis tes données personelles, afin que lorsque tu voudras réserver ou participer à une activité, le processus soit très facile.
+              </div>
+              <button (click)="goTo('register')" class="swiper-button btn-back-primary montserrat">
+                Get started
+              </button>
+              <div class="swiper-footer montserrat">
+                Already have an account? <span (click)="goTo('login')" class="color-primary cursor-pointer">Login</span>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="wrapper-back"></div>
+        <img src="assets/images/grafico3.png" class="swiper-img"/>
+          <div class="swiper-content">
+            <div class="swiper-content-wrapper">
+              <div class="pagination">
+                <button (click)="goToSlide(0)" [ngClass]="{'active back-primary': currentSlide === 0}"></button>
+                <button (click)="goToSlide(1)" [ngClass]="{'active back-primary': currentSlide === 1}"></button>
+                <button (click)="goToSlide(2)" [ngClass]="{'active back-primary': currentSlide === 2}"></button>
+              </div>
+              <div class="swiper-title">
+                Lorem Ipsum (Eleves)
+              </div>
+              <div class="swiper-text montserrat">
+                Remplis tes données personelles, afin que lorsque tu voudras réserver ou participer à une activité, le processus soit très facile.
+              </div>
+              <button (click)="goTo('register')" class="swiper-button btn-back-primary montserrat">
+                Get started
+              </button>
+              <div class="swiper-footer montserrat">
+                Already have an account? <span (click)="goTo('login')" class="color-primary cursor-pointer">Login</span>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</ion-content>

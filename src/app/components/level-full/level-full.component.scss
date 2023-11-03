@@ -1,0 +1,34 @@
+.flex-circle {
+    display: flex;flex-direction: column;justify-content: center;align-items: center;
+}
+.circle-container {
+    position: relative;
+}
+.circle-container svg {
+    z-index: 2;position: relative;
+}
+.level-info {
+    position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 1;background:rgba(86,93,102,0.35);
+}
+.level-flex {
+    width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+}
+.level-interior-flex {
+    width:100%;display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:center;
+}
+.level-border {
+    width:100%;height:8px;border-top:1px solid #c8c8c8;
+}
+.font-size-small {
+    font-size:13px;
+}
+.font-size-medium {
+    font-size:15px;
+}
+.font-size-subtitle {
+    font-size:17px;font-weight:500;
+}
+.font-size-title {
+    font-size:29px;color:#fff;font-weight:500;
+}
+

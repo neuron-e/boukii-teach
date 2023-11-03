@@ -1,0 +1,63 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-12">
+        <div class="header-section-title">
+          <img src="assets/icon/icon-clients-blue.png" />
+          <div>Clients</div>
+        </div>
+        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+      </div>
+
+      <input type="text" placeholder="Chercher clients..." class="montserrat mt-12 header-input-search" />
+
+    </div>
+
+    <div class="padding-wrapper">
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
+        <div class="box-message-img-wrapper">
+          <img src="assets/images/test-photo.jpg" class="box-message-img" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Marco Raymond</div>
+          </div>
+          <div class="montserrat color-light box-message-text">FR · Suisse · 40 ans</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
+        <div class="box-message-img-wrapper">
+          <img src="assets/images/test-photo.jpg" class="box-message-img" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Peter Duss</div>
+            <img src="assets/icon/icon-crown.png" />
+          </div>
+          <div class="montserrat color-light box-message-text">Groupe (+3)</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
+        <div class="box-message-img-wrapper">
+          <img src="assets/icon/icons-outline-default-avatar.svg" class="box-message-img" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Nom</div>
+          </div>
+          <div class="montserrat color-light box-message-text">Lg · Pays · Age</div>
+        </div>
+      </div>
+  
+    </div>
+
+  </div>
+  
+</ion-content>
+
+<app-footer section="clients"></app-footer>

@@ -1,0 +1,84 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-12">
+        <div class="header-section-title">
+          <img src="assets/icon/icons-outline-messages-blue.svg" />
+          <div>Messages</div>
+        </div>
+        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+      </div>
+
+      <input type="text" placeholder="Chercher messages..." class="montserrat mt-12 header-input-search" />
+
+    </div>
+
+    <div class="padding-wrapper mt-8">
+
+      <div class="flex-sections mb-24">
+        <div [ngClass]="showClients ? 'section-selected' : 'section-title'" (click)="showClients=true;showSchools=false;">
+          Clients
+          <div *ngIf="showClients" class="section-bullet"></div>
+        </div>
+        <div [ngClass]="showSchools ? 'section-selected' : 'section-title'" (click)="showClients=false;showSchools=true;">
+          École
+          <div *ngIf="showSchools" class="section-bullet"></div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('chat')">
+        <div class="box-message-img-wrapper">
+          <img src="assets/images/test-photo.jpg" class="box-message-img" />
+          <!--<img src="assets/icon/icon-no-image.png" class="box-message-img-none" />-->
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Nom</div>
+            <div class="montserrat box-message-number">2</div>
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet...</div>
+          <div class="montserrat box-message-date color-primary">2h</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('chat')">
+        <div class="box-message-img-wrapper">
+          <img src="assets/images/test-photo.jpg" class="box-message-img" />
+          <!--<img src="assets/icon/icon-no-image.png" class="box-message-img-none" />-->
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Nom</div>
+            <!--<div class="montserrat box-message-number">1</div>-->
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet...</div>
+          <div class="montserrat color-light box-message-date">01/01/2023</div>
+        </div>
+      </div>
+
+      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('chat')">
+        <div class="box-message-img-wrapper">
+          <!--<img src="assets/images/test-photo.jpg" class="box-message-img" />-->
+          <img src="assets/icon/icon-no-image.png" class="box-message-img-none" />
+        </div>
+        <div class="box-message-content">
+          <div class="box-message-name-flex">
+            <div class="montserrat box-message-name">Nom</div>
+            <!--<div class="montserrat box-message-number">1</div>-->
+          </div>
+          <div class="montserrat color-light box-message-text">Lorem ipsum dolor sit amet...</div>
+          <div class="montserrat color-light box-message-date">01/01/2023</div>
+        </div>
+      </div>
+  
+    </div>
+
+  </div>
+
+  <img src="assets/icon/icon-filter-add.png" class="filter-floating" />
+  
+</ion-content>
+
+<app-footer section="messages"></app-footer>

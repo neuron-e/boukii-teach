@@ -1,0 +1,162 @@
+<ion-content>
+  <div class="content-size content-background-image status-bar-overlap">
+
+    <div class="background-color-dark padding-wrapper">
+      <div class="header-content mb-12">
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('clients')" />
+        <!--Only if group-->
+        <div class="header-top-title">
+          Groupe
+        </div>
+        <!--/Only if group-->
+      </div>
+
+      <!--Only if group-->
+      <div class="list-box-selector-users">
+        <div class="box-selector-user-section cursor-pointer">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">
+            <div>Marco Raymond</div>
+            <img src="assets/icon/icon-crown.png" />
+          </div>
+        </div>
+        <div class="box-selector-user-section cursor-pointer opacity-light">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="1" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">Nom</div>
+        </div>
+        <div class="box-selector-user-section cursor-pointer opacity-light">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="3" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">Nom</div>
+        </div>
+      </div>
+      <!--/Only if group-->
+
+      <!--Only if individual-->
+      <!--
+      <div class="header-user-data mt-8">
+        <div class="header-user-data-img">
+          <img src="assets/images/test-photo.jpg" />
+        </div>
+        <div class="header-user-data-text">
+          <div class="header-user-data-text-top">
+            <div class="color-light">
+              FR · SUISSE · 31 ANS
+            </div>
+          </div>
+          <div class="header-user-data-text-title">
+            <div>Marco Raymond</div>
+            <img src="assets/icon/icon-crown.png" />
+          </div>
+          <div class="header-user-data-text-icons">
+            <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+          </div>
+        </div>
+      </div>
+      -->
+      <!--/Only if individual-->
+
+    </div>
+
+    <div class="padding-wrapper">
+
+      <div class="background-color-dark box-radius">
+
+        <!--Only if group-->
+        <div class="header-user-data padding-wrapper">
+          <div class="header-user-data-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="header-user-data-text">
+            <div class="header-user-data-text-top">
+              <div class="color-light">
+                FR · SUISSE · 31 ANS
+              </div>
+            </div>
+            <div class="header-user-data-text-title">
+              <div>Marco Raymond</div>
+              <img src="assets/icon/icon-crown.png" />
+            </div>
+            <div class="header-user-data-text-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+            </div>
+          </div>
+        </div>
+        <!--/Only if group-->
+
+        <div class="box-top">
+          <div class="box-top-left">
+            <div class="box-top-icon cursor-pointer">
+              <img src="assets/icon/icons-outline-disciplinas-1.svg" />
+              <div class="montserrat">Ski</div>
+            </div>
+
+            <div class="box-top-icon opacity-light cursor-pointer">
+              <img src="assets/icon/icons-outline-disciplinas-2.svg" />
+              <div class="montserrat">Snowboard</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="pt-24">
+          <app-level-full (click)="goTo('client-level')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
+
+          <div class="padding-wrapper mt-8">
+            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level')">
+              Évaluer les progrès
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('courses')">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-observations.png" />
+          </div>
+          <div class="flex-title-selector-text">
+            Observations
+          </div>
+        </div>
+      </div>
+
+      <div class="background-color-dark box-radius box-observations">
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        </div>
+        <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet.
+          <br>Lorem ipsum dolor sit amet.
+        </div>
+      </div>
+
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('courses')">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-historic.png" />
+          </div>
+          <div class="flex-title-selector-text">
+            Historique
+          </div>
+        </div>
+      </div>
+
+      <div class="background-color-dark box-radius box-observations mb-24">
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+
+</ion-content>

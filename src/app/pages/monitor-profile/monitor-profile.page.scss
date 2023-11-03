@@ -1,0 +1,128 @@
+.content-wrapper {
+    width:100%;min-height:100%;padding:20px 16px;
+}
+.content-size {
+    width:100%;min-height:100%;
+}
+.padding-wrapper {
+    padding:20px 16px;
+}
+.dark-background {
+    width:100%;min-height:100vh;background:var(--ion-back-color-dark);
+}
+.header-content {
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:60px;
+}
+.header-content-icon {
+    position:absolute;left:0;top: 50%;transform: translateY(-50%);width:28px;
+}
+.user-image-wrapper {
+    position: relative;width: 80px;height: 80px;border-radius: 50px;display: block;margin: 0 auto;
+}
+.user-image {
+    object-fit:cover;width:100%;height:100%;
+}
+.user-image-add {
+    position:absolute;right:-4px;bottom:-4px;width:30px;height:30px;background:var(--ion-color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;
+}
+.user-image-add img {
+    width:20px;
+}
+.user-image-title {
+    display:flex;align-items:center;justify-content:center;gap:1px;flex-direction:column;
+}
+.user-image-title img {
+    width:36px;position: relative;top:-2px;
+}
+.user-image-title div {
+    font-size:17px;color:#fff;font-weight:500;
+}
+.user-image-title span {
+    font-size:13px;
+}
+.flex-buttons {
+    display:flex;width:100%;align-items:center;gap:4px;
+}
+.flex-buttons-button {
+    display:flex;align-items:center;justify-content:center;font-size:14px;width: 100%;padding: 6px 0px;border-radius: 4px;
+}
+
+.input-label {
+    font-size:14px;margin-bottom:8px;
+}
+.input-form-icon {
+    width:100%;height:48px;border-radius:12px;color:#fff;padding:0 16px;display:flex;align-items:center;gap:9px;margin-bottom:24px;
+}
+.input-form-icon img {
+    width:18px;position:relative;top:-1px;
+}
+.input-form-icon input, .input-form-icon select {
+    color:#fff;font-size:15px;width:100%;border:none;background:transparent;outline:0;
+}
+.inputs-flex {
+    display:flex;align-items:center;gap:12px;
+}
+.content-button {
+    width: 100%;height: 44px;line-height: 44px;display: block;text-align: center;border-radius: 44px;color: #000;text-align: center;font-size: 14px;font-weight: 500;cursor:pointer;transition:all ease-in-out 0.3s;
+}
+
+.flex-sections {
+    display: flex; align-items: flex-start; gap: 32px;
+}
+.section-title {
+    color:#c8c8c8;font-size:17px;position:relative;height:38px;font-weight:500;cursor:pointer;
+}
+.section-selected {
+    color:#fff;font-size:17px;position:relative;height:38px;font-weight:500;cursor:pointer;
+}
+.section-bullet {
+    background:var(--ion-color-primary);width:8px;height:8px;border-radius:8px;position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+}
+.custom-radio {
+    display: flex;flex-wrap:wrap;gap: 16px;
+}
+.radio-option {
+    position: relative;display: inline-block;cursor: pointer;height:120px;width:calc(50% - 8px);border-radius:12px;
+}  
+.radio-option input[type="radio"], .radio-option input[type="checkbox"] {
+    display: none;
+}  
+.radio-wrapper {
+    padding:28px 10px;text-align: center;display:flex;flex-direction:column;gap:18px;
+}  
+.radio-wrapper img {
+    display: block;width: 20px;margin: 0 auto;
+}
+.radio-wrapper span {
+    font-size:14px;text-align: center;color:#fff;
+}  
+.custom-check {
+    position: absolute;top: 10px;right: 10px;width: 22px;height: 22px;background: var(--ion-color-primary);border-radius: 6px;display: none;align-items: center;justify-content: center;
+}  
+.custom-check::before {
+    content: "";width: 5px;height: 10px;border: solid black;border-width: 0 2px 2px 0;transform: rotate(45deg);position: absolute;top: 4px;left: 8px;
+}
+.extra-check {
+    display:none;margin-top: -12px;font-size: 12px;
+}
+.radio-option input[type="radio"]:checked + .radio-wrapper + .custom-check, .radio-option input[type="checkbox"]:checked + .radio-wrapper + .custom-check {
+    display: block;
+}
+.radio-option input[type="checkbox"]:checked + .radio-wrapper .extra-check {
+    display: block;
+}
+.level-back {
+    position:absolute;left:0;top: 50%;transform: translateY(-50%);font-size:14px;
+}
+.level-title {
+    font-size:14px;color:#fff;font-weight:500;
+}
+.flex-sport {
+    display:flex;gap:8px;align-items:center;
+}
+.flex-sport img {
+    width:22px;
+}
+.flex-sport span {
+    font-size:20px;font-weight:600;
+}

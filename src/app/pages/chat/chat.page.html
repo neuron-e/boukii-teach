@@ -1,0 +1,72 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper flex-members status-bar-overlap-wrapper">
+      <div class="flex-members-left">
+        <img src="assets/icon/arrow-left.svg" class="icon-arrow cursor-pointer" (click)="goTo('messages')" />
+        <div class="flex-user-box">
+          <div class="flex-user-img-wrapper">
+            <img src="assets/images/test-photo.jpg" class="flex-user-img" />
+            <!--<img src="assets/icon/icon-no-image.png" class="flex-user-img-none" />-->
+          </div>
+          <div class="flex-user-text">
+            <div class="flex-user-title">Nom</div>
+            <div class="montserrat flex-user-subtitle color-light">Ecole</div>
+          </div>
+        </div>
+      </div>
+      <img src="assets/icon/icon-phone-white.png" class="icon-phone cursor-pointer" />
+    </div>
+
+    <div class="padding-wrapper">
+
+      <div class="montserrat pb-12 flex-section-date">
+        01/01/2023
+      </div>
+
+      <!--Message chat-->
+      <div class="mb-24 message-chat">
+        <div class="message-img-wrapper">
+          <img src="assets/images/test-photo.jpg" class="message-img" />
+          <!--<img src="assets/icon/icon-no-image.png" class="message-img-none" />-->
+        </div>
+        <div class="background-color-dark message-chat-content">
+          <div class="montserrat color-light message-chat-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </div>
+          <div class="montserrat color-light message-chat-date">
+            10:24
+          </div>
+        </div>
+      </div>
+
+      <!--Message user-->
+      <div class="mb-24 message-user">
+        <div class="message-user-content">
+          <div class="montserrat message-user-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </div>
+          <div class="montserrat message-user-date">
+            10:24
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="chat-footer">
+      <img src="assets/icon/icon-gallery.png" class="chat-footer-icon cursor-pointer" />
+      <img src="assets/icon/icons-outline-camera.svg" class="chat-footer-icon cursor-pointer" />
+      <div class="chat-input-icon">
+        <input type="text" placeholder="Écrire un message"  />
+        <img class="cursor-pointer" src="assets/icon/icon-send.png" />
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer>

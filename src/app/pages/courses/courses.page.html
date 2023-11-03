@@ -1,0 +1,274 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-12">
+        <div class="header-section-title">
+          <img src="assets/icon/icons-outline-teacher-blue.svg" />
+          <div>Cours</div>
+        </div>
+        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+      </div>
+
+      <div class="flex-members">
+        <div class="box-arrow cursor-pointer" (click)="previousMonth()">
+          <img src="assets/icon/arrow-left.svg" />
+        </div>
+
+        <div class="montserrat month-title">
+          {{ months[currentMonth] }} {{ currentYear }}
+        </div>
+
+        <div class="box-arrow cursor-pointer" (click)="nextMonth()">
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+        </div>
+      </div>
+
+      <div class="list-box-selector-users">
+        <div class="box-selector-user-section cursor-pointer">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="46" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">Nom</div>
+        </div>
+        <div class="box-selector-user-section cursor-pointer">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="1" [size]="46" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">Nom</div>
+        </div>
+        <div class="box-selector-user-section cursor-pointer">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="3" [size]="46" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+          <div class="montserrat box-selector-user-section-title">Nom</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="padding-wrapper">
+
+      <!--Selectors-->
+      <div class="list-box-selector-column">
+        <!--1-->
+        <div class="background-color-dark box-selector-full cursor-pointer" (click)="goTo('booking-detail')">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              Lun 15, 10:00-12:00
+            </div>
+            <div class="box-selector-top-user">
+              <img src="assets/icon/icons-outline-default-avatar.svg" />
+              <div class="color-light montserrat">Nom</div>
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/images/test-course.jpg" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="box-selector-subtitle">
+                  <img src="assets/icon/icons-outline-disciplinas-1.svg" />
+                  <span class="montserrat">Collectif Ski</span>
+                </div>
+                <div class="montserrat color-light box-selector-title">
+                  Advanced
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="montserrat color-light box-selector-bottom">
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span class="pr-12">1hr</span>
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span>Les Paccots - 100 km</span>
+          </div>
+        </div>
+
+        <!--2-->
+        <div class="background-color-dark box-selector-full cursor-pointer" (click)="goTo('booking-detail')">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              Lun 15, 10:00-12:00
+            </div>
+            <div class="box-selector-top-user">
+              <img src="assets/icon/icons-outline-default-avatar.svg" />
+              <div class="color-light montserrat">Nom</div>
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/images/test-course.jpg" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="box-selector-subtitle">
+                  <img src="assets/icon/icons-outline-disciplinas-1.svg" />
+                  <span class="montserrat">Collectif Ski</span>
+                </div>
+                <div class="montserrat color-light box-selector-title">
+                  Advanced
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="montserrat color-light box-selector-bottom">
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span class="pr-12">1hr</span>
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span>Les Paccots - 100 km</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <img src="assets/icon/icon-filter.png" class="filter-floating" (click)="toggleFilter()" />
+  
+</ion-content>
+
+<app-footer section="courses"></app-footer>
+
+<div [@slideInOut]="filterState" class="content-size padding-wrapper dark-background filter-modal status-bar-overlap-wrapper">
+  <div class="header-filter no-margin">
+    <img src="assets/icon/arrow-left.svg" class="filter-side-img cursor-pointer" (click)="toggleFilter()" />
+    <div class="filter-title">
+      Filtres (3)
+    </div>
+    <div class="montserrat filter-side color-light cursor-pointer">
+      Réinitialiser
+    </div>
+  </div>
+
+  <div class="filter-section-text mt-24 mb-8">
+    Membres
+  </div>
+
+  <!--Selectors-->
+  <div class="list-box-selector mb-12">
+    <!--1-->
+    <div class="background-color-dark box-selector-user cursor-pointer">
+      <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+      <div class="montserrat box-selector-user-title">Nom</div>
+    </div>
+    <!--2-->
+    <div class="background-color-dark box-selector-user cursor-pointer">
+      <app-level-user [dataLevels]="dataLevels" [selectLevel]="3" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+      <div class="montserrat box-selector-user-title">Nom</div>
+    </div>
+    <!--3-->
+    <div class="background-color-dark box-selector-user cursor-pointer">
+      <app-level-user [dataLevels]="dataLevels" [selectLevel]="1" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+      <div class="montserrat box-selector-user-title">Nom</div>
+    </div>
+    <!--4-->
+    <div class="background-color-dark box-selector-user cursor-pointer">
+      <app-level-user [dataLevels]="dataLevels" [selectLevel]="8" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+      <div class="montserrat box-selector-user-title">Nom</div>
+    </div>
+    <!--5-->
+    <div class="background-color-dark box-selector-user cursor-pointer">
+      <app-level-user [dataLevels]="dataLevels" [selectLevel]="4" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+      <div class="montserrat box-selector-user-title">Nom</div>
+    </div>
+  </div>
+
+  <div class="filter-section-text mt-24 mb-8">
+    Location
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Distance
+  </div>
+
+  <ion-range [(ngModel)]="distanceValue" [ticks]="true" [snaps]="true" step="10" [min]="10" [max]="100"></ion-range>
+  
+  <div class="filter-section-text-sub montserrat color-primary mb-8">
+    {{ distanceValue === 100 ? 'Unlimited' : distanceValue + ' Km' }}
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Canton
+  </div>
+
+  <div class="input-form-icon background-color-dark">
+    <select class="montserrat" placeholder="Sélectionnez">
+      <option value="Canton">Canton</option>
+    </select>
+  </div>
+
+  <div class="filter-section-text mt-24 mb-8">
+    Activités
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Hivern
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Été
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <div class="filter-section-text-sub montserrat mt-24 mb-8">
+    Autres
+  </div>
+
+  <div class="mb-24 content-list-boxes">
+    <div class="box-background cursor-pointer">
+      <img src="assets/icon/main_ski_on_blue.png" />
+      <div class="montserrat">Sport 1</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_snowboard_off.png" />
+      <div class="montserrat">Sport 2</div>
+    </div>
+    <div class="box-background box-opacity cursor-pointer">
+      <img src="assets/icon/main_srando_off.png" />
+      <div class="montserrat">Sport 3</div>
+    </div>
+  </div>
+
+  <button (click)="toggleFilter()" class="content-button mt-32 btn-back-primary montserrat mb-32">
+    Appliquer les filtres
+  </button>
+
+</div>

@@ -1,0 +1,187 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+
+/* Fonts */
+@font-face {
+    font-family: "Dinamit";
+    src: url("./assets/fonts/Dinamit/Dinamit Bold.otf");
+    font-weight: bold;
+  }
+  
+  @font-face {
+    font-family: "Dinamit";
+    src: url("./assets/fonts/Dinamit/Dinamit Regular.otf");
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: "Dinamit";
+    src: url("./assets/fonts/Dinamit/Dinamit Medium.otf");
+    font-weight: 500;
+  }
+  
+  @font-face {
+    font-family: "Dinamit";
+    src: url("./assets/fonts/Dinamit/Dinamit Light.otf");
+    font-weight: lighter;
+  }
+  
+  /* Fonts */
+
+ion-header, ion-footer {
+    --color:#fff;
+}
+ion-content {
+    --color:#fff;
+}
+.status-bar-overlap {
+    padding-top: env(safe-area-inset-top) !important;
+}
+.status-bar-overlap-wrapper {
+    padding-top: calc(20px + env(safe-area-inset-top)) !important;
+}
+body, html {
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    font-family: 'Dinamit', sans-serif;
+    color:#fff;
+}
+.montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+.btn-back-primary {
+    background:#3399ff !important;
+    color:#fff !important;
+}
+.btn-back-primary:hover {
+    background:#54a7fb !important;
+}
+.btn-back-grey {
+    background:rgba(200, 200, 200, 0.3) !important;
+    color:#fff !important;
+}
+.btn-back-grey:hover {
+    background:rgba(200, 200, 200, 0.4) !important;
+}
+.back-primary {
+    background:#3399ff !important;
+}
+.color-primary {
+    color:#3399ff !important;
+}
+.background-color-dark {
+    background:rgba(7,10,14,0.5) !important;
+}
+.background-color-darker {
+    background:rgba(7,10,14,0.8) !important;
+}
+.content-background-image {
+    background-image: url('./assets/images/grafico-back.png');background-size: cover;background-repeat: no-repeat;background-position: center center;
+}
+.cursor-pointer {
+    cursor:pointer;
+}
+.text-uppercase {
+    text-transform:uppercase;
+}
+.position-relative {
+    position:relative;
+}
+.color-light {
+    color:#c8c8c8 !important;
+}
+.no-padding {
+    padding:0 !important;
+}
+.no-margin {
+    margin:0 !important;
+}
+.mr-16 {
+    margin-right:16px !important;
+}
+.mb-8 {
+    margin-bottom:8px !important;
+}
+.mb-12 {
+    margin-bottom:12px !important;
+}
+.mb-24 {
+    margin-bottom:24px !important;
+}
+.mb-32 {
+    margin-bottom:32px !important;
+}
+.mt-8 {
+    margin-top:8px !important;
+}
+.mt-12 {
+    margin-top:12px !important;
+}
+.mt-24 {
+    margin-top:24px !important;
+}
+.mt-32 {
+    margin-top:32px !important;
+}
+
+.pb-8 {
+    padding-bottom:8px !important;
+}
+.pb-12 {
+    padding-bottom:12px !important;
+}
+.pb-24 {
+    padding-bottom:24px !important;
+}
+.pb-32 {
+    padding-bottom:32px !important;
+}
+.pt-8 {
+    padding-top:8px !important;
+}
+.pt-12 {
+    padding-top:12px !important;
+}
+.pt-24 {
+    padding-top:24px !important;
+}
+.pt-32 {
+    padding-top:32px !important;
+}
+.pr-12 {
+    padding-right:12px !important;
+}
+.width-50 {
+    width:50% !important;
+}
+.width-40 {
+    width:40% !important;
+}
+.width-60 {
+    width:60% !important;
+}

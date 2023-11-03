@@ -1,0 +1,30 @@
+<ion-content>
+  <div class="content-wrapper content-background-image status-bar-overlap-wrapper">
+
+    <div class="header-content">
+      <div class="header-back background-color-dark cursor-pointer" (click)="goTo('home')">
+        <img src="assets/icon/icon-close.png" class="header-close-icon" />
+      </div>
+      <img src="assets/images/boukii-logo.png" class="header-logo" />
+    </div>
+
+
+    <div class="background-color-dark padding-wrapper content-box mt-32">
+      <img src="assets/icon/icon-user-tick-blue.png" class="content-box-icon" />
+      <div class="content-box-title">
+        Enregistrement complété
+      </div>
+      <div class="montserrat color-light content-box-text">
+        Votre compte a été créé avec succès.
+        <br>Complétez votre inscription en tant que  moniteur et joignez une école.
+      </div>
+      <div class="montserrat btn-back-primary content-button" (click)="goTo('register-monitor')">
+        Je veux m'inscrire
+      </div>
+      <div class="montserrat btn-back-grey content-button" (click)="goTo('home')">
+        Plus loin
+      </div>
+    </div>
+
+  </div>
+</ion-content>

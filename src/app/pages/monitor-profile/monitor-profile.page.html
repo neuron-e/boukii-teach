@@ -1,0 +1,176 @@
+<ion-content>
+  <!-- Normal view -->
+  <ng-container *ngIf="!showLevel">
+    <div class="content-wrapper dark-background status-bar-overlap-wrapper">
+
+      <div class="header-content pt-24 mb-12">
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('monitor-detail')" />
+      </div>
+
+      <div>
+        <div class="user-image-wrapper mb-12">
+          <img src="assets/icon/icons-outline-default-avatar.svg" class="user-image" />
+          <div class="user-image-add cursor-pointer">
+            <img src="assets/icon/icon-camera-black.png" />
+          </div>
+        </div>
+        <div class="user-image-title mb-12">
+          <div>Marco Raymond</div>
+          <span class="montserrat color-primary">@MRaymond</span>
+        </div>
+        <div class="mt-8 mb-32 flex-buttons">
+          <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;">
+            Données
+          </div>
+          <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;">
+            Sports
+          </div>
+        </div>
+      </div>
+
+      <!-- GENERAL -->
+      <div *ngIf="showGeneral" class="mb-24 pt-8">
+
+        <div class="input-label color-light montserrat">
+          Email
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-mail.png" />
+          <input class="montserrat" type="text" value="test@test.com" />
+        </div>
+        <div class="input-label color-light montserrat">
+          Teléphone
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-phone.png" />
+          <input class="montserrat" type="text" value="123456789" />
+        </div>
+
+        <div class="input-label color-light montserrat">
+          Nom
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <input class="montserrat" type="text" value="Marco Raymond" />
+        </div>
+
+        <div class="input-label color-light montserrat">
+          User
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <input class="montserrat" type="text" value="MRaymond" />
+        </div>
+
+        <div class="input-label color-light montserrat">
+          Date de naissance
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-birth.png" />
+          <input class="montserrat" type="date" value="1990-01-01" />
+        </div>
+
+        <div class="input-label color-light montserrat mb-12">
+          Adresse
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <input class="montserrat" type="text" placeholder="Rue, nº" value="Rue test, 9" />
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <input class="montserrat" type="text" placeholder="Ville" value="Ville test" />
+        </div>
+        <div class="inputs-flex">
+          <div class="input-form-icon background-color-dark width-40">
+            <input class="montserrat" type="text" placeholder="NPA" value="10101" />
+          </div>
+          <div class="input-form-icon background-color-dark width-60">
+            <input class="montserrat" type="text" placeholder="Pays" value="Suisse" />
+          </div>
+        </div>
+
+        <button (click)="goTo('monitor-detail')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+          Sauvegarder
+        </button>
+
+      </div>
+
+      <!-- SPORTS -->
+      <div *ngIf="showSports" class="mb-24 pt-8">
+
+        <div class="flex-sections mb-24">
+          <div [ngClass]="showWinter ? 'section-selected' : 'section-title'" (click)="showWinter=true;showSummer=false;showOther=false;">
+            Hiver
+            <div *ngIf="showWinter" class="section-bullet"></div>
+          </div>
+          <div [ngClass]="showSummer ? 'section-selected' : 'section-title'" (click)="showWinter=false;showSummer=true;showOther=false;">
+            Été
+            <div *ngIf="showSummer" class="section-bullet"></div>
+          </div>
+          <div [ngClass]="showOther ? 'section-selected' : 'section-title'" (click)="showWinter=false;showSummer=false;showOther=true;">
+            Autres
+            <div *ngIf="showOther" class="section-bullet"></div>
+          </div>
+        </div>
+        
+        <div class="custom-radio mb-32">
+          <label *ngFor="let sport of dataSports" class="radio-option background-color-dark">
+            <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" />
+            <div class="radio-wrapper">
+              <img [src]="sport.image" />
+              <span class="montserrat">{{sport.name}}</span>
+              <div class="extra-check montserrat color-primary" (click)="doShowLevel(sport)">
+                FORMATION
+              </div>
+            </div>
+            <div class="custom-check"></div>
+          </label>
+        
+        </div>
+
+        <button (click)="goTo('monitor-detail')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+          Sauvegarder
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <!-- LEVEL - inside ShowSports -->
+  <ng-container >
+    <div class="content-size dark-background status-bar-overlap" [hidden]="!showLevel">
+      <div class="padding-wrapper">
+        <div class="header-content no-margin">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="showLevel=false;">
+            Cancel
+          </div>
+          <div class="level-title">
+            Formation
+          </div>
+        </div>
+      </div>
+
+      <div class="padding-wrapper">
+        <div *ngIf="selectedSport" class="flex-sport">
+          <img [src]="selectedSport.image" />
+          <span>{{selectedSport.name}}</span>
+        </div>
+
+        <div class="input-label color-light montserrat mt-24">
+          Formation existante
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <select class="montserrat" placeholder="Sélectionnez">
+            <option value="Formation">Formation</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="padding-wrapper mt-32">
+        <button (click)="updateLevel()" class="content-button btn-back-primary montserrat">
+          Confirmer formation
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+</ion-content>

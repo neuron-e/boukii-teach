@@ -1,0 +1,90 @@
+<div *ngIf="showMenu$ | async" @slideAnimation class="content-menu-wrapper">
+  <div class="content-menu content-background-image">
+    <div class="padding-wrapper background-color-dark menu-header status-bar-overlap-wrapper">
+      <img src="assets/icon/icons-outline-close.svg" class="cursor-pointer" (click)="onClose()" />
+      <div>Menu</div>
+    </div>
+
+    <div class="padding-wrapper">
+      <div class="color-light menu-list-title">
+        MON COMPTE
+      </div>
+
+      <div class="background-color-dark menu-list-box">
+
+        <div class="menu-list-item cursor-pointer" (click)="goTo('monitor-detail')">
+          <div class="menu-list-text">
+            <img src="assets/icon/profil.png" />
+            <div class="montserrat">Profil</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+        <div class="menu-list-item cursor-pointer" (click)="goTo('stations-list')">
+          <div class="menu-list-text">
+            <img src="assets/icon/ecoles.png" />
+            <div class="montserrat">Écoles</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+        <div class="menu-list-item cursor-pointer">
+          <div class="menu-list-text">
+            <img src="assets/icon/meteo.png" />
+            <div class="montserrat">Meteo</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+        <div class="menu-list-item cursor-pointer no-border" (click)="goTo('stats')">
+          <div class="menu-list-text">
+            <img src="assets/icon/statistiques.png" />
+            <div class="montserrat">Statistiques</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+
+      </div>
+
+
+      <div class="color-light menu-list-title mt-24">
+        CONFIGURATION
+      </div>
+
+      <div class="background-color-dark menu-list-box">
+
+        <div class="menu-list-item cursor-pointer">
+          <div class="menu-list-text">
+            <img src="assets/icon/sounds.png" />
+            <div class="montserrat">Sounds</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+        <div class="menu-list-item cursor-pointer">
+          <div class="menu-list-text">
+            <img src="assets/icon/langue.png" />
+            <div class="montserrat">Langue</div>
+          </div>
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+        <div class="menu-list-item">
+          <div class="menu-list-text">
+            <img src="assets/icon/auto_sync.png" />
+            <div class="montserrat">Auto Sync</div>
+          </div>
+          <ion-toggle [checked]="true"></ion-toggle>
+        </div>
+        <div class="menu-list-item cursor-pointer no-border">
+          <div class="menu-list-text">
+            <img src="assets/icon/supprimer_le_compte.png" />
+            <div class="montserrat">Supprimer le compte</div>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="menu-button mt-24 montserrat" (click)="goTo('start')">
+        <img src="assets/icon/icons-outline-logout-white.svg" />
+        <span>Se déconnecter</span>
+      </button>
+
+    </div>
+  </div>
+</div>

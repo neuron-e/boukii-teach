@@ -1,0 +1,52 @@
+<div class="flex-circle">
+            <div class="circle-container"
+              (click)="onCircleClick($event)"
+              (touchstart)="onTouchStart($event)" 
+              (touchmove)="onTouchMove($event)" 
+              (touchend)="onTouchEnd($event)">
+              <!--Levels-->
+              <svg #circleSVG [attr.width]="circleWidth" [attr.height]="circleWidth" xmlns="http://www.w3.org/2000/svg">
+                  <path *ngFor="let level of dataLevels; let i = index" [attr.d]="getCirclePath(i)" [attr.stroke]="getCircleColor(i, currentLevel)" fill="none" stroke-width="8"></path>
+              </svg>
+              <!-- Marker-->
+              <svg [attr.width]="circleWidth" [attr.height]="circleWidth" class="circle-marker">
+                <circle [attr.cx]="screenWidth" [attr.cy]="16" r="16" fill="#666666" opacity="0.4" />
+                <circle [attr.cx]="screenWidth" [attr.cy]="16" r="12" fill="white" />
+              </svg>            
+          </div>
+          
+        </div>
+
+        <div class="padding-wrapper-circle">
+          <div class="circle-text">
+            <div class="circle-text-subtitle" [ngStyle]="{'color': allLevels[currentLevel].inactive_color}">
+              {{allLevels[currentLevel].level}}
+            </div>
+            <div class="circle-text-title">
+              {{allLevels[currentLevel].name}}
+            </div>
+          </div>
+
+          <div class="circle-list-title">
+            <div>Objectifs</div>
+            <span class="color-light">2/4</span>
+          </div>
+          <div class="circle-list">
+            <div *ngFor="let objective of allLevels[currentLevel].objectives" class="circle-list-item">
+              <div class="custom-radio">
+                <label class="simple-check-option">
+                    <input type="checkbox" />
+                    <div class="custom-check"></div>
+                </label>
+              </div>
+              <div class="montserrat color-light circle-list-item-text">
+                {{objective}}
+              </div>
+            </div>
+          </div>
+
+          <div class="input-label color-light montserrat mt-32">
+            Observations:
+          </div>
+          <textarea class="montserrat textarea-form background-color-dark" rows="5"></textarea>
+        </div>
