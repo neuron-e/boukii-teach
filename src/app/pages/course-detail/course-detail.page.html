@@ -1,0 +1,148 @@
+<ion-content>
+  <div class="content-size content-background-image status-bar-overlap">
+
+    <div class="background-color-dark padding-wrapper">
+      <div class="header-content mb-12">
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('calendar')" />
+        <div class="header-top-title">
+          Aujourd d'hui
+        </div>
+      </div>
+      <div class="montserrat color-light header-top-subtitle">
+        15 Janvier 2023
+      </div>
+
+    </div>
+
+    <div class="padding-wrapper">
+      
+      <div class="flex-sections mb-24">
+        <div [ngClass]="showA ? 'section-selected' : 'section-title'" (click)="showA=true;showB=false;showC=false;">
+          09:00<br>11:00
+          <div *ngIf="showA" class="section-bullet"></div>
+        </div>
+        <div [ngClass]="showB ? 'section-selected' : 'section-title'" (click)="showA=false;showB=true;showC=false;">
+          12:00<br>13:00
+          <div *ngIf="showB" class="section-bullet"></div>
+        </div>
+        <div [ngClass]="showC ? 'section-selected' : 'section-title'" (click)="showA=false;showB=false;showC=true;">
+          14:00<br>15:00
+          <div *ngIf="showC" class="section-bullet"></div>
+        </div>
+      </div>
+      
+      <div class="background-color-dark padding-wrapper box-radius">
+
+        <div class="mb-24 content-flex-top">
+          <img src="assets/icon/course-collective-box.png" class="content-flex-top-img" />
+          <div class="content-flex-top-text">
+            <span class="color-light">COLLECTIF SKI</span>
+            <div>Advance</div>
+          </div>
+        </div>
+
+        <div class="cursor-pointer menu-section-content" (click)="goTo('course-groupe')">
+          <div class="menu-section-title">Groupe</div>
+          <div class="menu-section-text">
+            <div>+3</div>
+            <span class="montserrat color-light">Groupes</span>
+            <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+          </div>
+        </div>
+
+        <div class="list-box-selector-b mt-12 mb-12">
+          <div class="box-selector-type-red box-selector-type cursor-pointer">
+            <img src="assets/icon/icon-award-level.png" />
+            <div class="montserrat">Red league</div>
+            <span>ROI</span>
+          </div>
+          <div class="background-grey-translucent box-selector-type cursor-pointer">
+            <img src="assets/icon/icon-calendar-tick.png" />
+            <div class="montserrat color-light">Jour</div>
+            <span class="color-light">3/6</span>
+          </div>
+          <div class="background-grey-translucent box-selector-type cursor-pointer">
+            <img src="assets/icon/icon-user-tick.png" />
+            <div class="montserrat color-light">Élèves</div>
+            <span class="color-light">5/6</span>
+          </div>
+          <div class="background-grey-translucent box-selector-type cursor-pointer">
+            <img src="assets/icon/icon-timer.png" />
+            <div class="montserrat color-light">Heures</div>
+            <span class="color-light">2</span>
+          </div>
+        </div>
+
+        <div class="menu-section-content mt-24 mb-24">
+          <div class="menu-section-title">Élèves</div>
+          <div class="menu-section-icons">
+            <img src="assets/icon/icon-user-tick.png" class="cursor-pointer" />
+            <img src="assets/icon/icon-transfer.png" class="cursor-pointer" />
+          </div>
+        </div>
+
+        
+    <div class="member-list">
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer">
+        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <div class="montserrat">Marco Raymond</div>
+            </div>
+            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+          </div>
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+        </div>
+      </div>
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer">
+        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <div class="montserrat">Marco Raymond</div>
+            </div>
+            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+          </div>
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+        </div>
+      </div>
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer">
+        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <div class="montserrat">Marco Raymond</div>
+            </div>
+            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+          </div>
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+        </div>
+      </div>
+
+      <div class="pb-8 mb-8 member-list-item no-border cursor-pointer">
+        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <div class="montserrat">Marco Raymond</div>
+            </div>
+            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+          </div>
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+        </div>
+      </div>
+      
+
+    </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

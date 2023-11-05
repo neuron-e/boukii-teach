@@ -1,0 +1,289 @@
+<ion-content>
+  <div class="content-size content-background-image">
+
+    <ng-container *ngIf="!showStation">
+    
+      <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+        <div class="header-top mb-12">
+          <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('schools')" />
+          <div class="header-top-title">
+            Ajouter école
+          </div>
+        </div>
+
+        <input type="text" placeholder="Chercher stations..." class="montserrat mt-12 header-input-search" />
+
+      </div>
+
+      <div class="padding-wrapper">
+
+        <!--Column boxes-->
+        <div class="list-box-selector-row">
+
+          <div class="station-box" (click)="showStation=true;">
+            <div class="station-box-img-wrapper">
+              <img src="assets/images/test-station.jpg" class="station-box-img" />
+              <div class="station-box-img-data">
+                <img src="assets/icon/ecoles-white.svg" />
+                <div class="montserrat">3</div>
+              </div>
+            </div>
+            <div class="station-box-text">
+              <div class="montserrat station-box-title">
+                Les Paccots
+              </div>
+              <div class="montserrat color-light station-box-subtitle">
+                Châtel-Saint-Denis
+              </div>
+            </div>
+          </div>
+
+          <div class="station-box" (click)="showStation=true;">
+            <div class="station-box-img-wrapper">
+              <img src="assets/icon/icon-no-image.png" class="station-box-img-none" />
+              <div class="station-box-img-data">
+                <img src="assets/icon/ecoles-white.svg" />
+                <div class="montserrat">2</div>
+              </div>
+            </div>
+            <div class="station-box-text">
+              <div class="montserrat station-box-title">
+                Les Paccots
+              </div>
+              <div class="montserrat color-light station-box-subtitle">
+                Châtel-Saint-Denis
+              </div>
+            </div>
+          </div>
+
+          <div class="station-box" (click)="showStation=true;">
+            <div class="station-box-img-wrapper">
+              <img src="assets/images/test-station.jpg" class="station-box-img" />
+              <div class="station-box-img-data">
+                <img src="assets/icon/ecoles-white.svg" />
+                <div class="montserrat">1</div>
+              </div>
+            </div>
+            <div class="station-box-text">
+              <div class="montserrat station-box-title">
+                Les Paccots
+              </div>
+              <div class="montserrat color-light station-box-subtitle">
+                Châtel-Saint-Denis
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+
+      <!-- STATION - (inside Step 3) -->
+      <ng-container >
+        <div class="dark-background status-bar-overlap" [hidden]="!showStation">
+          
+          <div class="content-img-wrapper">
+            <div class="wrapper-back"></div>
+            <img src="assets/images/test-station.jpg" class="content-img-back" />
+            <div class="box-icon-left cursor-pointer" (click)="showStation=false;">
+              <img src="assets/icon/arrow-left.svg" />
+            </div>
+    
+            <div class="content-img-text">
+              <div class="content-img-title">Les Paccots</div>
+              <div class="content-img-text-flex">
+                <img src="assets/icon/icon-location-blue.png" />
+                <div class="montserrat">Châtel-Saint-Denis, Suisse</div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="padding-wrapper">
+    
+            <div class="list-boxes pt-8">
+              
+              <div class="input-label color-light mb-12">
+                3 ECOLÉS
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <!--<img src="assets/icon/icon-no-image.png" class="box-item-img-none" />-->
+                      <img src="assets/images/test-course.jpg" class="box-item-img" />
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                  <!--<div class="montserrat btn-back-primary box-item-button cursor-pointer" (click)="goTo('new-booking')">Réserver</div>-->
+                  <div class="montserrat btn-back-grey box-item-button cursor-pointer">Enregistré</div>
+                </div>
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <img src="assets/icon/icon-no-image.png" class="box-item-img-none" />
+                      <!--<img [src]="image" class="box-item-img" />-->
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                  <div class="montserrat btn-back-primary box-item-button cursor-pointer">Enregistrez</div>
+                </div>
+              </div>
+    
+              <div class="pb-24 mb-24 list-boxes-item">
+                <div class="box-item-top">
+                  <div class="box-item-left">
+                    <div class="box-item-left-img">
+                      <img src="assets/icon/icon-no-image.png" class="box-item-img-none" />
+                      <!--<img [src]="image" class="box-item-img" />-->
+                    </div>
+                    <div class="box-item-left-text">
+                      <div class="montserrat">ESS Les Paccots</div>
+                      <div class="box-item-left-text-icons">
+                        <img src="assets/icon/main_ski_on.png" />
+                        <img src="assets/icon/main_snowboard_on.png" />
+                        <img src="assets/icon/main_srando_off.png" />
+                        <img src="assets/icon/main_telemark_off.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+                </div>
+                <div class="box-item-bottom">
+                  <div class="montserrat">Cours privés, collectifs</div>
+                  <div class="montserrat btn-back-primary box-item-button cursor-pointer">Enregistrez</div>
+                </div>
+              </div>
+    
+            </div>
+
+
+            <button (click)="goTo('schools')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+              Confirmer
+            </button>
+        
+          </div>
+
+        </div>
+      </ng-container>
+
+  </div>
+  
+</ion-content>
+
+<div [@slideInOut]="moreState" class="member-modal-wrapper">
+  <div class="padding-wrapper dark-background member-modal">
+
+    <div class="header-member mt-12">
+      <img src="assets/icon/icon-close-box.png" class="cursor-pointer" (click)="toggleMore()" />
+    </div>
+
+    <div class="pb-24 mb-8 list-boxes-item">
+      <div class="box-item-top">
+        <div class="box-item-left">
+          <div class="box-item-left-img">
+            <!--<img src="assets/icon/icon-no-image.png" class="box-item-img-none" />-->
+            <img src="assets/images/test-course.jpg" class="box-item-img" />
+          </div>
+          <div class="box-item-left-text">
+            <div class="montserrat">ESS Les Paccots</div>
+            <div class="box-item-left-text-icons">
+              <img src="assets/icon/main_ski_on.png" />
+              <img src="assets/icon/main_snowboard_on.png" />
+              <img src="assets/icon/main_srando_off.png" />
+              <img src="assets/icon/main_telemark_off.png" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-item-bottom">
+        <div class="montserrat">Cours privés, collectifs</div>
+      </div>
+    </div>
+
+    <div class="member-list background-color-dark padding-wrapper">
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
+        
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <img src="assets/icon/icon-calendar-edit-blue.png" />
+              <div class="montserrat">Établir disponibilité</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
+        
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <img src="assets/icon/icon-message-blue.png" />
+              <div class="montserrat">Message</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
+        
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <img src="assets/icon/icon-phone-blue.png" />
+              <div class="montserrat">Téléphone</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="member-list-item cursor-pointer no-border" (click)="toggleMore()">
+        
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <img src="assets/icon/icon-mail-blue.png" />
+              <div class="montserrat">Mail</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    </div>
+
+  </div>
+</div>

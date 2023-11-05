@@ -103,6 +103,18 @@ const routes: Routes = [
     path: 'register-monitor',
     loadChildren: () => import('./pages/register-monitor/register-monitor.module').then( m => m.RegisterMonitorPageModule)
   },
+  {
+    path: 'schools',
+    loadChildren: () => import('./pages/schools/schools.module').then( m => m.SchoolsPageModule)
+  },
+  {
+    path: 'school-add',
+    loadChildren: () => import('./pages/school-add/school-add.module').then( m => m.SchoolAddPageModule)
+  },
+  {
+    path: 'course-detail',
+    loadChildren: () => import('./pages/course-detail/course-detail.module').then( m => m.CourseDetailPageModule)
+  },
 ];
 
 @NgModule({
