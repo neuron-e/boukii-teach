@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="box-school-icons">
-              <img src="assets/icon/icon-calendar-edit.png" class="box-item-icon cursor-pointer" />
+              <img src="assets/icon/icon-calendar-edit.png" class="box-item-icon cursor-pointer" (click)="goTo('calendar')" />
               <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
             </div>
           </div>
@@ -98,7 +98,7 @@
         <div class="member-item-flex">
           <div class="member-item-content">
             <div class="member-item-title">
-              <img src="assets/icon/icon-calendar-edit-blue.png" />
+              <img src="assets/icon/icon-calendar-edit-blue.png" (click)="goTo('calendar-available')" />
               <div class="montserrat">Établir disponibilité</div>
             </div>
           </div>

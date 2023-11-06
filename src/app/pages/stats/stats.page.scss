@@ -1,0 +1,100 @@
+.content-size {
+    width:100%;min-height:100%;
+}
+.padding-wrapper {
+    padding:20px 16px;
+}
+.header-top {
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;
+}
+.header-top-side-img {
+    position:absolute;left:0;top: 50%;transform: translateY(-50%);width:28px;
+}
+.header-top-side-img-b {
+    position:absolute;right:0;top: 50%;transform: translateY(-50%);width:20px;
+}
+.header-top-title {
+    font-size:15px;color:#fff;font-weight:600;
+}
+.header-section-title {
+    display:flex;gap:10px;align-items:center;justify-content:center;
+}
+.header-section-title img {
+    width:24px;
+}
+.header-section-title div {
+    color:#fff;font-size:15px;font-weight:600;
+}
+
+.chart-container {
+    width:100%;height:500px;
+}
+
+.menu-section-content {
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+}
+.menu-section-title {
+    font-size:17px;font-weight:500;
+}
+.menu-section-text {
+    display:flex;align-items:center;gap:8px;
+}
+.menu-section-text div {
+    color:#fff;background-color:var(--ion-color-primary);padding:5px 8px;border-radius:40px;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;
+}
+.menu-section-text span {
+    font-size:12px;
+}
+.menu-section-text img {
+    width:24px;
+}
+.menu-section-icons {
+    display:flex;align-items:center;gap:8px;
+}
+.menu-section-icons img {
+    width:24px;
+}
+
+.table-wrapper {
+    display:flex;flex-direction:column;gap:8px;border-radius:8px;
+}
+.table-line {
+    display:flex;align-items:center;gap:16px;border-bottom:1px solid #444953;
+}
+.table-line-total {
+    font-weight:500;
+}
+.table-line div {
+    font-size:13px;color:#fff;
+}
+.table-line span {
+    font-size:11px;
+}
+.table-line-text {
+    display:flex;flex-direction:column;gap:3px;
+}
+.width-big {
+    width:40%;
+}
+.width-small {
+    width:30%;
+}
+.no-border {
+    border:none !important;
+}
+
+.input-form-icon-b {
+    width: fit-content;height: 36px;border-radius: 12px;color: #fff;padding: 0 12px;display: flex;align-items: center;gap: 9px;
+}
+.input-form-icon-b input, .input-form-icon-b select {
+    color:#fff;font-size:14px;width:100%;border:none;background:transparent;outline:0;
+}
+.background-grey-translucent {
+    background:rgba(65,69,78,0.4);
+}
+.margin-auto {
+    margin:auto;
+}
+.remove-bottom {
+    margin-bottom:-12px !important;
+}

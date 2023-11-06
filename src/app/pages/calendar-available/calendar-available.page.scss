@@ -1,0 +1,68 @@
+.content-size {
+    width:100%;min-height:100%;
+}
+.padding-wrapper {
+    padding:20px 16px;
+}
+.header-section-content {
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;
+}
+.header-content-icon {
+    position:absolute;left:0;top: 50%;transform: translateY(-50%);width:28px;
+}
+.header-section-title {
+    display:flex;gap:10px;align-items:center;justify-content:center;
+}
+.header-section-title img {
+    width:24px;
+}
+.header-section-title div {
+    color:#fff;font-size:16px;font-weight:600;
+}
+
+.header-section-menu {
+    position:absolute;right:0;top: 50%;transform: translateY(-50%);width:22px;display:flex;align-items:center;justify-content:center;
+}
+
+.month-title {
+    color:#fff;font-size:15px;font-weight:500;
+}
+.flex-members {
+    display:flex;width:100%;align-items:center;justify-content:space-between;
+}
+.box-arrow {
+    width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#2b303b;
+}
+.box-arrow img {
+    width:22px;
+}
+.filter-floating {
+    width: 54px;position: fixed;right: 12px;bottom:102px;cursor: pointer;
+}
+.button-floating {
+    position: fixed;right: 12px;bottom:102px;cursor: pointer;display:flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:40px;width:fit-content;font-weight:600;font-size:14px;
+}
+
+.flex-buttons {
+    display:flex;width:100%;align-items:center;gap:4px;
+}
+.flex-buttons-button {
+    display:flex;align-items:center;justify-content:center;font-size:14px;width: 100%;padding: 6px 0px;border-radius: 4px;
+}
+
+.input-label {
+    font-size:14px;margin-bottom:8px;
+}
+.input-form-icon {
+    width:100%;height:48px;border-radius:12px;color:#fff;padding:0 16px;display:flex;align-items:center;gap:9px;margin-bottom:24px;
+}
+.input-form-icon img {
+    width:18px;position:relative;top:-1px;
+}
+.input-form-icon input, .input-form-icon select {
+    color:#fff;font-size:15px;width:100%;border:none;background:transparent;outline:0;
+}
+
+.content-button {
+    width: 100%;height: 44px;line-height: 44px;display: block;text-align: center;border-radius: 44px;color: #000;text-align: center;font-size: 14px;font-weight: 500;cursor:pointer;transition:all ease-in-out 0.3s;
+}

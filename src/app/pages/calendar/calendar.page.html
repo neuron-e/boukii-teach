@@ -86,6 +86,7 @@
                         <span class="day-on-top">{{ day.number }}</span>
                         <span *ngIf="day.today" class="active-today"></span>
                         <span *ngIf="day.active" class="active-calendar"></span>
+                        <span *ngIf="day.block" class="block-calendar"></span>
                       </span>
                   </span>
             </ng-container>
@@ -113,11 +114,12 @@
             <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
             <!--Tasks-->
-            <div *ngFor="let task of filteredTasksWeek" (click)="goTo('course-detail')"
+            <div *ngFor="let task of filteredTasksWeek" (click)="task.type === 'block' ? goTo('calendar-available') : goTo('course-detail')"
                 [ngClass]="{
                   'collective-icon-only': task.type === 'collective',
                   'private-icon-only': task.type === 'private',
-                  'other-icon-only': task.type === 'other'
+                  'other-icon-only': task.type === 'other',
+                  'block-icon-only': task.type === 'block'
                 }" 
                 [ngStyle]="task.styleWeek">
               <img [src]="getIconForTaskType(task.type)" class="task-icon-only" />
@@ -143,11 +145,12 @@
           <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
           <!--Tasks-->
-          <div *ngFor="let task of filteredTasks" (click)="goTo('course-detail')"
+          <div *ngFor="let task of filteredTasks" (click)="task.type === 'block' ? goTo('calendar-available') : goTo('course-detail')"
               [ngClass]="{
                 'collective-icon-full': task.type === 'collective',
                 'private-icon-full': task.type === 'private',
-                'other-icon-full': task.type === 'other'
+                'other-icon-full': task.type === 'other',
+                'block-icon-full': task.type === 'block'
               }" 
               [ngStyle]="task.style">
             <!--<img [src]="getIconForTaskType(task.type)" class="task-icon-only" />-->
@@ -184,6 +187,10 @@
                 <div class="montserrat">Nom activité</div>
               </div>
             </div>
+            <!--Block-->
+            <div class="task-content-block" *ngIf="task.type === 'block'">
+              Rendez-vous médical
+            </div>
 
           </div>
         </div>
@@ -193,8 +200,8 @@
 
   </div>
 
-  <!--MONTH-->
-  <div class="montserrat button-floating btn-back-primary" *ngIf="showMonth">
+  <!--SHOW IN MONTH/WEEK/DAY-->
+  <div class="montserrat button-floating btn-back-primary" (click)="goTo('calendar-available')">
     DISPONIBILITÉ
   </div>
   

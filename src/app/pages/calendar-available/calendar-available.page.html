@@ -1,0 +1,152 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-12">
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('calendar')" />
+        <div class="header-section-title">
+          <div>Disponibilité</div>
+        </div>
+        <img src="assets/icon/icon-clock.png" class="header-section-menu cursor-pointer" />
+      </div>
+
+      <div class="mt-24 flex-buttons">
+        <div [ngClass]="{'btn-back-primary': showMonthAvailable, 'btn-back-grey': !showMonthAvailable}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonthAvailable=true;showDayAvailable=false;">
+          Mois
+        </div>
+        <div [ngClass]="{'btn-back-primary': showDayAvailable, 'btn-back-grey': !showDayAvailable}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonthAvailable=false;showDayAvailable=true;">
+          Jour
+        </div>
+      </div>
+
+    </div>
+
+    <!--MONTH-->
+    <div class="padding-wrapper" *ngIf="showMonthAvailable">
+
+      <div class="input-label color-light montserrat">
+        Date de début
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <input class="montserrat" type="date" />
+      </div>
+
+      <div class="input-label color-light montserrat">
+        Date de fin
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <input class="montserrat" type="date" />
+      </div>
+      
+      <div class="input-label color-light montserrat mt-24">
+        Heure de début
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="All">Toute la journée</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+        </select>
+      </div>
+      
+      <div class="input-label color-light montserrat mt-24">
+        Heure de fin
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="All">Toute la journée</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+        </select>
+      </div>
+      
+      <div class="input-label color-light montserrat mt-24">
+        Des exceptions
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="None">Aucun</option>
+          <option value="Collective">Collectif</option>
+          <option value="Private">Privé</option>
+          <option value="Other">Activité</option>
+        </select>
+      </div>
+
+      <div class="input-label color-light montserrat">
+        Titre
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <input class="montserrat" type="text" />
+      </div>
+
+      <button (click)="goTo('calendar')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+        Sauvegarder
+      </button>
+
+    </div>
+
+    <!--DAY-->
+    <div class="padding-wrapper" *ngIf="showDayAvailable">
+
+      <div class="input-label color-light montserrat">
+        Date
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <input class="montserrat" type="date" />
+      </div>
+
+      <div class="input-label color-light montserrat mt-24">
+        Heure de début
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="All">Toute la journée</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+        </select>
+      </div>
+      
+      <div class="input-label color-light montserrat mt-24">
+        Heure de fin
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="All">Toute la journée</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+        </select>
+      </div>
+      
+      <div class="input-label color-light montserrat mt-24">
+        Des exceptions
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <select class="montserrat">
+          <option value="None">Aucun</option>
+          <option value="Collective">Collectif</option>
+          <option value="Private">Privé</option>
+          <option value="Other">Activité</option>
+        </select>
+      </div>
+
+      <div class="input-label color-light montserrat">
+        Titre
+      </div>
+      <div class="input-form-icon background-color-dark">
+        <input class="montserrat" type="text" />
+      </div>
+
+      <button (click)="goTo('calendar')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+        Sauvegarder
+      </button>
+
+    </div>
+
+  </div>
+  
+</ion-content>

@@ -86,6 +86,10 @@
 .active-calendar {
     width:8px;height:8px;border-radius:8px;background:var(--ion-color-primary);position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
 }
+.block-calendar {
+    width:32px;height:5px;border-radius:8px;position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+    background: repeating-linear-gradient(-45deg,rgba(7,10,14,1),rgba(7,10,14,1) 2px,var(--ion-color-primary) 4px,var(--ion-color-primary) 6px);
+}
 .active-today {
     width:28px;height:28px;border-radius:28px;background:var(--ion-color-primary);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;
 }
@@ -139,6 +143,10 @@
 .other-icon-only {
     position:absolute;width:calc(14.25% - 4px);background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;
 }
+.block-icon-only {
+    position:absolute;width:calc(14.25% - 4px);border-radius:8px;cursor:pointer;
+    background: repeating-linear-gradient(-45deg,rgba(7,10,14,1),rgba(7,10,14,1) 15px,var(--ion-color-primary) 15px,var(--ion-color-primary) 30px);
+}
 .collective-icon-full {
     position:absolute;width:100%;background:rgba(251,153,23,0.3);border:1px solid rgba(251,153,23,0.6);border-radius:8px;cursor:pointer;
 }
@@ -147,6 +155,13 @@
 }
 .other-icon-full {
     position:absolute;width:100%;background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;
+}
+.block-icon-full {
+    position:absolute;width:100%;border-radius:8px;cursor:pointer;
+    background: repeating-linear-gradient(-45deg,rgba(7,10,14,1),rgba(7,10,14,1) 15px,var(--ion-color-primary) 15px,var(--ion-color-primary) 30px);
+}
+.task-content-block {
+    background:rgba(7, 10, 14, 0.7);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;color:#fff;font-weight:500;text-align:center;padding:8px 16px;border-radius:8px;max-width: 200px;
 }
 .task-icon-only {
     height:20px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);

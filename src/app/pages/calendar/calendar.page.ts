@@ -28,17 +28,19 @@ export class CalendarPage implements OnInit {
   weekdayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   days: any[] = [];
 
-  activeDates: string[] = ['2023-10-20','2023-10-28','2023-10-29','2023-10-30','2023-11-3','2023-11-4','2023-11-5','2023-11-6','2023-11-7','2023-11-18','2023-11-19','2023-11-20'];
-
   filteredTasks: any[];
   filteredTasksWeek: any[] = [];
   tasksCalendar: any[] = [
     {date:'2023-11-5',hour_start:'09:30',hour_end:'11:00',type:'collective'},
     {date:'2023-11-5',hour_start:'11:30',hour_end:'13:30',type:'private'},
+    {date:'2023-11-6',hour_start:'07:00',hour_end:'09:00',type:'block'},
     {date:'2023-11-6',hour_start:'09:00',hour_end:'11:00',type:'collective'},
     {date:'2023-11-6',hour_start:'12:00',hour_end:'13:00',type:'other'},
     {date:'2023-11-7',hour_start:'11:00',hour_end:'12:00',type:'private'},
     {date:'2023-11-8',hour_start:'09:00',hour_end:'11:00',type:'collective'},
+    {date:'2023-11-8',hour_start:'13:00',hour_end:'16:00',type:'block'},
+    {date:'2023-11-10',hour_start:'08:00',hour_end:'13:00',type:'block'},
+    {date:'2023-11-11',hour_start:'09:00',hour_end:'11:00',type:'block'},
   ];
 
   hourStartDay: string = '07:00';
@@ -178,9 +180,10 @@ export class CalendarPage implements OnInit {
       
       const isPast = spanDate < currentDate;
       const dateStr = `${this.currentYear}-${this.currentMonth + 1}-${i}`;
-      const isActive = this.activeDates.includes(dateStr);
       const isToday = i === currentDay && this.currentMonth === currentMonth && this.currentYear === currentYear;
-      this.days.push({ number: i, active: isActive, selected: false, past: isPast, today: isToday });
+      const isActive = this.tasksCalendar.some(task => task.date === dateStr && task.type !== 'block');
+      const isBlock = this.tasksCalendar.some(task => task.date === dateStr && task.type === 'block');
+      this.days.push({ number: i, active: isActive, selected: false, past: isPast, today: isToday, block: isBlock });
     }
 
     let lastDayOfWeek = new Date(this.currentYear, this.currentMonth, daysInMonth).getDay();

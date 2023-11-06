@@ -1,0 +1,139 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-top">
+        <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('home')" />
+        <div class="header-section-title">
+          <img src="assets/icon/ecoles.png" />
+          <div>Statistiques</div>
+        </div>
+      </div>
+      <div class="input-form-icon-b margin-auto remove-bottom cursor-pointer">
+        <select class="montserrat">
+          <option value="Actual">Cette année</option>
+          <option value="Last">Année passée</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="background-color-dark padding-wrapper mt-24 mb-24">
+      <div class="input-form-icon-b background-grey-translucent mb-24 cursor-pointer">
+        <select class="montserrat">
+          <option value="All">Heures totales</option>
+        </select>
+      </div>
+      
+      <canvas
+        baseChart
+        class="chart-container"
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="lineChartType"
+      ></canvas>
+    </div>
+
+    <div class="padding-wrapper">
+
+      <div class="cursor-pointer menu-section-content mb-12">
+        <div class="menu-section-title">Rapport d'activité</div>
+      </div>
+
+
+      <div class="table-line no-border padding-wrapper pb-8">
+        <div class="width-big">
+          Cours
+        </div>
+        <div class="width-small">
+          Heures
+        </div>
+        <div class="width-small">
+          Revenu
+        </div>
+      </div>
+
+      <div class="background-color-dark padding-wrapper table-wrapper">
+        <div class="table-line table-line-total pb-8 mb-8">
+          <div class="width-big">
+            TOTAL
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+
+        <div class="table-line pb-8 mb-8">
+          <div class="montserrat width-big table-line-text">
+            <div>Advanced</div>
+            <span class="montserrat color-light">Collectif Ski</span>
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+
+        <div class="table-line pb-8 mb-8">
+          <div class="montserrat width-big table-line-text">
+            <div>Advanced</div>
+            <span class="montserrat color-light">Collectif Ski</span>
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+
+        <div class="table-line pb-8 mb-8">
+          <div class="montserrat width-big table-line-text">
+            <div>Advanced</div>
+            <span class="montserrat color-light">Collectif Ski</span>
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+
+        <div class="table-line pb-8 mb-8">
+          <div class="montserrat width-big table-line-text">
+            <div>Advanced</div>
+            <span class="montserrat color-light">Collectif Ski</span>
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+
+        <div class="table-line table-line-total pb-8 no-border">
+          <div class="width-big">
+            TOTAL
+          </div>
+          <div class="montserrat width-small">
+            XXXX h
+          </div>
+          <div class="montserrat width-small">
+            XX,XX CHF
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

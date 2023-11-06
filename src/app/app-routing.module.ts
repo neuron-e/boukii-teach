@@ -135,6 +135,14 @@ const routes: Routes = [
     path: 'course-transfer',
     loadChildren: () => import('./pages/course-transfer/course-transfer.module').then( m => m.CourseTransferPageModule)
   },
+  {
+    path: 'calendar-available',
+    loadChildren: () => import('./pages/calendar-available/calendar-available.module').then( m => m.CalendarAvailablePageModule)
+  },
+  {
+    path: 'stats',
+    loadChildren: () => import('./pages/stats/stats.module').then( m => m.StatsPageModule)
+  },
 ];
 
 @NgModule({
