@@ -1,0 +1,148 @@
+<ion-content>
+  <div class="content-size dark-background status-bar-overlap">
+
+    <div class="padding-wrapper">
+      <div class="header-content mb-8">
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail')" />
+        <div class="header-top-title">
+          Confirmer participation
+        </div>
+      </div>
+
+    </div>
+
+    <div class="padding-wrapper">
+
+        <div class="menu-section-content mb-24">
+          <div class="menu-section-title">Sélectionnez élèves</div>
+        </div>
+        
+        
+        <div class="member-list">
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item no-border cursor-pointer">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <button (click)="goTo('course-detail')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+          Confirmer
+        </button>
+
+      </div>
+
+  </div>
+
+</ion-content>

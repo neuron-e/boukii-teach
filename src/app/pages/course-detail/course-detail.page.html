@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div class="cursor-pointer menu-section-content" (click)="goTo('course-groupe')">
+        <div class="cursor-pointer menu-section-content" (click)="goTo('course-group')">
           <div class="menu-section-title">Groupe</div>
           <div class="menu-section-text">
             <div>+3</div>
@@ -76,70 +76,214 @@
         <div class="menu-section-content mt-24 mb-24">
           <div class="menu-section-title">Élèves</div>
           <div class="menu-section-icons">
-            <img src="assets/icon/icon-user-tick.png" class="cursor-pointer" />
-            <img src="assets/icon/icon-transfer.png" class="cursor-pointer" />
+            <img src="assets/icon/icon-user-tick.png" class="cursor-pointer" (click)="goTo('course-participation')" />
+            <img src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer')" />
           </div>
         </div>
-
         
-    <div class="member-list">
+        <div class="member-list">
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer">
-        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-        <div class="member-item-flex">
-          <div class="member-item-content">
-            <div class="member-item-title">
-              <div class="montserrat">Marco Raymond</div>
+          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level')">
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat member-item-title-icon">
+                    <div>Marco Raymond</div>
+                    <img src="assets/icon/icon-double-check.png" />
+                  </div>
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
             </div>
-            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
           </div>
-          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level')">
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat member-item-title-icon">
+                    <div>Marco Raymond</div>
+                    <img src="assets/icon/icon-double-check.png" />
+                  </div>
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level')">
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat member-item-title-icon">
+                    <div>Marco Raymond</div>
+                    <!--<img src="assets/icon/icon-double-check.png" />-->
+                  </div>
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level')">
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat member-item-title-icon">
+                    <div>Marco Raymond</div>
+                    <!--<img src="assets/icon/icon-double-check.png" />-->
+                  </div>
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item no-border cursor-pointer" (click)="goTo('course-detail-level')">
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat member-item-title-icon">
+                    <div>Marco Raymond</div>
+                    <!--<img src="assets/icon/icon-double-check.png" />-->
+                  </div>
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+
+      </div>
+
+      <!-- PRIVATE TYPE COURSE -->
+      <!--
+      <div class="background-color-dark padding-wrapper box-radius">
+
+        <div class="mb-24 content-flex-top-wrapper">
+          <div class="content-flex-top">
+            <img src="assets/icon/course-private-box.png" class="content-flex-top-img" />
+            <div class="content-flex-top-text">
+              <span class="color-light">PRIVÉ SKI</span>
+              <div>Privé basic</div>
+            </div>
+          </div>
+          <img src="assets/icon/icon-user-tick.png" class="content-flex-top-wrapper-icon cursor-pointer" (click)="goTo('course-participation')" />
+        </div>
+
+        <div class="header-user-data">
+          <div class="header-user-data-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="header-user-data-text">
+            <div class="header-user-data-text-top">
+              <div class="color-light">
+                FR · SUISSE · 31 ANS
+              </div>
+            </div>
+            <div class="header-user-data-text-title">
+              <div>Marco Raymond</div>
+            </div>
+            <div class="header-user-data-text-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+            </div>
+          </div>
+        </div>
+
+        <div class="border-separator mt-24 mb-24"></div>
+
+        <div>
+          <app-level-full (click)="goTo('course-detail-level-update')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
+
+          <div class="padding-wrapper mt-8">
+            <button class="content-button btn-back-primary montserrat" (click)="goTo('course-detail-level-update')">
+              Évaluer les progrès
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer">
-        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
-        <div class="member-item-flex">
-          <div class="member-item-content">
-            <div class="member-item-title">
-              <div class="montserrat">Marco Raymond</div>
-            </div>
-            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-observations.png" />
           </div>
-          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+          <div class="flex-title-selector-text">
+            Observations
+          </div>
         </div>
       </div>
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer">
-        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
-        <div class="member-item-flex">
-          <div class="member-item-content">
-            <div class="member-item-title">
-              <div class="montserrat">Marco Raymond</div>
-            </div>
-            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
-          </div>
-          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+      <div class="background-color-dark box-radius box-observations">
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        </div>
+        <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet.
+          <br>Lorem ipsum dolor sit amet.
         </div>
       </div>
 
-      <div class="pb-8 mb-8 member-list-item no-border cursor-pointer">
-        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
-        <div class="member-item-flex">
-          <div class="member-item-content">
-            <div class="member-item-title">
-              <div class="montserrat">Marco Raymond</div>
-            </div>
-            <div class="montserrat member-item-subtitle">FR · Suisse · 40 ans</div>
+      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-historic.png" />
           </div>
-          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="member-item-icon" />
+          <div class="flex-title-selector-text">
+            Historique
+          </div>
         </div>
       </div>
-      
 
-    </div>
-
+      <div class="background-color-dark box-radius box-observations mb-24">
+        <div class="montserrat color-light text-observations">
+          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        </div>
       </div>
+      -->
+      <!-- /PRIVATE -->
 
     </div>
 

@@ -115,6 +115,26 @@ const routes: Routes = [
     path: 'course-detail',
     loadChildren: () => import('./pages/course-detail/course-detail.module').then( m => m.CourseDetailPageModule)
   },
+  {
+    path: 'course-detail-level',
+    loadChildren: () => import('./pages/course-detail-level/course-detail-level.module').then( m => m.CourseDetailLevelPageModule)
+  },
+  {
+    path: 'course-detail-level-update',
+    loadChildren: () => import('./pages/course-detail-level-update/course-detail-level-update.module').then( m => m.CourseDetailLevelUpdatePageModule)
+  },
+  {
+    path: 'course-group',
+    loadChildren: () => import('./pages/course-group/course-group.module').then( m => m.CourseGroupPageModule)
+  },
+  {
+    path: 'course-participation',
+    loadChildren: () => import('./pages/course-participation/course-participation.module').then( m => m.CourseParticipationPageModule)
+  },
+  {
+    path: 'course-transfer',
+    loadChildren: () => import('./pages/course-transfer/course-transfer.module').then( m => m.CourseTransferPageModule)
+  },
 ];
 
 @NgModule({

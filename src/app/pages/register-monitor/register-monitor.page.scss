@@ -102,7 +102,7 @@
     position: absolute;top: 10px;right: 10px;width: 22px;height: 22px;background: var(--ion-color-primary);border-radius: 6px;display: none;align-items: center;justify-content: center;
 }  
 .custom-check::before {
-    content: "";width: 5px;height: 10px;border: solid black;border-width: 0 2px 2px 0;transform: rotate(45deg);position: absolute;top: 4px;left: 8px;
+    content: "";width: 5px;height: 10px;border: solid white;border-width: 0 2px 2px 0;transform: rotate(45deg);position: absolute;top: 4px;left: 8px;
 }
 .extra-check {
     display:none;margin-top: -12px;font-size: 12px;

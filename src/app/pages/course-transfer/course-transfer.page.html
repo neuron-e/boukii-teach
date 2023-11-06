@@ -1,0 +1,315 @@
+<ion-content>
+  <div class="content-size dark-background status-bar-overlap">
+
+    <ng-container *ngIf="!confirmTransfer">
+
+      <div class="padding-wrapper">
+        <div class="header-content mb-8">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail')">
+            Cancel
+          </div>
+          <div class="header-top-title">
+            Transférer élèves
+          </div>
+        </div>
+
+      </div>
+
+      <div class="padding-wrapper">
+
+        <div class="menu-section-content mb-24">
+          <div class="menu-section-title">Sélectionnez élèves</div>
+        </div>
+        
+        
+        <div class="member-list">
+
+          <div class="pb-8 mb-8 member-list-item">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item no-border">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <!--<div class="montserrat">
+                    <div class="member-item-bullet"></div>NON PAYÉ
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <button (click)="confirmTransfer=true;" class="content-button btn-back-primary montserrat mb-32 mt-32">
+          Continuer
+        </button>
+
+      </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="confirmTransfer">
+
+      <div class="padding-wrapper">
+        <div class="header-content mb-8">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail')">
+            Cancel
+          </div>
+          <div class="header-top-title">
+            Transférer élèves
+          </div>
+        </div>
+
+      </div>
+
+      <div class="padding-wrapper">
+
+        <div class="menu-section-content mb-24">
+          <div class="menu-section-title">Élèves</div>
+          <div class="menu-section-text">
+            <img src="assets/icon/icons-outline-edit-white.svg" class="cursor-pointer" (click)="confirmTransfer=false;" />
+          </div>
+        </div>
+        
+        <div class="user-list-flex">
+          <div class="user-list-flex-item">
+            <div class="user-list-flex-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="montserrat">Nom</div>
+          </div>
+          <div class="user-list-flex-item">
+            <div class="user-list-flex-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="montserrat">Nom</div>
+          </div>
+          <div class="user-list-flex-item">
+            <div class="user-list-flex-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="montserrat">Nom</div>
+          </div>
+        </div>
+
+        <div class="border-separator mt-24 mb-24"></div>
+
+        <div class="menu-section-content mt-24 mb-24">
+          <div class="menu-section-title">Choisir groupe</div>
+        </div>
+
+        <div class="member-list">
+
+          <div class="pb-8 mb-8 member-list-item-b">
+            <div class="custom-radio pt-12">
+              <label class="simple-check-option">
+                  <input type="radio" name="groupSelection" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <div class="member-list-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                  <div class="box-selector-level">ROI</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat color-light">Professeur</span>
+                </div>
+                <div class="member-item-data">
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-user-tick.png" />
+                      <span class="montserrat color-light">5/6</span>
+                    </div>
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-calendar-tick.png" />
+                      <span class="montserrat color-light">3/6</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item-b">
+            <div class="custom-radio pt-12">
+              <label class="simple-check-option">
+                  <input type="radio" name="groupSelection" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <div class="member-list-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                  <div class="box-selector-level">ROI</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat color-light">Professeur</span>
+                </div>
+                <div class="member-item-data">
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-user-tick.png" />
+                      <span class="montserrat color-light">5/6</span>
+                    </div>
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-calendar-tick.png" />
+                      <span class="montserrat color-light">3/6</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pb-8 mb-8 member-list-item-b no-border">
+            <div class="custom-radio pt-12">
+              <label class="simple-check-option">
+                  <input type="radio" name="groupSelection" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <div class="member-list-item-img">
+              <img src="assets/images/test-photo.jpg" />
+            </div>
+            <div class="member-item-flex">
+              <div class="member-item-content">
+                <div class="member-item-title">
+                  <div class="montserrat">Marco Raymond</div>
+                  <div class="box-selector-level">ROI</div>
+                </div>
+                <div class="member-item-subtitle">
+                  <span class="montserrat color-light">Professeur</span>
+                </div>
+                <div class="member-item-data">
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-user-tick.png" />
+                      <span class="montserrat color-light">5/6</span>
+                    </div>
+                    <div class="task-content-icon">
+                      <img src="assets/icon/icon-calendar-tick.png" />
+                      <span class="montserrat color-light">3/6</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button (click)="goTo('course-detail')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+          Confirmer
+        </button>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</ion-content>

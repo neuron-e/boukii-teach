@@ -1,0 +1,54 @@
+<ion-content>
+  <div class="content-size dark-background status-bar-overlap">
+
+    <div class="padding-wrapper">
+      <div class="header-content no-margin">
+        <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail-level')">
+          Cancel
+        </div>
+      </div>
+    </div>
+
+    <div class="padding-wrapper">
+        <div class="flex-sport">
+          <img src="assets/icon/icons-outline-disciplinas-1.svg" />
+          <span class="montserrat">Ski</span>
+        </div>
+    </div>
+    
+        <app-level-wheel [dataLevels]="dataLevels" [allLevels]="allLevels" [currentLevel]="5"></app-level-wheel>
+
+        <div class="padding-wrapper mt-12 pt-24 top-border-wrapper">
+
+          <div class="flex-title-selector-text mb-12">
+            Multimedia
+          </div>
+
+          <div class="media-list">
+            <div class="media-list-item">
+              <img src="assets/icon/icon-camera-photo-box.png" class="box-selector-image cursor-pointer" />
+            </div>
+            <div class="media-list-item">
+              <img src="assets/images/test-photo.jpg" class="box-selector-image cursor-pointer" />
+              <div class="media-close-box cursor-pointer">
+                <img src="assets/icon/icon-close.png" />
+              </div>
+            </div>
+            <div class="media-list-item">
+              <img src="assets/images/test-photo.jpg" class="box-selector-image cursor-pointer" />
+              <div class="media-list-video cursor-pointer">
+                <img src="assets/icon/play.png" />
+              </div>
+              <div class="media-close-box cursor-pointer">
+                <img src="assets/icon/icon-close.png" />
+              </div>
+            </div>
+          </div>
+
+          <button (click)="goTo('course-detail-level')" class="content-button btn-back-primary montserrat mt-32 mb-32">
+            Sauver progrès
+          </button>
+        </div>
+
+  </div>
+</ion-content>
