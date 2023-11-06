@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Boukii Teach</string>
+    <string name="title_activity_main">Boukii Teach</string>
+    <string name="package_name">com.boukii.teach</string>
+    <string name="custom_url_scheme">com.boukii.teach</string>
+</resources>
