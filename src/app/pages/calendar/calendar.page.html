@@ -85,8 +85,30 @@
                       <span class="day-span-b cursor-pointer position-relative">
                         <span class="day-on-top">{{ day.number }}</span>
                         <span *ngIf="day.today" class="active-today"></span>
-                        <span *ngIf="day.active" class="active-calendar"></span>
-                        <span *ngIf="day.block" class="block-calendar"></span>
+                        
+                        <!--courses-->
+                        <span *ngIf="day.private && !day.collective && !day.other" class="top-position-bar private-calendar full-position"></span>
+                        <span *ngIf="!day.private && day.collective && !day.other" class="top-position-bar collective-calendar full-position"></span>
+                        <span *ngIf="!day.private && !day.collective && day.other" class="top-position-bar other-calendar full-position"></span>
+
+                        <span *ngIf="day.private && day.collective && !day.other" class="top-position-bar private-calendar half-position left-border left-half"></span>
+                        <span *ngIf="day.private && day.collective && !day.other" class="top-position-bar collective-calendar half-position right-border right-half"></span>
+                        <span *ngIf="day.private && !day.collective && day.other" class="top-position-bar private-calendar half-position left-border left-half"></span>
+                        <span *ngIf="day.private && !day.collective && day.other" class="top-position-bar other-calendar half-position right-border right-half"></span>
+                        <span *ngIf="!day.private && day.collective && day.other" class="top-position-bar collective-calendar half-position left-border left-half"></span>
+                        <span *ngIf="!day.private && day.collective && day.other" class="top-position-bar other-calendar half-position right-border right-half"></span>
+
+                        <span *ngIf="day.private && day.collective && day.other" class="top-position-bar private-calendar third-position left-border left-third"></span>
+                        <span *ngIf="day.private && day.collective && day.other" class="top-position-bar collective-calendar third-position middle-border middle-third"></span>
+                        <span *ngIf="day.private && day.collective && day.other" class="top-position-bar other-calendar third-position right-border right-third"></span>
+
+                        <!--blocks-->
+                        <span *ngIf="day.block && !day.blockPayed" [ngClass]="(day.private || day.collective || day.other) ? 'bottom-position-bar' : 'top-position-bar'" class="block-calendar full-position"></span>
+                        <span *ngIf="!day.block && day.blockPayed" [ngClass]="(day.private || day.collective || day.other) ? 'bottom-position-bar' : 'top-position-bar'" class="block-payed-calendar full-position"></span>
+                        <span *ngIf="day.block && day.blockPayed" [ngClass]="(day.private || day.collective || day.other) ? 'bottom-position-bar' : 'top-position-bar'" class="block-calendar half-position left-border left-half"></span>
+                        <span *ngIf="day.block && day.blockPayed" [ngClass]="(day.private || day.collective || day.other) ? 'bottom-position-bar' : 'top-position-bar'" class="block-payed-calendar half-position right-border right-half"></span>
+
+
                       </span>
                   </span>
             </ng-container>
@@ -114,12 +136,13 @@
             <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
             <!--Tasks-->
-            <div *ngFor="let task of filteredTasksWeek" (click)="task.type === 'block' ? goTo('calendar-available') : goTo('course-detail')"
+            <div *ngFor="let task of filteredTasksWeek" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail')"
                 [ngClass]="{
                   'collective-icon-only': task.type === 'collective',
                   'private-icon-only': task.type === 'private',
                   'other-icon-only': task.type === 'other',
-                  'block-icon-only': task.type === 'block'
+                  'block-icon-only': task.type === 'block',
+                  'block-payed-icon-only': task.type === 'block_payed'
                 }" 
                 [ngStyle]="task.styleWeek">
               <img [src]="getIconForTaskType(task.type)" class="task-icon-only" />
@@ -145,12 +168,13 @@
           <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
           <!--Tasks-->
-          <div *ngFor="let task of filteredTasks" (click)="task.type === 'block' ? goTo('calendar-available') : goTo('course-detail')"
+          <div *ngFor="let task of filteredTasks" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail')"
               [ngClass]="{
                 'collective-icon-full': task.type === 'collective',
                 'private-icon-full': task.type === 'private',
                 'other-icon-full': task.type === 'other',
-                'block-icon-full': task.type === 'block'
+                'block-icon-full': task.type === 'block',
+                'block-payed-icon-full': task.type === 'block_payed'
               }" 
               [ngStyle]="task.style">
             <!--<img [src]="getIconForTaskType(task.type)" class="task-icon-only" />-->
@@ -190,6 +214,10 @@
             <!--Block-->
             <div class="task-content-block" *ngIf="task.type === 'block'">
               Rendez-vous médical
+            </div>
+            <!--Block Payed-->
+            <div class="task-content-block" *ngIf="task.type === 'block_payed'">
+              Blocage payé
             </div>
 
           </div>

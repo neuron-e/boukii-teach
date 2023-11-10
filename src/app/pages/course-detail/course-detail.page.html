@@ -51,22 +51,22 @@
         </div>
 
         <div class="list-box-selector-b mt-12 mb-12">
-          <div class="box-selector-type-red box-selector-type cursor-pointer">
+          <div class="box-selector-type-red box-selector-type flex-large cursor-pointer">
             <img src="assets/icon/icon-award-level.png" />
             <div class="montserrat">Red league</div>
             <span>ROI</span>
           </div>
-          <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <div class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-calendar-tick.png" />
             <div class="montserrat color-light">Jour</div>
             <span class="color-light">3/6</span>
           </div>
-          <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <div class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-user-tick.png" />
             <div class="montserrat color-light">Élèves</div>
             <span class="color-light">5/6</span>
           </div>
-          <div class="background-grey-translucent box-selector-type cursor-pointer">
+          <div class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-timer.png" />
             <div class="montserrat color-light">Heures</div>
             <span class="color-light">2</span>
@@ -220,6 +220,7 @@
             </div>
             <div class="header-user-data-text-title">
               <div>Marco Raymond</div>
+              <img src="assets/icon/icon-crown.png" />
             </div>
             <div class="header-user-data-text-icons">
               <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
@@ -233,7 +234,42 @@
 
         <div class="border-separator mt-24 mb-24"></div>
 
-        <div>
+        <div class="header-user-data">
+          <div class="header-user-data-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="header-user-data-text">
+            <div class="header-user-data-text-top">
+              <div class="color-light">
+                FR · SUISSE · 31 ANS
+              </div>
+            </div>
+            <div class="header-user-data-text-title">
+              <div>Marco Raymond</div>
+            </div>
+            <div class="header-user-data-text-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+            </div>
+          </div>
+        </div>
+
+        <div class="box-top-center">
+          <div class="box-top-left">
+
+            <div class="box-top-icon cursor-pointer">
+              <img src="assets/icon/icons-outline-disciplinas-1.svg" />
+              <div class="montserrat">Ski</div>
+            </div>
+            
+          </div>
+
+        </div>
+
+        <div class="pt-24">
           <app-level-full (click)="goTo('course-detail-level-update')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">

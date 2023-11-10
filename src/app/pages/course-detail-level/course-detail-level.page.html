@@ -22,6 +22,7 @@
           </div>
           <div class="header-user-data-text-title">
             <div>Marco Raymond</div>
+            <img src="assets/icon/icon-crown.png" />
           </div>
           <div class="header-user-data-text-icons">
             <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
@@ -39,23 +40,49 @@
     <div class="padding-wrapper">
 
       <div class="background-color-dark box-radius">
-        <!--
-        <div class="box-top">
+
+        <!--Only if group-->
+        <div class="header-user-data padding-wrapper">
+          <div class="header-user-data-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="header-user-data-text">
+            <div class="header-user-data-text-top">
+              <div class="color-light">
+                FR · SUISSE · 31 ANS
+              </div>
+            </div>
+            <div class="header-user-data-text-title">
+              <div>Marco Raymond</div>
+            </div>
+            <div class="header-user-data-text-icons">
+              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+            </div>
+          </div>
+        </div>
+        <!--/Only if group-->
+        
+        <div class="box-top-center">
           <div class="box-top-left">
             <div class="box-top-icon cursor-pointer">
               <img src="assets/icon/icons-outline-disciplinas-1.svg" />
               <div class="montserrat">Ski</div>
             </div>
-
+            <!--
             <div class="box-top-icon opacity-light cursor-pointer">
               <img src="assets/icon/icons-outline-disciplinas-2.svg" />
               <div class="montserrat">Snowboard</div>
             </div>
+            -->
           </div>
 
         </div>
-        -->
-        <div>
+        
+        <div class="pt-24">
           <app-level-full (click)="goTo('course-detail-level-update')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">

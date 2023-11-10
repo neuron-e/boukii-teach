@@ -11,7 +11,7 @@
         <img src="assets/icon/icon-clock.png" class="header-section-menu cursor-pointer" />
       </div>
 
-      <div class="mt-24 flex-buttons">
+      <div class="mt-24 mb-32 flex-buttons">
         <div [ngClass]="{'btn-back-primary': showMonthAvailable, 'btn-back-grey': !showMonthAvailable}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonthAvailable=true;showDayAvailable=false;">
           Mois
         </div>
@@ -20,23 +20,109 @@
         </div>
       </div>
 
+      <!--MONTHS-->
+      <div class="flex-members" *ngIf="showMonthAvailable">
+        <div class="box-arrow cursor-pointer" (click)="previousMonth()">
+          <img src="assets/icon/arrow-left.svg" />
+        </div>
+
+        <div class="montserrat month-title">
+          {{ monthNames[currentMonth] }} {{ currentYear }}
+        </div>
+
+        <div class="box-arrow cursor-pointer" (click)="nextMonth()">
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+        </div>
+      </div>
+
+      <!--DAYS-->
+      <ng-container *ngIf="showDayAvailable">
+        <!--Calendar closed-->
+        <div class="flex-members" *ngIf="!showDayCalendar">
+          <div class="box-arrow cursor-pointer" (click)="previousDay()">
+            <img src="assets/icon/arrow-left.svg" />
+          </div>
+        
+          <div class="montserrat month-title">
+            {{ getWeekdayName(selectedDate) }}, {{ currentDay }} {{ monthNames[currentMonth] }} {{ currentYear }}
+          </div>
+        
+          <div class="box-arrow cursor-pointer" (click)="nextDay()">
+            <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+          </div>
+        </div>
+        <!--Calendar opened-->
+        <div class="flex-members" *ngIf="showDayCalendar">
+          <div class="box-arrow cursor-pointer" (click)="previousMonth()">
+            <img src="assets/icon/arrow-left.svg" />
+          </div>
+  
+          <div class="montserrat month-title">
+            {{ monthNames[currentMonth] }} {{ currentYear }}
+          </div>
+  
+          <div class="box-arrow cursor-pointer" (click)="nextMonth()">
+            <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+          </div>
+        </div>
+        <!--open/close calendar-->
+        <div class="mt-12 flex-select-date cursor-pointer" (click)="showDayCalendar = !showDayCalendar">
+          <img src="assets/icon/icons-outline-calendar-1-white.svg" />
+          <div class="montserrat" *ngIf="!showDayCalendar">Calendrier ouvert</div>
+          <div class="montserrat" *ngIf="showDayCalendar">Fermer le calendrier</div>
+        </div>
+      </ng-container>
+
     </div>
 
     <!--MONTH-->
     <div class="padding-wrapper" *ngIf="showMonthAvailable">
 
-      <div class="input-label color-light montserrat">
-        Date de début
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <input class="montserrat" type="date" />
+      <div class="mb-24 montserrat align-center">
+        Choisissez une plage de dates
       </div>
 
-      <div class="input-label color-light montserrat">
-        Date de fin
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <input class="montserrat" type="date" />
+      <div class="calendar mb-24 background-color-dark">
+        <div class="weekdays">
+            <span *ngFor="let day of weekdays" class="montserrat">{{ day }}</span>
+        </div>
+        <div class="days">
+            <ng-container *ngFor="let day of days">
+                <span *ngIf="day.number !== null" [ngClass]="{'very-light-opacity': day.past}" 
+                      class="montserrat day-span-a"
+                      (click)="selectDate(day)">
+                      <span class="day-span-b cursor-pointer position-relative">
+                        <span class="day-on-top">{{ day.number }}</span>
+                        <span *ngIf="day.activeSelected" class="active-selected"></span>
+                        <span *ngIf="day.activeRange" class="active-range"></span>
+                      </span>
+                  </span>
+                  <span *ngIf="day.number === null" class="montserrat day-span-a">
+                    <!--empty days-->
+                  </span>
+            </ng-container>
+        </div>
+      </div> 
+
+      <div class="inputs-flex">
+        <div>
+          <div class="input-label color-light montserrat">
+            Date de début
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <img src="assets/icon/icons-outline-calendar-1-white.svg" />
+            <input class="montserrat" type="text" disabled="true" [(ngModel)]="firstDateSelectedFormat" />
+          </div>
+        </div>
+        <div>
+          <div class="input-label color-light montserrat">
+            Date de fin
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <img src="assets/icon/icons-outline-calendar-1-white.svg" />
+            <input class="montserrat" type="text" disabled="true" [(ngModel)]="secondDateSelectedFormat" />
+          </div>
+        </div>
       </div>
       
       <div class="input-label color-light montserrat mt-24">
@@ -60,18 +146,6 @@
           <option value="09:00">09:00</option>
           <option value="10:00">10:00</option>
           <option value="11:00">11:00</option>
-        </select>
-      </div>
-      
-      <div class="input-label color-light montserrat mt-24">
-        Des exceptions
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <select class="montserrat">
-          <option value="None">Aucun</option>
-          <option value="Collective">Collectif</option>
-          <option value="Private">Privé</option>
-          <option value="Other">Activité</option>
         </select>
       </div>
 
@@ -91,59 +165,68 @@
     <!--DAY-->
     <div class="padding-wrapper" *ngIf="showDayAvailable">
 
-      <div class="input-label color-light montserrat">
-        Date
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <input class="montserrat" type="date" />
-      </div>
+      <ng-container *ngIf="showDayCalendar">
+        <div class="mb-24 montserrat align-center">
+          Choisissez un jour
+        </div>
 
-      <div class="input-label color-light montserrat mt-24">
-        Heure de début
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <select class="montserrat">
-          <option value="All">Toute la journée</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-        </select>
-      </div>
-      
-      <div class="input-label color-light montserrat mt-24">
-        Heure de fin
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <select class="montserrat">
-          <option value="All">Toute la journée</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-        </select>
-      </div>
-      
-      <div class="input-label color-light montserrat mt-24">
-        Des exceptions
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <select class="montserrat">
-          <option value="None">Aucun</option>
-          <option value="Collective">Collectif</option>
-          <option value="Private">Privé</option>
-          <option value="Other">Activité</option>
-        </select>
-      </div>
+        <div class="calendar mb-24 background-color-dark">
+          <div class="weekdays">
+              <span *ngFor="let day of weekdays" class="montserrat">{{ day }}</span>
+          </div>
+          <div class="days">
+              <ng-container *ngFor="let day of days">
+                  <span [ngClass]="{'very-light-opacity': day.past}" 
+                        class="montserrat day-span-a"
+                        (click)="selectDay(day)">
+                        <span class="day-span-b cursor-pointer position-relative">
+                          <span class="day-on-top">{{ day.number }}</span>
+                          <span *ngIf="day.today" class="active-today"></span>
+                          
+                        </span>
+                    </span>
+              </ng-container>
+          </div>
+        </div> 
+      </ng-container>
 
-      <div class="input-label color-light montserrat">
-        Titre
-      </div>
-      <div class="input-form-icon background-color-dark">
-        <input class="montserrat" type="text" />
-      </div>
+      <ng-container *ngIf="!showDayCalendar">
 
-      <button (click)="goTo('calendar')" class="content-button btn-back-primary montserrat mb-32 mt-32">
-        Sauvegarder
-      </button>
+        <div class="input-label color-light montserrat mt-24">
+          Heure de début
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <select class="montserrat">
+            <option value="All">Toute la journée</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+          </select>
+        </div>
+        
+        <div class="input-label color-light montserrat mt-24">
+          Heure de fin
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <select class="montserrat">
+            <option value="All">Toute la journée</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+          </select>
+        </div>
+
+        <div class="input-label color-light montserrat">
+          Titre
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <input class="montserrat" type="text" />
+        </div>
+
+        <button (click)="goTo('calendar')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+          Sauvegarder
+        </button>
+      </ng-container>
 
     </div>
 

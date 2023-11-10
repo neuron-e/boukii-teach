@@ -78,3 +78,23 @@
 .simple-check-option input[type="checkbox"]:checked + .custom-check::before {
     display: block;
 }
+
+ion-range {
+    padding-left:30px;padding-right:30px;margin-top:-4px;
+}
+.range-labels {
+    display:flex;width:100%;font-size:10px;align-items:center;justify-content:space-between;margin-top:-14px;
+}
+.range-labels div {
+    flex:1;
+}
+.range-labels div:nth-child(1) {
+    text-align:left;
+}
+.range-labels div:nth-child(2) {
+    text-align:center;
+}
+.range-labels div:nth-child(3) {
+    text-align:right;
+}
+  

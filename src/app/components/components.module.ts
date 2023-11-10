@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { LevelWheelComponent } from './level-wheel/level-wheel.component';
 import { LevelUserComponent } from './level-user/level-user.component';
@@ -11,7 +12,7 @@ import { MenuComponent } from './menu/menu.component';
 @NgModule({
   declarations: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent],
   imports: [
-    CommonModule, IonicModule.forRoot()
+    CommonModule, FormsModule, IonicModule.forRoot()
   ],
   exports: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent]
 })

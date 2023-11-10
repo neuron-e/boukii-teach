@@ -1,0 +1,174 @@
+<ion-content>
+  <div class="content-size content-background-image">
+    
+    <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper">
+
+      <div class="header-section-content mb-24">
+        <div class="header-section-title">
+          <img src="assets/icon/icon-scan-blue.png" />
+          <div>Analyse</div>
+        </div>
+        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+      </div>
+
+      <!--Only if individual-->
+      <div class="header-user-data-b mt-8">
+        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="54" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+        <div class="header-user-data-text">
+          <div class="header-user-data-text-top">
+            <div class="color-light">
+              FR · SUISSE · 31 ANS
+            </div>
+          </div>
+          <div class="header-user-data-text-title">
+            <div>Marco Raymond</div>
+            <img src="assets/icon/icon-crown.png" />
+          </div>
+        </div>
+      </div>
+      <!--/Only if individual-->
+
+    </div>
+
+    <div class="padding-wrapper">
+
+      <div class="background-color-dark box-radius padding-wrapper">
+
+        <!--Only if group-->
+        <div class="header-user-data-b pb-12">
+          <app-level-user [dataLevels]="dataLevels" [selectLevel]="2" [size]="54" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+          <div class="header-user-data-text">
+            <div class="header-user-data-text-top">
+              <div class="color-light">
+                FR · SUISSE · 11 ANS
+              </div>
+            </div>
+            <div class="header-user-data-text-title">
+              <div>Jr. Marco Raymond</div>
+            </div>
+          </div>
+        </div>
+        <!--/Only if group-->
+
+        <!--1-->
+
+        <div class="mt-24 mb-12 content-title-c">
+          RESERVATION
+        </div>
+
+        <div class="box-selector-full">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              Lun 15, 10:00-12:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Collectif Ski</span>
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="montserrat color-light box-selector-bottom">
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span>Les Paccots</span>
+          </div>
+        </div>
+
+        <div class="mt-24 mb-12 content-title-c">
+          PROFESSEUR
+        </div>
+
+        <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
+          <div class="user-booking-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="user-booking-content">
+            <div class="user-booking-header">
+              <div class="user-booking-title">Nom</div>
+            </div>
+            <div class="color-light user-booking-subheader">
+              French, English
+            </div>
+          </div>
+        </div>
+
+        <div class="border-separator mt-24 mb-24"></div>
+
+        <!--2-->
+
+        <div class="mt-24 mb-12 content-title-c">
+          RESERVATION
+        </div>
+
+        <div class="box-selector-full">
+          <div class="box-selector-top">
+            <div class="box-selector-date">
+              Lun 15, 14:00-16:00
+            </div>
+          </div>
+
+          <div class="box-selector-middle">
+            <div class="box-selector-middle-interior">
+              <div class="box-selector-image-wrapper">
+                <img src="assets/icon/course-private-box.png" class="box-selector-image" />
+              </div>
+              <div class="box-selector-text">
+                <div class="montserrat box-selector-title">
+                  Advanced
+                </div>
+                <div class="montserrat color-light box-selector-subtitle">
+                  <span>Privé Ski</span>
+                </div>
+              </div>
+            </div>
+            <div class="box-selector-level">
+              ROI RED
+            </div>
+          </div>
+
+          <div class="montserrat color-light box-selector-bottom">
+            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+            <span>Les Paccots</span>
+          </div>
+        </div>
+
+        <div class="mt-24 mb-12 content-title-c">
+          PROFESSEUR
+        </div>
+
+        <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
+          <div class="user-booking-img">
+            <img src="assets/images/test-photo.jpg" />
+          </div>
+          <div class="user-booking-content">
+            <div class="user-booking-header">
+              <div class="user-booking-title">Nom</div>
+            </div>
+            <div class="color-light user-booking-subheader">
+              French, English
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+
+  </div>
+</ion-content>
+
+<app-footer section="scan"></app-footer>

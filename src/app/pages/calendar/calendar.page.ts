@@ -39,7 +39,11 @@ export class CalendarPage implements OnInit {
     {date:'2023-11-7',hour_start:'11:00',hour_end:'12:00',type:'private'},
     {date:'2023-11-8',hour_start:'09:00',hour_end:'11:00',type:'collective'},
     {date:'2023-11-8',hour_start:'13:00',hour_end:'16:00',type:'block'},
-    {date:'2023-11-10',hour_start:'08:00',hour_end:'13:00',type:'block'},
+    {date:'2023-11-10',hour_start:'08:00',hour_end:'10:00',type:'block'},
+    {date:'2023-11-10',hour_start:'10:00',hour_end:'11:00',type:'private'},
+    {date:'2023-11-10',hour_start:'11:00',hour_end:'13:00',type:'block_payed'},
+    {date:'2023-11-10',hour_start:'13:00',hour_end:'14:00',type:'collective'},
+    {date:'2023-11-10',hour_start:'14:00',hour_end:'15:00',type:'other'},
     {date:'2023-11-11',hour_start:'09:00',hour_end:'11:00',type:'block'},
   ];
 
@@ -182,8 +186,23 @@ export class CalendarPage implements OnInit {
       const dateStr = `${this.currentYear}-${this.currentMonth + 1}-${i}`;
       const isToday = i === currentDay && this.currentMonth === currentMonth && this.currentYear === currentYear;
       const isActive = this.tasksCalendar.some(task => task.date === dateStr && task.type !== 'block');
-      const isBlock = this.tasksCalendar.some(task => task.date === dateStr && task.type === 'block');
-      this.days.push({ number: i, active: isActive, selected: false, past: isPast, today: isToday, block: isBlock });
+      
+      const taskTypes = this.tasksCalendar.reduce((accumulator, task) => {
+        if (task.date === dateStr) {
+          accumulator.isPrivate = accumulator.isPrivate || task.type === 'private';
+          accumulator.isCollective = accumulator.isCollective || task.type === 'collective';
+          accumulator.isOther = accumulator.isOther || task.type === 'other';
+          accumulator.isBlock = accumulator.isBlock || task.type === 'block';
+          accumulator.isBlockPayed = accumulator.isBlockPayed || task.type === 'block_payed';
+        }
+        return accumulator;
+      }, { isPrivate: false, isCollective: false, isOther: false, isBlock: false, isBlockPayed: false });
+            
+      this.days.push({ 
+        number: i, selected: false, past: isPast, today: isToday,
+        private: taskTypes.isPrivate, collective: taskTypes.isCollective, other: taskTypes.isOther, 
+        block: taskTypes.isBlock, blockPayed: taskTypes.isBlockPayed
+      });
     }
 
     let lastDayOfWeek = new Date(this.currentYear, this.currentMonth, daysInMonth).getDay();

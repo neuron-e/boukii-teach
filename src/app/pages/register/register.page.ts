@@ -58,6 +58,7 @@ export class RegisterPage implements OnInit {
   }
 
   updateLevel() {
+    this.selectedSport.checked=true;
     this.selectedSport.level = this.currentLevel;
     this.currentLevel=0;
     this.showLevel=false;

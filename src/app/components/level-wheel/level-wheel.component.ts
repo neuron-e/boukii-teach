@@ -18,6 +18,7 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   endX: number = 0;
   touchStartTime: number = 0;
   moved: boolean = false;
+  objectiveValue:any[] = [];
 
   constructor() { }
 

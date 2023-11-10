@@ -27,26 +27,51 @@
             </div>
           </div>
 
-          <div class="circle-list-title">
+          <div class="circle-list-title mb-24">
             <div>Objectifs</div>
             <span class="color-light">2/4</span>
           </div>
           <div class="circle-list">
-            <div *ngFor="let objective of allLevels[currentLevel].objectives" class="circle-list-item">
-              <div class="custom-radio">
-                <label class="simple-check-option">
-                    <input type="checkbox" />
-                    <div class="custom-check"></div>
-                </label>
+            <ng-container *ngFor="let objective of allLevels[currentLevel].objectives;let i=index;">
+              <div class="circle-list-item">
+                <!--
+                <div class="custom-radio">
+                  <label class="simple-check-option">
+                      <input type="checkbox" />
+                      <div class="custom-check"></div>
+                  </label>
+                </div>
+                -->
+                <div class="montserrat circle-list-item-text">
+                  {{objective}}
+                </div>
               </div>
-              <div class="montserrat color-light circle-list-item-text">
-                {{objective}}
+              <ion-range [(ngModel)]="objectiveValue[i]" [ticks]="true" [snaps]="true" step="1" [min]="0" [max]="2"></ion-range>
+              <div class="range-labels mb-24">
+                <div class="montserrat color-light">Non accompli</div>
+                <div class="montserrat color-light">À améliorer</div>
+                <div class="montserrat color-light">Accompli</div>
               </div>
-            </div>
+            </ng-container>
           </div>
 
           <div class="input-label color-light montserrat mt-32">
             Observations:
           </div>
           <textarea class="montserrat textarea-form background-color-dark" rows="5"></textarea>
+
+          <div class="input-label color-light montserrat mt-12">
+            CONFIRMATION DE NIVEAU
+          </div>
+          <div class="circle-list-item">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <div class="montserrat color-light circle-list-item-text">
+              Confirmez-vous qu'il a terminé le niveau?
+            </div>
+          </div>
         </div>

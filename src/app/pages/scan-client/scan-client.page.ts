@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
-  selector: 'app-monitor-profile',
-  templateUrl: './monitor-profile.page.html',
-  styleUrls: ['./monitor-profile.page.scss'],
+  selector: 'app-scan-client',
+  templateUrl: './scan-client.page.html',
+  styleUrls: ['./scan-client.page.scss'],
 })
-export class MonitorProfilePage implements OnInit {
+export class ScanClientPage implements OnInit {
 
   starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
   dataLevels:any[] = [
@@ -22,64 +23,14 @@ export class MonitorProfilePage implements OnInit {
   ];
   allLevels: any[] = [this.starterLevel, ...this.dataLevels];
 
-  showGeneral:boolean = true;
-  showSports:boolean = false;
-  showWork:boolean = false;
-  showWinter: boolean = true;
-  showSummer: boolean = false;
-  showOther: boolean = false;
-  showLevel:boolean = false;
-
-  isMarried:boolean = false;
-  isSingle:boolean = false;
-  isWorkYes:boolean = false;
-  isWorkNo:boolean = false;
-  isChildYes:boolean = false;
-  isChildNo:boolean = false;
-
-  dataSports:any[] = [
-    {id:1,name:'Ski',image:'assets/icon/icons-outline-disciplinas-1.svg',checked:false},
-    {id:2,name:'Snowboard',image:'assets/icon/icons-outline-disciplinas-2.svg',checked:false},
-    {id:3,name:'Telemark',image:'assets/icon/icons-outline-disciplinas-3.svg',checked:false},
-    {id:4,name:'S.Rando',image:'assets/icon/icons-outline-disciplinas-4.svg',checked:false},
-  ];
-
-  selectedSport:any;
-  currentLevel: number = 0;
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private menuService: MenuService) {}
 
   ngOnInit() {
   }
-  
-  doShowLevel(sport:any) {
-    this.selectedSport=sport;
-    if(sport.level){
-      this.currentLevel = sport.level;
-    }
-    else{
-      this.currentLevel = 0;
-    }
-    this.showLevel=true;
-  }
 
-  updateLevel() {
-    this.selectedSport.checked=true;
-    this.selectedSport.level = this.currentLevel;
-    this.currentLevel=0;
-    this.showLevel=false;
+  toggleMenu() {
+    this.menuService.toggleMenu();
   }
-
-  disableChildButton(): boolean {
-    const baseCondition = (this.isMarried || this.isSingle) && (this.isChildYes || this.isChildNo);
-    if (!baseCondition) {
-      return true;
-    }
-    if (this.isMarried && (!this.isWorkYes && !this.isWorkNo)) {
-      return true;
-    }
-    return false;
-  }  
 
   goTo(...urls: string[]) {
     this.router.navigate(urls);

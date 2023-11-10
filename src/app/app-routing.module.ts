@@ -143,6 +143,10 @@ const routes: Routes = [
     path: 'stats',
     loadChildren: () => import('./pages/stats/stats.module').then( m => m.StatsPageModule)
   },
+  {
+    path: 'scan-client',
+    loadChildren: () => import('./pages/scan-client/scan-client.module').then( m => m.ScanClientPageModule)
+  },
 ];
 
 @NgModule({

@@ -21,7 +21,7 @@
       <!--CALENDAR-->
       <div *ngIf="showCalendar" class="list-box-selector-c">
         <!--1-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('course-detail')">
           <div class="box-selector-top">
             <div class="box-selector-date">
               16 Janvier, 10:00-12:00
@@ -50,7 +50,7 @@
         </div>
 
         <!--2-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('course-detail')">
           <div class="box-selector-top">
             <div class="box-selector-date">
               16 Janvier, 10:00-12:00
@@ -79,7 +79,7 @@
         </div>
 
         <!--3-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('course-detail')">
           <div class="box-selector-top">
             <div class="box-selector-date">
               16 Janvier, 10:00-12:00
@@ -104,7 +104,7 @@
         </div>
 
         <!--4-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('course-detail')">
           <div class="box-selector-top">
             <div class="box-selector-date">
               16 Janvier, 10:00-12:00
@@ -132,7 +132,7 @@
         </div>
 
         <!--5-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('course-detail')">
           <div class="box-selector-top">
             <div class="box-selector-date">
               16 Janvier, 10:00-12:00
@@ -162,7 +162,7 @@
       </div>
 
       <!--ACTIVITES-->
-      <div *ngIf="showActivities" class="list-box-selector-c">
+      <div *ngIf="showActivities" class="list-box-selector-c" (click)="goTo('schools')">
         <!--1-->
         <div class="box-selector cursor-pointer pb-12">
           <div class="box-selector-middle-b">
@@ -184,7 +184,7 @@
         </div>
 
         <!--2-->
-        <div class="box-selector cursor-pointer pb-12">
+        <div class="box-selector cursor-pointer pb-12" (click)="goTo('schools')">
           <div class="box-selector-middle-b">
             <div class="box-selector-middle-interior">
               <div class="box-selector-image-wrapper">

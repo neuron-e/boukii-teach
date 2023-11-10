@@ -18,12 +18,17 @@
           <div>Marco Raymond</div>
           <span class="montserrat color-primary">@MRaymond</span>
         </div>
-        <div class="mt-8 mb-32 flex-buttons">
-          <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;">
+        <div class="mt-8 flex-buttons">
+          <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;">
             Données
           </div>
-          <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;">
+          <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;showWork=false;">
             Sports
+          </div>
+        </div>
+        <div class="mt-8 mb-32 flex-buttons">
+          <div [ngClass]="{'btn-back-primary': showWork, 'btn-back-grey': !showWork}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=false;showWork=true;">
+            Informations de travail
           </div>
         </div>
       </div>
@@ -111,7 +116,7 @@
         </div>
         
         <div class="custom-radio mb-32">
-          <label *ngFor="let sport of dataSports" class="radio-option background-color-dark">
+          <label *ngFor="let sport of dataSports" class="radio-option background-color-dark" (click)="!sport.checked && doShowLevel(sport)">
             <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" />
             <div class="radio-wrapper">
               <img [src]="sport.image" />
@@ -123,6 +128,152 @@
             <div class="custom-check"></div>
           </label>
         
+        </div>
+
+        <button (click)="goTo('monitor-detail')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+          Sauvegarder
+        </button>
+
+      </div>
+
+      
+      <!-- WORK -->
+      <div *ngIf="showWork" class="mb-24 pt-8">
+
+        <div class="content-title-b mb-24">
+          Information de travail
+        </div>
+
+        <div class="pb-24">
+          <div class="input-label color-light montserrat">
+            Nº AVS
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Permis de travail
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Coordonnées bancaires
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+          </div>
+          <div class="input-label color-light montserrat">
+            Nationalité
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <select class="montserrat">
+              <option value="Suisse">Suisse</option>
+            </select>
+          </div>
+          <div class="input-label color-light montserrat">
+            Nº enfants
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <input class="montserrat" placeholder="0" min="0" step="1" type="number" />
+          </div>
+
+        </div>
+
+        <div class="content-title-b mb-24">
+          Etat civil
+        </div>
+
+        <div class="pb-24">
+          <div class="input-label color-light montserrat">
+            Quel est votre etat civil?
+          </div>
+          <div class="list-chip mt-12">
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=true;isSingle=false;">
+              <img *ngIf="isMarried" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Mariée</div>
+            </div>
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=false;isSingle=true;">
+              <img *ngIf="isSingle" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Single</div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isMarried">
+            <div class="input-label color-light montserrat mt-24">
+              Permis travail du conjoint
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+            </div>
+
+            <div class="input-label color-light montserrat">
+              Conjoint travaille?
+            </div>
+            <div class="list-chip mt-12">
+              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=true;isWorkNo=false;">
+                <img *ngIf="isWorkYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+                <div class="montserrat chip-box-text">Oui</div>
+              </div>
+              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=false;isWorkNo=true;">
+                <img *ngIf="isWorkNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+                <div class="montserrat chip-box-text">Non</div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="isWorkYes">
+              <div class="input-label color-light montserrat mt-24">
+                Pourcentage du conjoint (%)
+              </div>
+              <div class="input-form-icon background-color-dark">
+                <input class="montserrat" placeholder="XX" min="0" type="number" />
+              </div>
+            </ng-container>
+
+          </ng-container>
+          
+          <div class="border-separator mt-24 mb-24"></div>
+
+          <div class="input-label color-light montserrat">
+            Demande d'allocation familiales?
+          </div>
+          <div class="list-chip mt-12">
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=true;isChildNo=false;">
+              <img *ngIf="isChildYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Oui</div>
+            </div>
+            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=false;isChildNo=true;">
+              <img *ngIf="isChildNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="montserrat chip-box-text">Non</div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isChildYes">
+            <div class="input-label color-light montserrat mt-24">
+              DONNÉES DE LES ENFANTS
+            </div>
+            <div class="background-color-dark box-childs">
+              <div class="mb-12 pb-12 box-new-child">
+                <div class="box-new-child-top">
+                  <div class="montserrat box-new-child-title">Nom</div>
+                  <div class="box-new-child-icons">
+                    <img src="assets/icon/icons-outline-edit-white.svg" class="cursor-pointer" />
+                    <img src="assets/icon/icons-outline-trash-white.svg" class="cursor-pointer" />
+                  </div>
+                </div>
+                <div class="montserrat color-light box-new-child-subtitle">
+                  Date naissance
+                </div>
+              </div>
+
+              <div class="box-add-child">
+                <img src="assets/icon/icon-add-square.png" class="cursor-pointer" />
+                <div class="montserrat">Ajouter enfant</div>
+              </div>
+            </div>
+          </ng-container>
+          
+
         </div>
 
         <button (click)="goTo('monitor-detail')" class="content-button btn-back-primary montserrat mt-24 mb-24">
@@ -155,14 +306,34 @@
           <span>{{selectedSport.name}}</span>
         </div>
 
-        <div class="input-label color-light montserrat mt-24">
-          Formation existante
-        </div>
-        <div class="input-form-icon background-color-dark">
-          <select class="montserrat" placeholder="Sélectionnez">
-            <option value="Formation">Formation</option>
-          </select>
-        </div>
+              <!-- When formations list then put it in a select-->
+              <!--
+              <div class="input-label color-light montserrat mt-24">
+                Formation existante
+              </div>
+              <div class="input-form-icon background-color-dark">
+                <select class="montserrat" placeholder="Sélectionnez">
+                  <option value="Formation">Formation</option>
+                </select>
+              </div>
+              -->
+
+              <div class="input-label color-light montserrat mt-24">
+                Formation
+              </div>
+              <div class="input-form-icon background-color-dark">
+                <input class="montserrat" type="text" />
+              </div>
+
+              <div class="input-label color-light montserrat mt-24">
+                Preuve de formation
+              </div>
+              <div class="position-relative">
+                <label for="file-upload" class="custom-file-upload montserrat">
+                  Upload PDF
+                </label>
+                <input id="file-upload" type="file" accept=".pdf" class="file-display-none" />
+              </div>
       </div>
 
       <div class="padding-wrapper mt-32">

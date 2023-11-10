@@ -146,3 +146,10 @@
 button[disabled] {
     opacity: 0.4;pointer-events: none;
 }
+
+.custom-file-upload {
+    cursor: pointer;color: #fff;background-color: #333;padding: 10px;display: inline-block;border-radius: 12px;
+}
+.file-display-none {
+    display:none;position: absolute;font-size: 100px;right: 0;top: 0;opacity: 0;
+}

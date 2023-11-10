@@ -185,7 +185,7 @@
             </div>
             
             <div class="custom-radio mb-32">
-              <label *ngFor="let sport of dataSports" class="radio-option background-color-dark">
+              <label *ngFor="let sport of dataSports" class="radio-option background-color-dark" (click)="!sport.checked && doShowLevel(sport)">
                 <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" />
                 <div class="radio-wrapper">
                   <img [src]="sport.image" />
@@ -226,6 +226,8 @@
                 <span>{{selectedSport.name}}</span>
               </div>
 
+              <!-- When formations list then put it in a select-->
+              <!--
               <div class="input-label color-light montserrat mt-24">
                 Formation existante
               </div>
@@ -233,6 +235,24 @@
                 <select class="montserrat" placeholder="Sélectionnez">
                   <option value="Formation">Formation</option>
                 </select>
+              </div>
+              -->
+
+              <div class="input-label color-light montserrat mt-24">
+                Formation
+              </div>
+              <div class="input-form-icon background-color-dark">
+                <input class="montserrat" type="text" />
+              </div>
+
+              <div class="input-label color-light montserrat mt-24">
+                Preuve de formation
+              </div>
+              <div class="position-relative">
+                <label for="file-upload" class="custom-file-upload montserrat">
+                  Upload PDF
+                </label>
+                <input id="file-upload" type="file" accept=".pdf" class="file-display-none" />
               </div>
           </div>
 

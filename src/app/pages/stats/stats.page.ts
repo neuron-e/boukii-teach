@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Chart, ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -9,10 +9,13 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./stats.page.scss'],
 })
 export class StatsPage implements OnInit {
-  public lineChartData: ChartConfiguration['data'] = {
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
+  lineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
-        data: [80,72,39,37,35,31],
+        data: [80,72,39,37,35,31,36,46,39,37,35,31],
         label: 'Heures',
         yAxisID: 'y',
         backgroundColor: 'rgba(51,153,255,0.4)',
@@ -24,10 +27,10 @@ export class StatsPage implements OnInit {
         fill: 'origin',
       },
     ],
-    labels: ['JAN', 'FEB', 'MAR', 'AVR', 'MAI', 'JUI'],
+    labels: ['JAN', 'FEB', 'MAR', 'AVR', 'MAI', 'JUI', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
   };
 
-  public lineChartOptions: ChartConfiguration['options'] = {
+  lineChartOptions: ChartConfiguration['options'] = {
     elements: {
       line: {
         tension: 0.3,
@@ -62,12 +65,39 @@ export class StatsPage implements OnInit {
 
   };
 
-  public lineChartType: ChartType = 'line';
+  lineChartType: ChartType = 'line';
+  selectedYear = 'year';
 
 
   constructor(private router: Router) {}
 
   ngOnInit() {
+  }
+
+  updateChartData(): void {
+    if (this.selectedYear === 'all') {
+      this.lineChartData = {
+        ...this.lineChartData,
+        datasets: [{
+          ...this.lineChartData.datasets[0],
+          data: [80,72,39,37,35,31,36,46,39,37,35,31,80,72,39,37,35,31,36,46,39,37,35,31],
+        }],
+        labels: ['JAN', 'FEB', 'MAR', 'AVR', 'MAI', 'JUI', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC','JAN', 'FEB', 'MAR', 'AVR', 'MAI', 'JUI', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      };
+    } else {
+      this.lineChartData = {
+        ...this.lineChartData,
+        datasets: [{
+          ...this.lineChartData.datasets[0],
+          data: [80,72,39,37,35,31,36,46,39,37,35,31],
+        }],
+        labels: ['JAN', 'FEB', 'MAR', 'AVR', 'MAI', 'JUI', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      };
+    }
+
+    if (this.chart) {
+      this.chart.update();
+    }
   }
 
   goTo(...urls: string[]) {
