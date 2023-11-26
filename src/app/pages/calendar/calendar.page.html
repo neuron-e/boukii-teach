@@ -12,13 +12,13 @@
       </div>
 
       <div class="mt-24 mb-32 flex-buttons">
-        <div [ngClass]="{'btn-back-primary': showMonth, 'btn-back-grey': !showMonth}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonth=true;showWeek=false;showDay=false;">
+        <div [ngClass]="{'btn-back-primary': showMonth, 'btn-back-grey': !showMonth}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateMonthRange();showMonth=true;showWeek=false;showDay=false;">
           Mois
         </div>
-        <div [ngClass]="{'btn-back-primary': showWeek, 'btn-back-grey': !showWeek}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonth=false;showWeek=true;showDay=false;">
+        <div [ngClass]="{'btn-back-primary': showWeek, 'btn-back-grey': !showWeek}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateWeekRange();showMonth=false;showWeek=true;showDay=false;">
           Semaine
         </div>
-        <div [ngClass]="{'btn-back-primary': showDay, 'btn-back-grey': !showDay}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonth=false;showWeek=false;showDay=true;">
+        <div [ngClass]="{'btn-back-primary': showDay, 'btn-back-grey': !showDay}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateDayRange();showMonth=false;showWeek=false;showDay=true;">
           Jour
         </div>
       </div>
@@ -136,7 +136,7 @@
             <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
             <!--Tasks-->
-            <div *ngFor="let task of filteredTasksWeek" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail')"
+            <div *ngFor="let task of filteredTasksWeek" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail',task.booking_id,task.date)"
                 [ngClass]="{
                   'collective-icon-only': task.type === 'collective',
                   'private-icon-only': task.type === 'private',
@@ -168,7 +168,7 @@
           <div class="task-data" *ngFor="let hour of hoursRange"></div>
 
           <!--Tasks-->
-          <div *ngFor="let task of filteredTasks" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail')"
+          <div *ngFor="let task of filteredTasks" (click)="(task.type === 'block' || task.type === 'block_payed') ? goTo('calendar-available') : goTo('course-detail',task.booking_id,task.date)"
               [ngClass]="{
                 'collective-icon-full': task.type === 'collective',
                 'private-icon-full': task.type === 'private',
@@ -182,17 +182,23 @@
             <div class="task-content" *ngIf="task.type === 'collective'">
               <img src="assets/icon/course-collective-icon.png" class="task-content-img" />
               <div class="task-content-text">
-                <div class="montserrat">Advanced</div>
-                <span class="montserrat color-light">Collectif Ski</span>
+                <div class="montserrat">{{task.name}}</div>
+                <span class="montserrat color-light">
+                  Collectif
+                  <!--CAMBIAR CUANDO TENGAS SPORTS CORRECTOS-->
+                  <ng-container *ngIf="task.sport_id && sports.length">
+                    {{sports[task.sport_id].name}}
+                  </ng-container>
+                </span>
               </div>
               <div class="task-content-icon-list">
                 <div class="task-content-icon">
                   <img src="assets/icon/icon-user-tick.png" />
-                  <span>5/6</span>
+                  <span>{{task.clients}}/{{task.max_participants}}</span>
                 </div>
                 <div class="task-content-icon">
                   <img src="assets/icon/icon-calendar-tick.png" />
-                  <span>3/6</span>
+                  <span>{{task.date_index}}/{{task.date_total}}</span>
                 </div>
               </div>
             </div>
@@ -200,8 +206,13 @@
             <div class="task-content" *ngIf="task.type === 'private'">
               <img src="assets/icon/course-private-icon.png" class="task-content-img" />
               <div class="task-content-text">
-                <div class="montserrat">Privé Basic</div>
-                <span class="montserrat color-light">Privé Ski · Jean Duss</span>
+                <div class="montserrat">{{task.name}}</div>
+                <span class="montserrat color-light">
+                  Privé
+                  <!--CAMBIAR CUANDO TENGAS SPORTS CORRECTOS-->
+                  <ng-container *ngIf="task.sport_id && sports.length">
+                    {{sports[task.sport_id].name}}
+                  </ng-container></span>
               </div>
             </div>
             <!--Other-->

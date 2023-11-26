@@ -161,3 +161,34 @@
 .border-separator {
     width:100%;border-bottom:1px solid #444953;height:1px;
 }
+
+.box-childs {
+    width:100%;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;
+}
+.box-new-child {
+    display:flex;flex-direction:column;gap:4px;width:100%;border-bottom:1px solid #444953;
+}
+.box-new-child-top {
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+}
+.box-new-child-title {
+    font-size:15px;
+}
+.box-new-child-icons {
+    display:flex;align-items:center;gap:12px;
+}
+.box-new-child-icons img {
+    width:22px;
+}
+.box-new-child-subtitle {
+    font-size:13px;
+}
+.box-add-child {
+    display:flex;align-items:center;gap:12px;
+}
+.box-add-child img {
+    width:16px;
+}
+.box-add-child div {
+    font-size:14px;
+}

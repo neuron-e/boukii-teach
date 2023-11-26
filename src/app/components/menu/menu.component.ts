@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { MenuService } from '../../services/menu.service';
+import { MonitorDataService } from '../../services/monitor-data.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,12 +24,19 @@ export class MenuComponent  implements OnInit {
   @Output() close = new EventEmitter<void>();
   showMenu$ = this.menuService.showMenu$;
 
-  constructor(public menuService: MenuService, private router: Router) { }
+  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService) { }
 
   ngOnInit() {}
 
   onClose() {
     this.close.emit();
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('monitorId');
+    this.monitorDataService.clearMonitorData();
+    this.goTo('start');
   }
 
   goTo(...urls: string[]) {

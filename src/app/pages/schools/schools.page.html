@@ -16,44 +16,49 @@
 
     <div class="padding-wrapper">
 
-      <!--Title selector-->
-      <div class="flex-title-selector mt-12 mb-24 cursor-pointer" (click)="goTo('school-add')">
-        <div class="flex-title-selector-interior">
-          <div class="flex-title-selector-text">
-            Les Paccots
+      <ng-container *ngFor="let station of monitorStationsWithSchools">
+
+        <div class="flex-title-selector mt-12 mb-24">
+          <div class="flex-title-selector-interior">
+            <div class="flex-title-selector-text">
+              {{station.name}}
+            </div>
           </div>
+          <!--
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
+          -->
         </div>
-        <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
-      </div>
 
-      <div class="list-boxes-school">
+        <div class="list-boxes-school">
 
-        <div class="list-boxes-item background-color-dark padding-wrapper">
-          <div class="box-item-top">
-            <div class="box-item-left">
-              <div class="box-item-left-img">
-                <!--<img src="assets/icon/icon-no-image.png" class="box-item-img-none" />-->
-                <img src="assets/images/test-course.jpg" class="box-item-img" />
-              </div>
-              <div class="box-item-left-text">
-                <span class="montserrat color-light">Les Paccots</span>
-                <div class="montserrat">ESS Les Paccots</div>
-                <div class="box-item-left-text-icons">
-                  <img src="assets/icon/main_ski_on.png" />
-                  <img src="assets/icon/main_snowboard_on.png" />
-                  <img src="assets/icon/main_srando_off.png" />
-                  <img src="assets/icon/main_telemark_off.png" />
+          <div *ngFor="let school of station.schools" class="list-boxes-item background-color-dark padding-wrapper">
+            <div class="box-item-top">
+              <div class="box-item-left">
+                <div class="box-item-left-img">
+                  <img [src]="school.image ? school.image : 'assets/icon/icon-no-image.png'"
+                    [ngClass]="{'box-item-img': school.image, 'box-item-img-none': !school.image}" />
+                </div>
+                <div class="box-item-left-text">
+                  <span class="montserrat color-light">{{station.name}}</span>
+                  <div class="montserrat">{{school.name}}</div>
+                  <div class="box-item-left-text-icons">
+                    <img [src]="school.has_ski ? 'assets/icon/main_ski_on.png' : 'assets/icon/main_ski_off.png'" />
+                    <img [src]="school.has_snowboard ? 'assets/icon/main_snowboard_on.png' : 'assets/icon/main_snowboard_off.png'" />
+                    <img [src]="school.has_rando ? 'assets/icon/main_srando_on.png' : 'assets/icon/main_srando_off.png'" />
+                    <img [src]="school.has_telemark ? 'assets/icon/main_telemark_on.png' : 'assets/icon/main_telemark_off.png'" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="box-school-icons">
-              <img src="assets/icon/icon-calendar-edit.png" class="box-item-icon cursor-pointer" (click)="goTo('calendar')" />
-              <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+              <div class="box-school-icons">
+                <img src="assets/icon/icon-calendar-edit.png" class="box-item-icon cursor-pointer" (click)="goTo('calendar')" />
+                <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+              </div>
             </div>
           </div>
+
         </div>
 
-      </div>
+      </ng-container>
 
     </div>
 

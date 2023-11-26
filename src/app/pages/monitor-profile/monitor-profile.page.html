@@ -15,8 +15,8 @@
           </div>
         </div>
         <div class="user-image-title mb-12">
-          <div>Marco Raymond</div>
-          <span class="montserrat color-primary">@MRaymond</span>
+          <div>{{ monitorData?.first_name }} {{ monitorData?.last_name }}</div>
+          <span class="montserrat color-primary">@{{ monitorData?.first_name }}</span> <!--missing username-->
         </div>
         <div class="mt-8 flex-buttons">
           <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;">
@@ -41,28 +41,47 @@
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
-          <input class="montserrat" type="text" value="test@test.com" />
+          <input class="montserrat" type="text" [(ngModel)]="email" [disabled]="true" />
+        </div>
+        <div class="input-label color-light montserrat">
+          Mobile
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <img src="assets/icon/icon-phone.png" />
+          <input class="montserrat" type="text" [(ngModel)]="phone" />
         </div>
         <div class="input-label color-light montserrat">
           Teléphone
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-phone.png" />
-          <input class="montserrat" type="text" value="123456789" />
+          <input class="montserrat" type="text" [(ngModel)]="telephone" />
         </div>
 
-        <div class="input-label color-light montserrat">
-          Nom
-        </div>
-        <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" value="Marco Raymond" />
+        <div class="inputs-flex">
+          <div>
+            <div class="input-label color-light montserrat">
+              Nom
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <input class="montserrat" type="text" [(ngModel)]="firstName" />
+            </div>
+          </div>
+          <div>
+            <div class="input-label color-light montserrat">
+              Prenom
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <input class="montserrat" type="text" [(ngModel)]="lastName" />
+            </div>
+          </div>
         </div>
 
         <div class="input-label color-light montserrat">
           User
         </div>
         <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" value="MRaymond" />
+          <input class="montserrat" type="text" [(ngModel)]="userName" />
         </div>
 
         <div class="input-label color-light montserrat">
@@ -70,28 +89,28 @@
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-birth.png" />
-          <input class="montserrat" type="date" value="1990-01-01" />
+          <input class="montserrat" type="date" [(ngModel)]="birth" />
         </div>
 
         <div class="input-label color-light montserrat mb-12">
           Adresse
         </div>
         <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" placeholder="Rue, nº" value="Rue test, 9" />
+          <input class="montserrat" type="text" placeholder="Rue, nº" [(ngModel)]="address" />
         </div>
         <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" placeholder="Ville" value="Ville test" />
+          <input class="montserrat" type="text" placeholder="Ville" [(ngModel)]="city" />
         </div>
         <div class="inputs-flex">
           <div class="input-form-icon background-color-dark width-40">
-            <input class="montserrat" type="text" placeholder="NPA" value="10101" />
+            <input class="montserrat" type="text" placeholder="NPA" [(ngModel)]="cp" />
           </div>
           <div class="input-form-icon background-color-dark width-60">
-            <input class="montserrat" type="text" placeholder="Pays" value="Suisse" />
+            <input class="montserrat" type="text" placeholder="Pays" [(ngModel)]="country" />
           </div>
         </div>
 
-        <button (click)="goTo('monitor-detail')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+        <button (click)="saveChanges()" class="content-button btn-back-primary montserrat mt-24 mb-24">
           Sauvegarder
         </button>
 

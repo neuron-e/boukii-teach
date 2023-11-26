@@ -17,40 +17,16 @@
 
     <div class="padding-wrapper">
 
-      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
+      <div *ngFor="let client of clientsMonitor" class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail',client.id)">
         <div class="box-message-img-wrapper">
-          <img src="assets/images/test-photo.jpg" class="box-message-img" />
+          <img [src]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"
+            class="box-message-img" />
         </div>
         <div class="box-message-content">
           <div class="box-message-name-flex">
-            <div class="montserrat box-message-name">Marco Raymond</div>
+            <div class="montserrat box-message-name">{{client.first_name}} {{client.last_name}}</div>
           </div>
-          <div class="montserrat color-light box-message-text">FR · Suisse · 40 ans</div>
-        </div>
-      </div>
-
-      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
-        <div class="box-message-img-wrapper">
-          <img src="assets/images/test-photo.jpg" class="box-message-img" />
-        </div>
-        <div class="box-message-content">
-          <div class="box-message-name-flex">
-            <div class="montserrat box-message-name">Peter Duss</div>
-            <img src="assets/icon/icon-crown.png" />
-          </div>
-          <div class="montserrat color-light box-message-text">Groupe (+3)</div>
-        </div>
-      </div>
-
-      <div class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail')">
-        <div class="box-message-img-wrapper">
-          <img src="assets/icon/icons-outline-default-avatar.svg" class="box-message-img" />
-        </div>
-        <div class="box-message-content">
-          <div class="box-message-name-flex">
-            <div class="montserrat box-message-name">Nom</div>
-          </div>
-          <div class="montserrat color-light box-message-text">Lg · Pays · Age</div>
+          <div class="montserrat color-light box-message-text">{{client.country}} · {{client.birth_years}} ans</div>
         </div>
       </div>
   

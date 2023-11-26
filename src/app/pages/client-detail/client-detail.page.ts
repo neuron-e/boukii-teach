@@ -1,12 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { MonitorDataService } from '../../services/monitor-data.service';
+import { TeachService } from '../../services/teach.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-client-detail',
   templateUrl: './client-detail.page.html',
   styleUrls: ['./client-detail.page.scss'],
 })
-export class ClientDetailPage implements OnInit {
+export class ClientDetailPage implements OnInit, OnDestroy {
+  monitorData: any;
+  private subscription: Subscription;
 
   starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
   dataLevels:any[] = [
@@ -28,6 +34,7 @@ export class ClientDetailPage implements OnInit {
   showSummer: boolean = false;
   showOther: boolean = false;
   showLevel:boolean = false;
+  userAdmin:boolean = true;
 
   dataSports:any[] = [
     {id:1,name:'Ski',image:'assets/icon/icons-outline-disciplinas-1.svg',checked:false},
@@ -38,11 +45,73 @@ export class ClientDetailPage implements OnInit {
 
   selectedSport:any;
   currentLevel: number = 0;
+  clientMonitor:any;
+  clientObservation:any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
 
   ngOnInit() {
-  }
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(monitorData => {
+      if (monitorData) {
+        this.monitorData = monitorData;
+  
+        this.activatedRoute.params.subscribe(params => {
+          const clientId = +params['id'];
+          if (clientId) {
+            this.teachService.getData(`teach/clients/${clientId}`).subscribe(
+              (data:any) => {
+                const client = data.data;
+                if (client) {
+                  const birthDate = moment(client.birth_date);
+                  const age = moment().diff(birthDate, 'years');
+                  client.birth_years = age;
+                  this.clientMonitor = client;
+                  console.log(this.clientMonitor);
+                } else {
+                  //Not a client of monitor
+                  this.goTo('clients');
+                }
+              },
+              error => {
+                console.error('There was an error fetching clients!', error);
+              }
+            );
+  
+            this.teachService.getData(`client-observations/${clientId}`).subscribe(
+              (observationData:any) => {
+                if(observationData.success){
+                  this.clientObservation = observationData.data;
+                }
+                else{
+                  this.clientObservation = [];
+                }
+              },
+              error => {
+                this.clientObservation = [];
+                console.error('Error fetching client observations', error);
+              }
+            );
+
+/*
+              const data = {
+                client_id: 6,
+                sport_id: 1
+              };
+          
+              this.teachService.postData('client-sports', data).subscribe(response => {
+                console.log('Response:', response);
+              }, error => {
+                console.error('Error:', error);
+              });*/
+            
+
+          } else {
+            this.goTo('clients');
+          }
+        });
+      }
+    });
+  }  
   
   doShowLevel(sport:any) {
     this.selectedSport=sport;
@@ -63,6 +132,10 @@ export class ClientDetailPage implements OnInit {
 
   goTo(...urls: string[]) {
     this.router.navigate(urls);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }

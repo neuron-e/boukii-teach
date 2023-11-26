@@ -40,3 +40,6 @@
 .content-footer {
     text-align: center;margin-top: 18px;font-size: 15px;
 }
+button[disabled] {
+    opacity: 0.4;pointer-events: none;
+}

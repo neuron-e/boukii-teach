@@ -18,18 +18,18 @@
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
-          <input class="montserrat" type="text" />
+          <input class="montserrat" [(ngModel)]="email" type="text" />
         </div>
         <div class="input-label color-light montserrat">
           Password
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-password.png" />
-          <input class="montserrat" [type]="showPassword ? 'text' : 'password'" />
+          <input class="montserrat" [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'" />
           <img class="cursor-pointer" src="assets/icon/icon-eye.png" (click)="togglePassword()" />
         </div>
       </div>
-      <button (click)="goTo('home')" class="content-button btn-back-primary montserrat">
+      <button (click)="onLogin()" [disabled]="!email || !password" class="content-button btn-back-primary montserrat">
         Login
       </button>
       <div class="content-footer cursor-pointer montserrat" (click)="showLogin=false">

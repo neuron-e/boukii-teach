@@ -5,35 +5,14 @@
       <div class="header-content mb-12">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('clients')" />
         <!--Only if group-->
-        <div class="header-top-title">
+        <div *ngIf="!userAdmin" class="header-top-title">
           Groupe
         </div>
         <!--/Only if group-->
       </div>
 
       <!--Only if group-->
-      <div class="list-box-selector-users">
-        <div class="box-selector-user-section cursor-pointer">
-          <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-          <div class="montserrat box-selector-user-section-title">
-            <div>Marco Raymond</div>
-            <img src="assets/icon/icon-crown.png" />
-          </div>
-        </div>
-        <div class="box-selector-user-section cursor-pointer opacity-light">
-          <app-level-user [dataLevels]="dataLevels" [selectLevel]="1" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-          <div class="montserrat box-selector-user-section-title">Nom</div>
-        </div>
-        <div class="box-selector-user-section cursor-pointer opacity-light">
-          <app-level-user [dataLevels]="dataLevels" [selectLevel]="3" [size]="46" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-          <div class="montserrat box-selector-user-section-title">Nom</div>
-        </div>
-      </div>
-      <!--/Only if group-->
-
-      <!--Only if individual-->
-      <!--
-      <div class="header-user-data mt-8">
+      <div *ngIf="!userAdmin" class="header-user-data mt-24">
         <div class="header-user-data-img">
           <img src="assets/images/test-photo.jpg" />
         </div>
@@ -56,8 +35,32 @@
           </div>
         </div>
       </div>
-      -->
-      <!--/Only if individual-->
+      <!--/Only if group-->
+
+      <!--Only if admin-->
+      <div *ngIf="userAdmin && clientMonitor" class="header-user-data mt-24">
+        <div class="header-user-data-img">
+          <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+        </div>
+        <div class="header-user-data-text">
+          <div class="header-user-data-text-top">
+            <div class="color-light">
+              {{clientMonitor.country}} · {{clientMonitor.birth_years}} ans
+            </div>
+          </div>
+          <div class="header-user-data-text-title">
+            <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
+          </div>
+          <div class="header-user-data-text-icons">
+            <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
+            <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+
+          </div>
+        </div>
+      </div>
+      <!--/Only if admin-->
 
     </div>
 
@@ -66,7 +69,7 @@
       <div class="background-color-dark box-radius">
 
         <!--Only if group-->
-        <div class="header-user-data padding-wrapper">
+        <div *ngIf="!userAdmin" class="header-user-data padding-wrapper">
           <div class="header-user-data-img">
             <img src="assets/images/test-photo.jpg" />
           </div>
