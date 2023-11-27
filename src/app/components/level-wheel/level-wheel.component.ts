@@ -7,11 +7,27 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, 
 })
 export class LevelWheelComponent  implements OnInit, OnChanges {
 
+
+  /*
+  starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
+  dataLevels:any[] = [
+    {id:1,name:'Prince Bleu',level:'BLUE LEAGUE',percentage:30,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:2,name:'Roi Bleu',level:'BLUE LEAGUE',percentage:60,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:3,name:'Star Bleu',level:'BLUE LEAGUE',percentage:100,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:4,name:'Prince Red',level:'RED LEAGUE',percentage:30,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:5,name:'Roi Red',level:'RED LEAGUE',percentage:60,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:6,name:'Star Red',level:'RED LEAGUE',percentage:100,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:7,name:'Prince Noir',level:'BLACK LEAGUE',percentage:30,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:8,name:'Roi Noir',level:'BLACK LEAGUE',percentage:60,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+    {id:9,name:'Star Noir',level:'BLACK LEAGUE',percentage:100,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
+  ];
+  allLevels: any[] = [this.starterLevel, ...this.dataLevels];
+  */
+
   @ViewChild('circleSVG', { static: false }) circleSVG: ElementRef;
 
-  @Input() dataLevels: any[] = [];
   @Input() allLevels: any[] = [];
-  @Input() currentLevel: number = 0;
+  @Input() currentLevel: any = 0;
   @Output() currentLevelChange: EventEmitter<number> = new EventEmitter<number>();
 
   startX: number = 0;
@@ -22,7 +38,20 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if(this.currentLevel){
+      let index = this.allLevels.findIndex(obj => obj.id === this.currentLevel);
+      if (index === -1) {
+        this.currentLevel = 0;
+      }
+      else{
+        this.currentLevel = index;
+      }
+    }
+    else{
+      this.currentLevel = 0;
+    }
+  }
 
   ngAfterViewInit() {
     this.initializeCircleRotation();
@@ -35,12 +64,7 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   }
 
   initializeCircleRotation() {
-    if (this.currentLevel === 0) {
-        const rotationAmount = 360 / 9;
-        this.circleSVG.nativeElement.style.transform = `rotate(${rotationAmount}deg)`;
-    } else {
-        this.setCircleRotation();
-    }
+    this.setCircleRotation();
   }
 
   onTouchStart(event: TouchEvent) {
@@ -83,7 +107,7 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   getCirclePath(index: number): string {
     const markerSize = 16; //White circle marking level (outer circle shadow)
     const circleRadius = this.screenWidth - (markerSize);
-    const circleAngleSize = 360 / 9;
+    const circleAngleSize = 360 / this.allLevels.length;
 
     const gapAngleSize = (8 / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
@@ -118,17 +142,17 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   }
 
   getCircleColor(index: number, currentLevel: number): string {
-    if (index < currentLevel) {
-      return this.dataLevels[index].color;
+    if (index <= currentLevel) {
+      return this.allLevels[index].color;
     } else {
-      return this.dataLevels[index].inactive_color;
+      return this.allLevels[index].inactive_color;
     }
   }
 
   rotate(direction: 'left' | 'right') {
     if (direction === 'left' && this.currentLevel !== 0) {
       this.currentLevel--;
-    } else if (direction === 'right' && this.currentLevel !== 9) {
+    } else if (direction === 'right' && this.currentLevel !== (this.allLevels.length - 1) ) {
       this.currentLevel++;
     }
     this.setCircleRotation();
@@ -137,9 +161,9 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   }
 
   setCircleRotation() {
-    // 9 levels
-    const rotationAmount = 360 / 9;
-    const rotation = (this.currentLevel - 1) * rotationAmount;
+    // X levels
+    const rotationAmount = 360 / this.allLevels.length;
+    const rotation = (this.currentLevel) * rotationAmount;
     this.circleSVG.nativeElement.style.transform = `rotate(${-rotation}deg)`;
   }
 

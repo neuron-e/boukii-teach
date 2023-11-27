@@ -5,25 +5,25 @@
       <div class="header-content mb-12">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('clients')" />
         <!--Only if group-->
-        <div *ngIf="!userAdmin" class="header-top-title">
+        <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-top-title">
           Groupe
         </div>
         <!--/Only if group-->
       </div>
 
       <!--Only if group-->
-      <div *ngIf="!userAdmin" class="header-user-data mt-24">
+      <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-user-data mt-24">
         <div class="header-user-data-img">
-          <img src="assets/images/test-photo.jpg" />
+          <img [src]="clientMonitor.main[0].image ? clientMonitor.main[0].image : 'assets/icon/icons-outline-default-avatar.svg'" />
         </div>
         <div class="header-user-data-text">
           <div class="header-user-data-text-top">
             <div class="color-light">
-              FR · SUISSE · 31 ANS
+              {{clientMonitor.main[0].country}} · {{getBirthYears(clientMonitor.main[0].birth_date)}} ans
             </div>
           </div>
           <div class="header-user-data-text-title">
-            <div>Marco Raymond</div>
+            <div>{{clientMonitor.main[0].first_name}} {{clientMonitor.main[0].last_name}}</div>
             <img src="assets/icon/icon-crown.png" />
           </div>
           <div class="header-user-data-text-icons">
@@ -38,7 +38,7 @@
       <!--/Only if group-->
 
       <!--Only if admin-->
-      <div *ngIf="userAdmin && clientMonitor" class="header-user-data mt-24">
+      <div *ngIf="clientMonitor && !clientMonitor.main.length" class="header-user-data mt-24">
         <div class="header-user-data-img">
           <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
         </div>
@@ -69,18 +69,18 @@
       <div class="background-color-dark box-radius">
 
         <!--Only if group-->
-        <div *ngIf="!userAdmin" class="header-user-data padding-wrapper">
+        <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-user-data padding-wrapper">
           <div class="header-user-data-img">
-            <img src="assets/images/test-photo.jpg" />
+            <img [src]="clientMonitor.main[0].image ? clientMonitor.main[0].image : 'assets/icon/icons-outline-default-avatar.svg'" />
           </div>
           <div class="header-user-data-text">
             <div class="header-user-data-text-top">
               <div class="color-light">
-                FR · SUISSE · 31 ANS
+                {{clientMonitor.main[0].country}} · {{getBirthYears(clientMonitor.main[0].birth_date)}} ans
               </div>
             </div>
             <div class="header-user-data-text-title">
-              <div>Marco Raymond</div>
+              <div>{{clientMonitor.main[0].first_name}} {{clientMonitor.main[0].last_name}}</div>
               <img src="assets/icon/icon-crown.png" />
             </div>
             <div class="header-user-data-text-icons">
@@ -95,24 +95,19 @@
         <!--/Only if group-->
 
         <div class="box-top">
-          <div class="box-top-left">
-            <div class="box-top-icon cursor-pointer">
-              <img src="assets/icon/icons-outline-disciplinas-1.svg" />
-              <div class="montserrat">Ski</div>
-            </div>
-
-            <div class="box-top-icon opacity-light cursor-pointer">
-              <img src="assets/icon/icons-outline-disciplinas-2.svg" />
-              <div class="montserrat">Snowboard</div>
+          <div *ngIf="clientMonitor && clientMonitor.sports" class="box-top-left">
+            <div *ngFor="let sport of clientMonitor.sports;let i = index" (click)="changeSport(i)" class="box-top-icon cursor-pointer" [ngClass]="{'opacity-light': !sport.selected}">
+              <img [src]="sport.selected ? sport.icon_selected : sport.icon_unselected" />
+              <div class="montserrat">{{ sport.name }}</div>
             </div>
           </div>
 
         </div>
         <div class="pt-24">
-          <app-level-full (click)="goTo('client-level')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
+          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length" (click)="goTo('client-level',clientId,sportSelected)" [allLevels]="sportDegrees" [selectLevel]="clientMonitor.degree_sport" [size]="280" class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">
-            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level')">
+            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level',clientId,sportSelected)">
               Évaluer les progrès
             </button>
           </div>
@@ -131,14 +126,15 @@
       </div>
 
       <div class="background-color-dark box-radius box-observations">
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        <div *ngIf="clientMonitor && clientMonitor.observations.general" class="montserrat color-light text-observations">
+          {{clientMonitor.observations.general}}
         </div>
-        <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet.
-          <br>Lorem ipsum dolor sit amet.
-        </div>
+        <ng-container *ngIf="clientMonitor && clientMonitor.observations.notes">
+          <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
+          <div class="montserrat color-light text-observations">
+            {{clientMonitor.observations.notes}}
+          </div>
+        </ng-container>
       </div>
 
       <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
@@ -153,8 +149,8 @@
       </div>
 
       <div class="background-color-dark box-radius box-observations mb-24">
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
+        <div *ngIf="clientMonitor && clientMonitor.observations.historical" class="montserrat color-light text-observations">
+          {{clientMonitor.observations.historical}}
         </div>
       </div>
       

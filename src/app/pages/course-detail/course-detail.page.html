@@ -92,7 +92,7 @@
         
         <div class="member-list">
 
-          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level')">
+          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level',bookingId,dateBooking,client.id,selectedBooking.course.sport_id)">
             <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="60" [userImage]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
             <div class="member-item-flex">
               <div class="member-item-content">

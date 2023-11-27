@@ -1,34 +1,380 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { MonitorDataService } from '../../services/monitor-data.service';
+import { TeachService } from '../../services/teach.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-client-level',
   templateUrl: './client-level.page.html',
   styleUrls: ['./client-level.page.scss'],
 })
-export class ClientLevelPage implements OnInit {
+export class ClientLevelPage implements OnInit, OnDestroy {
+  monitorData: any;
+  private subscription: Subscription;
 
-  starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
-  dataLevels:any[] = [
-    {id:1,name:'Prince Bleu',level:'BLUE LEAGUE',percentage:30,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:2,name:'Roi Bleu',level:'BLUE LEAGUE',percentage:60,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:3,name:'Star Bleu',level:'BLUE LEAGUE',percentage:100,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:4,name:'Prince Red',level:'RED LEAGUE',percentage:30,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:5,name:'Roi Red',level:'RED LEAGUE',percentage:60,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:6,name:'Star Red',level:'RED LEAGUE',percentage:100,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:7,name:'Prince Noir',level:'BLACK LEAGUE',percentage:30,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:8,name:'Roi Noir',level:'BLACK LEAGUE',percentage:60,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:9,name:'Star Noir',level:'BLACK LEAGUE',percentage:100,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-  ];
-  allLevels: any[] = [this.starterLevel, ...this.dataLevels];
+  completeLevel:boolean = false;
 
-  constructor(private router: Router) {}
+  degrees: any[] = [];
+  sportDegrees: any[] = [];
+  sports: any[] = [];
+  goals: any[] = [];
+  filteredGoals: any[] = [];
 
-  ngOnInit() {
+  clientId:any;
+  sportId:any;
+  clientMonitor:any;
+  sportEvaluation:any;
+
+  clientLevel:any;
+  alreadyCompleted:boolean=false;
+  newLevel:any;
+  currentLevelMain:any;
+  observationsEvaluation:string;
+  currentClientSport:any;
+  clientEvaluations:any;
+  clientDegreeEvaluation:any;
+  allGoalScores:any[] = [];
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+
+  async ngOnInit() {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe( monitorData => {
+      if (monitorData) {
+        this.monitorData = monitorData;
+  
+        this.activatedRoute.params.subscribe( async params => {
+          this.clientId = +params['client'];
+          this.sportId = +params['sport'];
+          if (this.clientId && this.sportId) {
+            await this.getDegrees();
+            await this.getSports();
+            await this.getClientEvaluations();
+            this.getClient();
+            this.getClientSports();
+          } else {
+            this.goTo('home');
+          }
+        });
+      }
+    });
+  }
+
+  getClient() {
+    this.teachService.getData(`teach/clients/${this.clientId}`).subscribe(
+      (data:any) => {
+        const client = data.data;
+        if (client) {
+          const birthDate = moment(client.birth_date);
+          const age = moment().diff(birthDate, 'years');
+          client.birth_years = age;
+
+          let sport = client.sports.find((sport:any) => sport.id === this.sportId);
+          if (sport && sport.pivot) {
+            if(sport.pivot.degree_id){
+              client.degree_sport = sport.pivot.degree_id;
+            }
+            else{
+              client.degree_sport = 0;
+            } 
+          } else {
+            client.degree_sport = 0;
+          }
+          this.clientMonitor = client;
+
+          if(this.clientMonitor.degree_sport){
+            let index = this.sportDegrees.findIndex(obj => obj.id === this.clientMonitor.degree_sport);
+            if (index === -1) {
+              this.newLevel = 0;
+              this.currentLevelMain = this.sportDegrees[0];
+            }
+            else{
+              this.clientLevel = index;
+              this.newLevel = index;
+              this.currentLevelMain = this.sportDegrees[index];
+            }
+          }
+          else{
+            this.newLevel = 0;
+            this.currentLevelMain = this.sportDegrees[0];
+          }
+          this.getCurrentGoals();
+          this.filterEvaluationDegree();
+          console.log(this.clientMonitor);
+        } else {
+          //Not a client of monitor
+          this.goTo('clients');
+        }
+      },
+      error => {
+        console.error('There was an error fetching clients!', error);
+      }
+    );
+  }
+
+  async getDegrees() {
+    try {
+      const data: any = await this.teachService.getData('degrees').toPromise();
+      console.log(data);
+      this.degrees = data.data;
+  
+      this.degrees.sort((a, b) => a.degree_order - b.degree_order);
+  
+      // Inactive color
+      this.degrees.forEach(degree => {
+        degree.inactive_color = this.lightenColor(degree.color, 30);
+      });
+  
+      // Filter by sport
+      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportId);
+      console.log('Processed Degrees:', this.degrees);
+      console.log('Sport Degrees:', this.sportDegrees);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }  
+
+  async getSports() {
+    try {
+      const data: any = await this.teachService.getData('sports').toPromise();
+      console.log(data);
+      this.sports = data.data;
+      this.sportEvaluation = this.sports.find(sport => sport.id === this.sportId);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }
+
+  async getGoals() {
+    try {
+      const data: any = await this.teachService.getData('degrees-school-sport-goals').toPromise();
+      console.log(data);
+      this.goals = data.data;
+      //Insert from saved values
+      this.goals.forEach(goal => {
+        const matchingGoal = this.allGoalScores.find(g => g.degrees_school_sport_goals_id === goal.id);
+      
+        if (matchingGoal) {
+          goal.score = matchingGoal.score;
+          goal.update_id = matchingGoal.id;
+        } else {
+          goal.score = 0;
+          goal.update_id = 0;
+        }
+      });
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }
+
+  async getClientSports() {
+    this.teachService.getData('client-sports', null, { client_id: this.clientId }).subscribe(
+      (data: any) => {
+        console.log(data);
+  
+        const filteredSports = data.data.filter((sport:any) => 
+          sport.client_id === this.clientId && sport.sport_id === this.sportId);
+  
+        if (filteredSports.length === 0) {
+          this.currentClientSport = null;
+        } else if (filteredSports.length === 1) {
+          this.currentClientSport = filteredSports[0];
+        } else {
+          this.currentClientSport = filteredSports.sort((a:any, b:any) => b.id - a.id)[0];
+        }
+  
+        console.log('Current Client Sport:', this.currentClientSport);
+      },
+      error => {
+        console.error('There was an error!', error);
+      }
+    );
+  }  
+
+  async getClientEvaluations() {
+    try {
+      const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientId }).toPromise();
+      console.log(data);
+      this.clientEvaluations = data.data;
+  
+      const requests = this.clientEvaluations.map((evaluation:any) => 
+        this.teachService.getData('evaluation-fulfilled-goals', null, { evaluation_id: evaluation.id }).toPromise()
+      );
+      
+      const responses = await Promise.all(requests);
+      let allGoalScores:any[] = [];
+      responses.forEach(response => {
+        allGoalScores.push(...response.data);
+      });
+      
+      let uniqueGoalScoresMap:any = {};
+      allGoalScores.forEach(goal => {
+        if (!uniqueGoalScoresMap[goal.degrees_school_sport_goals_id] || uniqueGoalScoresMap[goal.degrees_school_sport_goals_id].id < goal.id) {
+          uniqueGoalScoresMap[goal.degrees_school_sport_goals_id] = goal;
+        }
+      });
+      this.allGoalScores = Object.values(uniqueGoalScoresMap);
+      console.log(this.allGoalScores);
+  
+      await this.getGoals();
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }  
+
+  filterEvaluationDegree() {
+    const filteredEvaluations = this.clientEvaluations.filter((evaluation:any) => 
+        evaluation.degree_id === this.currentLevelMain.id);
+  
+        if (filteredEvaluations.length === 0) {
+          this.clientDegreeEvaluation = null;
+          this.observationsEvaluation = '';
+        } else if (filteredEvaluations.length === 1) {
+          this.clientDegreeEvaluation = filteredEvaluations[0];
+          this.observationsEvaluation = this.clientDegreeEvaluation.observations;
+        } else {
+          this.clientDegreeEvaluation = filteredEvaluations.sort((a:any, b:any) => b.id - a.id)[0];
+          this.observationsEvaluation = this.clientDegreeEvaluation.observations;
+        }
+  }
+
+  getBirthYears(date:string) {
+    const birthDate = moment(date);
+    return moment().diff(birthDate, 'years');
+  }
+
+  lightenColor(hexColor:any, percent:any) {
+    let r:any = parseInt(hexColor.substring(1, 3), 16);
+    let g:any = parseInt(hexColor.substring(3, 5), 16);
+    let b:any = parseInt(hexColor.substring(5, 7), 16);
+
+    // Increase the lightness
+    r = Math.round(r + (255 - r) * percent / 100);
+    g = Math.round(g + (255 - g) * percent / 100);
+    b = Math.round(b + (255 - b) * percent / 100);
+
+    // Convert RGB back to hex
+    r = r.toString(16).padStart(2, '0');
+    g = g.toString(16).padStart(2, '0');
+    b = b.toString(16).padStart(2, '0');
+
+    return `#${r}${g}${b}`;
+  }
+
+  onCurrentLevelChange(newLevel: number) {
+    if(this.clientLevel > newLevel) {
+      this.alreadyCompleted = true;
+    }
+    else{
+      this.alreadyCompleted = false;
+    }
+    this.newLevel = newLevel;
+    this.currentLevelMain = this.sportDegrees[newLevel];
+
+    this.filterEvaluationDegree();
+    this.getCurrentGoals();
+  }
+
+  getCurrentGoals() {
+    const filteredGoals = this.goals.filter(goal => goal.degree_id === this.currentLevelMain.id);
+    this.filteredGoals = filteredGoals.sort((a, b) => a.id - b.id);
+  }
+
+  countGoalsCompleted() {
+    return this.filteredGoals.filter(goal => goal.score === 10).length;
+  }
+
+  allGoalsCompleted() {
+    return this.filteredGoals.every(goal => goal.score === 10);
+  }
+
+  handleGoalsAndClientSport(evaluationId:any) {
+    const goalPostPromises = this.filteredGoals.map(goal => {
+        let dataGoal = {
+            evaluation_id: evaluationId,
+            degrees_school_sport_goals_id: goal.id,
+            score: goal.score
+        };
+
+        if (goal.update_id) {
+            return this.teachService.updateData('evaluation-fulfilled-goals', goal.update_id, dataGoal).toPromise();
+        } else {
+            return this.teachService.postData('evaluation-fulfilled-goals', dataGoal).toPromise();
+        }
+    });
+
+    Promise.all(goalPostPromises).then(() => {
+        //Assign level to client
+        let nextLevel = this.currentLevelMain.id;
+        if (this.allGoalsCompleted() && this.completeLevel) {
+          if (this.sportDegrees[this.newLevel + 1] && this.sportDegrees[this.newLevel + 1].id) {
+            nextLevel = this.sportDegrees[this.newLevel + 1].id;
+          }
+        }
+
+        let dataClient = {
+          client_id: this.clientId,
+          sport_id: this.sportId,
+          degree_id: nextLevel
+        };
+
+        //Check if a client-sport already exists
+        if (this.currentClientSport) {
+          this.teachService.updateData('client-sports', this.currentClientSport.id, dataClient).subscribe(
+              response => {
+                  console.log('Response:', response);
+                  this.goTo('client-detail',this.clientId);
+              },
+              error => {
+                  console.error('Error:', error);
+              }
+          );
+        } else {
+          this.teachService.postData('client-sports', dataClient).subscribe(
+              response => {
+                  console.log('Response:', response);
+                  this.goTo('client-detail',this.clientId);
+              },
+              error => {
+                  console.error('Error:', error);
+              }
+          );
+        }
+    }).catch(error => {
+        console.error('Error in posting/updating goals:', error);
+    });
+}
+
+  saveEvaluation() {
+
+      const data = {
+        client_id: this.clientId,
+        degree_id: this.currentLevelMain.id,
+        observations: this.observationsEvaluation
+      };
+      if (this.clientDegreeEvaluation) {
+        this.teachService.updateData('evaluations', this.clientDegreeEvaluation.id, data).subscribe(response => {
+            this.handleGoalsAndClientSport(this.clientDegreeEvaluation.id);
+        }, error => {
+            console.error('Error in updating evaluation:', error);
+        });
+    } else {
+        this.teachService.postData('evaluations', data).subscribe(response => {
+            this.handleGoalsAndClientSport(response.data.id);
+        }, error => {
+            console.error('Error in posting evaluation:', error);
+        });
+    }
+
   }
 
   goTo(...urls: string[]) {
     this.router.navigate(urls);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }

@@ -39,6 +39,8 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   sports: any[] = [];
 
   selectedBooking:any;
+  bookingId:any;
+  dateBooking:any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
 
@@ -48,11 +50,11 @@ export class CourseDetailPage implements OnInit, OnDestroy {
         this.monitorData = monitorData;
   
         this.activatedRoute.params.subscribe(params => {
-          const bookingId = +params['id'];
-          const dateBooking = params['date'];
-          if (bookingId && dateBooking) {
-            this.currentDateFull = moment(dateBooking).locale('fr').format('D MMMM YYYY');
-            this.loadBookings(bookingId,dateBooking);
+          this.bookingId = +params['id'];
+          this.dateBooking = params['date'];
+          if (this.bookingId && this.dateBooking) {
+            this.currentDateFull = moment(this.dateBooking).locale('fr').format('D MMMM YYYY');
+            this.loadBookings();
             this.getDegrees();
             this.getSports();
           } else {
@@ -63,11 +65,11 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     });
   }
 
-  loadBookings(bookingId:number,dateBooking:string) {
-    this.teachService.getData('teach/getAgenda', null, { date_start: dateBooking, date_end: dateBooking }).subscribe(
+  loadBookings() {
+    this.teachService.getData('teach/getAgenda', null, { date_start: this.dateBooking, date_end: this.dateBooking }).subscribe(
       (data:any) => {
         console.log(data);
-        this.processBookings(bookingId,data.data.bookings);
+        this.processBookings(data.data.bookings);
       },
       error => {
         console.error('There was an error!', error);
@@ -75,7 +77,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     );
   }
 
-  processBookings(bookingId: number, bookings: any[]) {
+  processBookings(bookings: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsCurrent = [];
   
@@ -95,7 +97,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           uniqueCourseGroups.set(key, {
             ...booking,
             all_clients: [clientWithBooking],
-            selected_detail: booking.id === bookingId
+            selected_detail: booking.id === this.bookingId
           });
           this.bookingsCurrent.push(uniqueCourseGroups.get(key));
         } else {
@@ -107,7 +109,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
           uniqueCourseGroups.get(key).all_clients.push(clientWithBooking);
           
-          if (booking.id === bookingId) {
+          if (booking.id === this.bookingId) {
             uniqueCourseGroups.get(key).selected_detail = true;
           }
         }

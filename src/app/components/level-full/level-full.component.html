@@ -2,9 +2,9 @@
   <div class="circle-container" [style.width.px]="size" [style.height.px]="size">
       <!--Levels-->
       <svg [attr.width]="size" [attr.height]="size" [attr.viewBox]="viewBox" xmlns="http://www.w3.org/2000/svg">
-        <path *ngFor="let level of dataLevels; let i = index" 
+        <path *ngFor="let level of allLevels; let i = index" 
               [attr.d]="getCirclePath(i)" 
-              [attr.stroke]="getCircleColor(i, selectLevel)" 
+              [attr.stroke]="getCircleColor(i, indexSelectLevel)" 
               fill="none" 
               [attr.stroke-width]="strokeWidth">
         </path>
@@ -17,15 +17,17 @@
         <div class="level-flex">
 
           <div class="level-interior-flex">
-            <div class="montserrat font-size-medium" [ngStyle]="{'color': allLevels[selectLevel].inactive_color}">
-              {{allLevels[selectLevel].level}}
+            <div class="montserrat font-size-medium" [ngStyle]="{'color': allLevels[indexSelectLevel].inactive_color}">
+              {{allLevels[indexSelectLevel].league}}
             </div>
-            <div class="font-size-subtitle" [ngStyle]="{'color': allLevels[selectLevel].inactive_color}">
-              {{allLevels[selectLevel].percentage}}%
+            <!--
+            <div class="font-size-subtitle" [ngStyle]="{'color': allLevels[indexSelectLevel].inactive_color}">
+              {{allLevels[indexSelectLevel].percentage}}%
             </div>
+            -->
           </div>
           <div class="font-size-title">
-            {{allLevels[selectLevel].name}}
+            {{allLevels[indexSelectLevel].name}}
           </div>
           <div class="level-interior-flex">
             <div class="level-border"></div>
@@ -33,10 +35,10 @@
               NEXT LEVEL
             </div>
             <div class="font-size-subtitle color-light">
-              <ng-container *ngIf="selectLevel < allLevels.length -1">
-                {{allLevels[selectLevel+1].name}}
+              <ng-container *ngIf="indexSelectLevel < allLevels.length -1">
+                {{allLevels[indexSelectLevel+1].name}}
               </ng-container>
-              <ng-container *ngIf="selectLevel >= allLevels.length -1">
+              <ng-container *ngIf="indexSelectLevel >= allLevels.length -1">
                 -
               </ng-container>
             </div>

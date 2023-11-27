@@ -117,7 +117,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'client-level',
+    path: 'client-level/:client/:sport',
     loadChildren: () => import('./pages/client-level/client-level.module').then( m => m.ClientLevelPageModule),
     canActivate: [AuthGuard]
   },
@@ -149,12 +149,12 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'course-detail-level',
+    path: 'course-detail-level/:id/:date/:client/:sport',
     loadChildren: () => import('./pages/course-detail-level/course-detail-level.module').then( m => m.CourseDetailLevelPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'course-detail-level-update',
+    path: 'course-detail-level-update/:id/:date/:client/:sport',
     loadChildren: () => import('./pages/course-detail-level-update/course-detail-level-update.module').then( m => m.CourseDetailLevelUpdatePageModule),
     canActivate: [AuthGuard]
   },

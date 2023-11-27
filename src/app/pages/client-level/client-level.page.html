@@ -3,20 +3,66 @@
 
     <div class="padding-wrapper">
       <div class="header-content no-margin">
-        <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('client-detail')">
+        <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('client-detail',clientId)">
           Cancel
         </div>
       </div>
     </div>
 
     <div class="padding-wrapper">
-        <div class="flex-sport">
-          <img src="assets/icon/icons-outline-disciplinas-1.svg" />
-          <span class="montserrat">Ski</span>
+        <div *ngIf="sportEvaluation" class="flex-sport">
+          <img [src]="sportEvaluation.icon_selected" />
+          <span class="montserrat">{{sportEvaluation.name}}</span>
         </div>
     </div>
     
-        <app-level-wheel [dataLevels]="dataLevels" [allLevels]="allLevels" [currentLevel]="5"></app-level-wheel>
+        <app-level-wheel *ngIf="clientMonitor && sportDegrees && sportDegrees.length" [allLevels]="sportDegrees" 
+          [currentLevel]="clientMonitor.degree_sport" (currentLevelChange)="onCurrentLevelChange($event)"></app-level-wheel>
+
+        
+        <div class="padding-wrapper mt-12 mb-12">
+          <div class="circle-list-title mb-24">
+            <div>Objectifs</div>
+            <span class="color-light">{{countGoalsCompleted()}}/{{filteredGoals.length}}</span>
+          </div>
+          <div class="circle-list">
+            <ng-container *ngFor="let goal of filteredGoals;let i=index;">
+              <div class="circle-list-item">
+                <div class="montserrat circle-list-item-text">
+                  {{goal.name}}
+                </div>
+              </div>
+              <ion-range [(ngModel)]="goal.score" [ticks]="true" [snaps]="true" step="5" [min]="0" [max]="10"></ion-range>
+              <div class="range-labels mb-24">
+                <div class="montserrat color-light">Non accompli</div>
+                <div class="montserrat color-light">À améliorer</div>
+                <div class="montserrat color-light">Accompli</div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="input-label color-light montserrat mt-32">
+            Observations:
+          </div>
+          <textarea [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
+
+          <ng-container *ngIf="allGoalsCompleted() && !alreadyCompleted">
+            <div class="input-label color-light montserrat mt-12">
+              CONFIRMATION DE NIVEAU
+            </div>
+            <div class="circle-list-item">
+              <div class="custom-radio">
+                <label class="simple-check-option">
+                    <input type="checkbox" [(ngModel)]="completeLevel" />
+                    <div class="custom-check"></div>
+                </label>
+              </div>
+              <div class="montserrat color-light circle-list-item-text">
+                Confirmez-vous qu'il a terminé le niveau?
+              </div>
+            </div>
+          </ng-container>
+        </div>
 
         <div class="padding-wrapper mt-12 pt-24 top-border-wrapper">
 
@@ -45,8 +91,12 @@
             </div>
           </div>
 
-          <button (click)="goTo('client-detail')" class="content-button btn-back-primary montserrat mt-32 mb-32">
+          <button *ngIf="!alreadyCompleted" (click)="saveEvaluation()" class="content-button btn-back-primary montserrat mt-32 mb-32">
             Sauver progrès
+          </button>
+
+          <button *ngIf="alreadyCompleted" class="content-button btn-back-grey montserrat mt-32 mb-32">
+            Niveau terminé
           </button>
         </div>
 

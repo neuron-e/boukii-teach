@@ -1,20 +1,47 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-level-full',
   templateUrl: './level-full.component.html',
   styleUrls: ['./level-full.component.scss'],
 })
-export class LevelFullComponent  implements OnInit {
+export class LevelFullComponent  implements OnInit, OnChanges {
 
   @Input() allLevels: any[] = [];
-  @Input() dataLevels: any[] = [];
-  @Input() selectLevel: number = 0;
+  @Input() selectLevel: any = 0;
   @Input() size: number;
+
+  indexSelectLevel:any = 0;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['allLevels'] || changes['selectLevel']) {
+      this.processInputs();
+    }
+  }
+
+  ngOnInit() {
+    this.processInputs();
+  }
+
+  processInputs() {
+    if(this.selectLevel){
+      let index = this.allLevels.findIndex(obj => obj.id === this.selectLevel);
+      console.log(index);
+      if (index === -1) {
+        this.selectLevel = 0;
+        this.indexSelectLevel = 0;
+      }
+      else{
+        this.indexSelectLevel = index;
+      }
+    }
+    else{
+      this.selectLevel = 0;
+      this.indexSelectLevel = 0;
+    }
+  }
 
   get viewBox(): string {
     return `-${this.size * 0.5625} -${this.size * 0.5625} ${this.size * 1.125} ${this.size * 1.125}`;
@@ -42,7 +69,7 @@ export class LevelFullComponent  implements OnInit {
 
   getCirclePath(index: number): string {
     const circleRadius = this.size / 2;
-    const circleAngleSize = 360 / 9;
+    const circleAngleSize = 360 / this.allLevels.length;
 
     const gapAngleSize = ((this.size / 80) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
@@ -66,15 +93,15 @@ export class LevelFullComponent  implements OnInit {
 
   getMarkerPosition() {
     const circleRadius = this.size / 2;
-    const circleAngleSize = 360 / 9;
+    const circleAngleSize = 360 / this.allLevels.length;
     const sizeMarker = this.markerRadius * 2;
   
     const gapAngleSize = ( (this.size / 60) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
   
     // Start angle for the selected level
-    const shiftAdjustment = circleAngleSize * 1.60; //manually to fit in gap
-    const startAngle = (this.selectLevel * circleAngleSize) - shiftAdjustment;
+    const shiftAdjustment = circleAngleSize * (this.allLevels.length / 6.8); //manually to fit in gap
+    const startAngle = ( (this.indexSelectLevel + 1) * circleAngleSize) - shiftAdjustment;
     const markerAngle = startAngle + levelAngleSize + sizeMarker; // middle of the gap
   
     const x =   circleRadius * Math.cos(this.degToRad(markerAngle - 90));
@@ -88,10 +115,10 @@ export class LevelFullComponent  implements OnInit {
   }
 
   getCircleColor(index: number, selectLevel: number): string {
-    if (index < selectLevel) {
-      return this.dataLevels[index].color;
+    if (index <= selectLevel) {
+      return this.allLevels[index].color;
     } else {
-      return this.dataLevels[index].inactive_color;
+      return this.allLevels[index].inactive_color;
     }
   }
 

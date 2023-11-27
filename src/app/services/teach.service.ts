@@ -30,11 +30,16 @@ export class TeachService {
     if (id) {
       url += `/${id}`;
     }
+
     let httpParams = new HttpParams();
     if (params) {
       Object.keys(params).forEach(key => {
+        httpParams = httpParams.set('perPage', '99999');
         httpParams = httpParams.set(key, params[key]);
       });
+    }
+    else {
+      httpParams = httpParams.set('perPage', '99999');
     }
 
     return this.http.get<T>(url, { headers: this.getHeaders(), params: httpParams });
@@ -48,6 +53,11 @@ export class TeachService {
   // POST
   postData<T>(route: string, data: T): Observable<any> {
     return this.http.post<T>(`${environment.apiUrl}/${route}`, data, { headers: this.getHeaders() });
+  }
+  
+  // DELETE
+  deleteData(route: string, id: number): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/${route}/${id}`, { headers: this.getHeaders() });
   }
 
 }
