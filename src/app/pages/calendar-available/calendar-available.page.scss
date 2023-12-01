@@ -154,6 +154,9 @@
 .simple-check-option input[type="checkbox"]:checked + .custom-check::before {
     display: block;
 }
+.flex-1 {
+    flex:1;
+}
 
 .reduce-top {
     margin-top: -16px;

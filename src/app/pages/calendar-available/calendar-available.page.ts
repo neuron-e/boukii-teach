@@ -47,6 +47,9 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   startTimeDay:string;
   endTimeDay:string;
   nameBlockDay:string;
+  divideDay:boolean=false;
+  startTimeDivision:string;
+  endTimeDivision:string;
 
   typeVisual:string;
   dateVisual:string;
@@ -169,6 +172,31 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   get filteredEndHoursDay() {
     const startIndex = this.hoursRange.indexOf(this.startTimeDay);
     return this.hoursRange.slice(startIndex + 1);
+  }
+
+  onStartTimeDivisionChange() {
+    const filteredEndHours = this.filteredEndHoursDivision;
+    if (!filteredEndHours.includes(this.endTimeDivision)) {
+      this.endTimeDivision = filteredEndHours[0] || '';
+    }
+  }  
+
+  get filteredStartHoursDivision() {
+    const startIndex = this.allHoursDay ? this.hoursRange.indexOf(this.hourStartDay) : this.hoursRange.indexOf(this.startTimeDay);
+    const endIndex = this.allHoursDay ? this.hoursRange.indexOf(this.hourEndDay) : this.hoursRange.indexOf(this.endTimeDay);
+    return this.hoursRange.slice(startIndex + 1, endIndex - 1);
+  }
+  
+  get filteredEndHoursDivision() {
+    const defaultStartIndex = this.calculateDefaultStartTimeDivisionIndex();
+    const startIndex = this.startTimeDivision ? this.hoursRange.indexOf(this.startTimeDivision) : defaultStartIndex;
+    const endIndex = this.allHoursDay ? this.hoursRange.indexOf(this.hourEndDay) : this.hoursRange.indexOf(this.endTimeDay);
+    return this.hoursRange.slice(startIndex + 1, endIndex);
+  }
+  
+  calculateDefaultStartTimeDivisionIndex() {
+    const blockStartTimeIndex = this.allHoursDay ? this.hoursRange.indexOf(this.hourStartDay) : this.hoursRange.indexOf(this.startTimeDay);
+    return blockStartTimeIndex + 1;
   }
 
   initializeMonthNames() {
@@ -340,40 +368,101 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   }  
 
   isButtonDayEnabled() {
-    return this.nameBlockDay && this.selectedDate && (this.allHoursDay || (this.startTimeDay && this.endTimeDay));
-  }  
+    if (this.divideDay) {
+      return this.nameBlockDay && this.selectedDate && this.startTimeDivision && this.endTimeDivision && (this.allHoursDay || (this.startTimeDay && this.endTimeDay));
+    } else {
+      return this.nameBlockDay && this.selectedDate && (this.allHoursDay || (this.startTimeDay && this.endTimeDay));
+    }
+  }
 
   saveBlockDay() {
     const formattedDayDate = moment(this.selectedDate).format('YYYY-MM-DD');
-
     this.spinnerService.show();
-    if(this.idEditBlock){
-      const dataDay = {
-        monitor_id: this.editBlock.monitor_id,
-        school_id: this.editBlock.school_id,
-        station_id: this.editBlock.station_id,
-        start_date: formattedDayDate,
-        end_date: formattedDayDate,
-        start_time: this.allHoursDay ? '' : `${this.startTimeDay}:00`,
-        end_time: this.allHoursDay ? '' : `${this.endTimeDay}:00`,
-        full_day: this.allHoursDay,
+
+    if(this.idEditBlock) {
+      const commonData = {
+        monitor_id: this.monitorData.id,
+        school_id: this.monitorData.active_school,
+        station_id: this.monitorData.active_station,
         description: this.nameBlockDay,
-        color: this.editBlock.color,
-        user_nwd_subtype_id: this.editBlock.user_nwd_subtype_id,
+        color: '#89add1',
+        user_nwd_subtype_id: 1,
       };
-      this.teachService.updateData('monitor-nwds', this.idEditBlock, dataDay).subscribe(
-        response => {
-            console.log('Response:', response);
-            this.spinnerService.hide();
-            this.toastr.success('Enregistré correctement');
-            this.goTo('calendar');
-        },
-        error => {
-            console.error('Error:', error);
-            this.spinnerService.hide();
-            this.toastr.error('Erreur');
-        }
-      );
+      let firstBlockData:any = { ...commonData, start_date: formattedDayDate, end_date: formattedDayDate };
+      let secondBlockData:any;
+
+      // Calculate time moments
+      firstBlockData.start_time = this.allHoursDay ? `${this.hourStartDay}:00` : `${this.startTimeDay}:00`;
+      firstBlockData.end_time = this.divideDay ? `${this.startTimeDivision}:00` : (this.allHoursDay ? `${this.hourEndDay}:00` : `${this.endTimeDay}:00`);
+      firstBlockData.full_day = this.allHoursDay && !this.divideDay;
+  
+      let firstBlockStartMoment = moment(`${formattedDayDate} ${firstBlockData.start_time}`, 'YYYY-MM-DD HH:mm:ss');
+      let firstBlockEndMoment = moment(`${formattedDayDate} ${firstBlockData.end_time}`, 'YYYY-MM-DD HH:mm:ss');
+  
+      // Function update first block -> CALL LATER
+      const updateFirstBlock = () => {
+          this.teachService.updateData('monitor-nwds', this.idEditBlock, firstBlockData).subscribe(
+              response => {
+                  console.log('First block updated:', response);
+                  this.spinnerService.hide();
+                  this.toastr.success('Enregistré correctement');
+                  this.goTo('calendar');
+              },
+              error => {
+                  console.error('Error updating first block:', error);
+                  this.spinnerService.hide();
+                  this.toastr.error('Erreur');
+              }
+          );
+      };
+  
+      // Overlap FIRST
+      this.checkOverlap(firstBlockStartMoment, firstBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
+          if (overlap) {
+              this.spinnerService.hide();
+              this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+              return;
+          }
+  
+          if (this.divideDay) {
+              secondBlockData = { ...commonData, start_date: formattedDayDate, end_date: formattedDayDate, start_time: `${this.endTimeDivision}:00`, end_time: `${this.endTimeDay}:00`, full_day: false };
+              let secondBlockStartMoment = moment(`${formattedDayDate} ${secondBlockData.start_time}`, 'YYYY-MM-DD HH:mm:ss');
+              let secondBlockEndMoment = moment(`${formattedDayDate} ${secondBlockData.end_time}`, 'YYYY-MM-DD HH:mm:ss');
+  
+              // Overlap SECOND
+              this.checkOverlap(secondBlockStartMoment, secondBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
+                  if (overlap) {
+                      this.spinnerService.hide();
+                      this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+                      return;
+                  }
+  
+                  this.teachService.postData('monitor-nwds', secondBlockData).subscribe(
+                      secondResponse => {
+                          console.log('Second block created:', secondResponse);
+                          updateFirstBlock();
+                      },
+                      error => {
+                          console.error('Error creating second block:', error);
+                          this.spinnerService.hide();
+                          this.toastr.error('Erreur');
+                      }
+                  );
+              }).catch(error => {
+                  console.error('Error checking overlap for second block:', error);
+                  this.spinnerService.hide();
+                  this.toastr.error('Erreur');
+              });
+          } else {
+              // Update FIRST
+              updateFirstBlock();
+          }
+      }).catch(error => {
+          console.error('Error checking overlap for first block:', error);
+          this.spinnerService.hide();
+          this.toastr.error('Erreur');
+      });
+
     }
     else{
       const dataDay = {
@@ -382,68 +471,178 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         station_id: this.monitorData.active_station,
         start_date: formattedDayDate,
         end_date: formattedDayDate,
-        start_time: this.allHoursDay ? '' : `${this.startTimeDay}:00`,
-        end_time: this.allHoursDay ? '' : `${this.endTimeDay}:00`,
+        start_time: this.allHoursDay ? `${this.hourStartDay}:00` : `${this.startTimeDay}:00`,
+        end_time: this.allHoursDay ? `${this.hourEndDay}:00` : `${this.endTimeDay}:00`,
         full_day: this.allHoursDay,
         description: this.nameBlockDay,
         color: '#89add1',
         user_nwd_subtype_id: 1,
       };
-      this.teachService.postData('monitor-nwds', dataDay).subscribe(
-        response => {
-            console.log('Response:', response);
-            this.spinnerService.hide();
-            this.toastr.success('Enregistré correctement');
-            this.goTo('calendar');
-        },
-        error => {
-            console.error('Error:', error);
-            this.spinnerService.hide();
-            this.toastr.error('Erreur');
+
+      const blockStartTime = this.allHoursDay ? this.hourStartDay : this.startTimeDay;
+      const blockEndTime = this.allHoursDay ? this.hourEndDay : this.endTimeDay;
+      const blockStartMoment = moment(`${formattedDayDate} ${blockStartTime}:00`, 'YYYY-MM-DD HH:mm:ss');
+      const blockEndMoment = moment(`${formattedDayDate} ${blockEndTime}:00`, 'YYYY-MM-DD HH:mm:ss');
+
+      this.checkOverlap(blockStartMoment, blockEndMoment, formattedDayDate).then(overlap => {
+        if (!overlap) {
+          this.teachService.postData('monitor-nwds', dataDay).subscribe(
+            response => {
+                console.log('Response:', response);
+                this.spinnerService.hide();
+                this.toastr.success('Enregistré correctement');
+                this.goTo('calendar');
+            },
+            error => {
+                console.error('Error:', error);
+                this.spinnerService.hide();
+                this.toastr.error('Erreur');
+            }
+          );
+        } else {
+          this.spinnerService.hide();
+          this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
         }
-      );
+      }).catch(error => {
+        console.error('Overlap check error:', error);
+        this.spinnerService.hide();
+        this.toastr.error('Erreur lors de la vérification des chevauchements');
+      });
+
     }
   }
 
   saveBlockMonth() {
     const startDate = moment(this.firstDateSelected);
     const endDate = moment(this.secondDateSelected);
-    const requests = [];
+    const datesToCheck:any[] = [];
+    const overlapDates:any[] = [];
+    const createRequests:any[] = [];
 
     this.spinnerService.show();
-    for (let date = startDate; date.diff(endDate, 'days') <= 0; date.add(1, 'days')) {
-        const formattedDate = date.format('YYYY-MM-DD');
-        const dataDay = {
-            monitor_id: this.monitorData.id,
-            school_id: this.monitorData.active_school,
-            station_id: this.monitorData.active_station,
-            start_date: formattedDate,
-            end_date: formattedDate,
-            start_time: this.allHoursMonth ? '' : `${this.startTimeMonth}:00`,
-            end_time: this.allHoursMonth ? '' : `${this.endTimeMonth}:00`,
-            full_day: this.allHoursMonth,
-            description: this.nameBlockMonth,
-            color: '#89add1',
-            user_nwd_subtype_id: 1,
-        };
 
-        requests.push(this.teachService.postData('monitor-nwds', dataDay));
+    // Prepare dates to check
+    for (let date = moment(startDate); date.diff(endDate, 'days') <= 0; date.add(1, 'days')) {
+        datesToCheck.push(moment(date));
     }
 
-    forkJoin(requests).subscribe(
-        responses => {
-            console.log('All requests completed', responses);
-            this.spinnerService.hide();
+    // Check for overlaps and create blocks
+    Promise.all(datesToCheck.map(async date => {
+        const formattedDate = date.format('YYYY-MM-DD');
+        const blockStartMoment = moment(`${formattedDate} ${this.allHoursMonth ? this.hourStartDay : this.startTimeMonth}:00`, 'YYYY-MM-DD HH:mm:ss');
+        const blockEndMoment = moment(`${formattedDate} ${this.allHoursMonth ? this.hourEndDay : this.endTimeMonth}:00`, 'YYYY-MM-DD HH:mm:ss');
+
+        return this.checkOverlap(blockStartMoment, blockEndMoment, formattedDate).then(overlap => {
+            if (!overlap) {
+                const dataDay = {
+                    monitor_id: this.monitorData.id,
+                    school_id: this.monitorData.active_school,
+                    station_id: this.monitorData.active_station,
+                    start_date: formattedDate,
+                    end_date: formattedDate,
+                    start_time: this.allHoursMonth ? `${this.hourStartDay}:00` : `${this.startTimeMonth}:00`,
+                    end_time: this.allHoursMonth ? `${this.hourEndDay}:00` : `${this.endTimeMonth}:00`,
+                    full_day: this.allHoursMonth,
+                    description: this.nameBlockMonth,
+                    color: '#89add1',
+                    user_nwd_subtype_id: 1,
+                };
+                return new Promise((resolve, reject) => {
+                  this.teachService.postData('monitor-nwds', dataDay).subscribe(
+                      response => {
+                          console.log('Data posted successfully:', response);
+                          resolve(response);
+                      },
+                      error => {
+                          console.error('Error posting data:', error);
+                          reject(error);
+                      }
+                  );
+                });
+            } else {
+                const formattedDateNice = moment(formattedDate).format('DD-MM-YYYY');
+                overlapDates.push(formattedDateNice);
+                return null;
+            }
+        }).catch(error => {
+            console.error('Error checking overlap:', error);
+            overlapDates.push(formattedDate);
+            return null;
+        });
+    })).then(responses => {
+        this.spinnerService.hide();
+
+        const successfulResponses = responses.filter(response => response != null);
+        if (successfulResponses.length > 0) {
+          if (overlapDates.length > 0) {
+            this.toastr.success('Certains blocages ont été enregistrés correctement');
+          }
+          else{
             this.toastr.success('Enregistré correctement');
-            this.goTo('calendar');
+          }
+        }
+
+        if (overlapDates.length > 0) {
+            this.toastr.error(`Un chevauchement a été détecté. Les dates suivantes n'ont pas été créées : ${overlapDates.join(', ')}`);
+        } else if (successfulResponses.length === 0) {
+            this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+        }
+
+      this.goTo('calendar');
+    }).catch(error => {
+        console.error('An error occurred:', error);
+        this.spinnerService.hide();
+        this.toastr.error('Erreur');
+    });
+  }
+
+  private checkOverlap(blockStartMoment: moment.Moment, blockEndMoment: moment.Moment, formattedDayDate: string, id?: any): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.teachService.getData('teach/getAgenda', null, { date_start: formattedDayDate, date_end: formattedDayDate, school_id: this.monitorData.active_school }).subscribe(
+        (data: any) => {
+          for (const booking of data.data.bookings) {
+            const bookingStart = moment(`${formattedDayDate} ${booking.hour_start}`, 'YYYY-MM-DD HH:mm:ss');
+            const bookingEnd = moment(`${formattedDayDate} ${booking.hour_end}`, 'YYYY-MM-DD HH:mm:ss');
+            if (bookingStart.isBefore(blockEndMoment) && bookingEnd.isAfter(blockStartMoment)) {
+              console.log(booking);
+              resolve(true); // Overlap found
+              return;
+            }
+          }
+  
+          for (const nwd of data.data.nwd) {
+            //If editing and chcking same
+            let same:boolean = false;
+            if(id && (nwd.id == id)){
+              same=true;
+            }
+
+            if(!id || !same){
+              if (nwd.full_day) {
+                resolve(true); // Overlap found
+                return;
+              } else {
+                const nwdStart = moment(`${formattedDayDate} ${nwd.start_time}`, 'YYYY-MM-DD HH:mm:ss');
+                const nwdEnd = moment(`${formattedDayDate} ${nwd.end_time}`, 'YYYY-MM-DD HH:mm:ss');
+                if (nwdStart.isBefore(blockEndMoment) && nwdEnd.isAfter(blockStartMoment)) {
+                  console.log(nwd);
+                  resolve(true); // Overlap found
+                  return;
+                }
+              }
+            }
+          }
+  
+          resolve(false); // No overlap found
         },
         error => {
-            console.error('An error occurred', error);
-            this.spinnerService.hide();
-            this.toastr.error('Erreur');
+          console.error('Error in checkOverlap:', error);
+          reject(error);
         }
-    );
+      );
+    });
   }
+  
 
   deleteBlockDay() {
     if (this.idEditBlock) {

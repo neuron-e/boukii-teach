@@ -106,7 +106,7 @@
       </div> 
 
       <div class="inputs-flex">
-        <div>
+        <div class="flex-1">
           <div class="input-label color-light montserrat">
             Date de début
           </div>
@@ -115,7 +115,7 @@
             <input class="montserrat" type="text" disabled="true" [(ngModel)]="firstDateSelectedFormat" />
           </div>
         </div>
-        <div>
+        <div class="flex-1">
           <div class="input-label color-light montserrat">
             Date de fin
           </div>
@@ -139,7 +139,7 @@
       </div>
 
       <ng-container *ngIf="!allHoursMonth">
-        <div class="input-label color-light montserrat mb-24">
+        <div class="input-label color-light montserrat">
           Heure de début
         </div>
         <div class="input-form-icon background-color-dark">
@@ -214,7 +214,7 @@
         </div>
 
         <ng-container *ngIf="!allHoursDay">
-          <div class="input-label color-light montserrat mb-24">
+          <div class="input-label color-light montserrat">
             Heure de début
           </div>
           <div class="input-form-icon background-color-dark">
@@ -239,6 +239,45 @@
         <div class="input-form-icon background-color-dark">
           <input class="montserrat" type="text" [(ngModel)]="nameBlockDay" />
         </div>
+
+        <ng-container *ngIf="idEditBlock">
+          <div class="circle-list-item mb-24">
+            <div class="custom-radio">
+              <label class="simple-check-option">
+                  <input type="checkbox" [(ngModel)]="divideDay" />
+                  <div class="custom-check"></div>
+              </label>
+            </div>
+            <div class="montserrat color-light circle-list-item-text">
+              Diviser
+            </div>
+          </div>
+
+          <ng-container *ngIf="divideDay">
+            <div class="inputs-flex">
+              <div class="flex-1">
+                <div class="input-label color-light montserrat">
+                  Début de division
+                </div>
+                <div class="input-form-icon background-color-dark">
+                  <select class="montserrat" [(ngModel)]="startTimeDivision"(change)="onStartTimeDivisionChange()">
+                    <option *ngFor="let hour of filteredStartHoursDivision" [value]="hour">{{hour}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="input-label color-light montserrat">
+                  Fin de division
+                </div>
+                <div class="input-form-icon background-color-dark">
+                  <select class="montserrat" [(ngModel)]="endTimeDivision">
+                    <option *ngFor="let hour of filteredEndHoursDivision" [value]="hour">{{hour}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
 
         <button (click)="saveBlockDay()" [disabled]="!isButtonDayEnabled()" class="content-button btn-back-primary montserrat mb-32 mt-32">
           Sauvegarder
