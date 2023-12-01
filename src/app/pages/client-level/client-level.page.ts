@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
 
 @Component({
@@ -14,6 +17,8 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   monitorData: any;
   private subscription: Subscription;
 
+  showMultimedia:boolean = false;
+  showView:boolean = false;
   completeLevel:boolean = false;
 
   degrees: any[] = [];
@@ -22,8 +27,11 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   goals: any[] = [];
   filteredGoals: any[] = [];
 
-  clientId:any;
-  sportId:any;
+  typeRoute:any;
+  bookingId:any;
+  dateBooking:any;
+  clientIdBooking:any;
+  sportIdBooking:any;
   clientMonitor:any;
   sportEvaluation:any;
 
@@ -37,22 +45,37 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   clientDegreeEvaluation:any;
   allGoalScores:any[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+  allMultimedia:any[] = [];
+  allMultimediaDelete:any[] = [];
+  viewTypeSelected:string;
+  viewFileSelected:string;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
 
   async ngOnInit() {
-    this.subscription = this.monitorDataService.getMonitorData().subscribe( monitorData => {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
       if (monitorData) {
         this.monitorData = monitorData;
+        try {
+          this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
+          this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.toastr.error("Erreur lors du chargement des données");
+        }
   
         this.activatedRoute.params.subscribe( async params => {
-          this.clientId = +params['client'];
-          this.sportId = +params['sport'];
-          if (this.clientId && this.sportId) {
-            await this.getDegrees();
-            await this.getSports();
+          this.typeRoute = params['type'];
+          this.bookingId = +params['id'];
+          this.dateBooking = params['date'];
+          this.clientIdBooking = +params['client'];
+          this.sportIdBooking = +params['sport'];
+          if (this.typeRoute && this.bookingId && this.dateBooking && this.clientIdBooking && this.sportIdBooking) {
+            this.spinnerService.show();
             await this.getClientEvaluations();
             this.getClient();
             this.getClientSports();
+            this.spinnerService.hide();
           } else {
             this.goTo('home');
           }
@@ -62,7 +85,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   }
 
   getClient() {
-    this.teachService.getData(`teach/clients/${this.clientId}`).subscribe(
+    this.teachService.getData(`teach/clients/${this.clientIdBooking}`).subscribe(
       (data:any) => {
         const client = data.data;
         if (client) {
@@ -70,7 +93,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           const age = moment().diff(birthDate, 'years');
           client.birth_years = age;
 
-          let sport = client.sports.find((sport:any) => sport.id === this.sportId);
+          let sport = client.sports.find((sport:any) => sport.id === this.sportIdBooking);
           if (sport && sport.pivot) {
             if(sport.pivot.degree_id){
               client.degree_sport = sport.pivot.degree_id;
@@ -113,39 +136,6 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     );
   }
 
-  async getDegrees() {
-    try {
-      const data: any = await this.teachService.getData('degrees').toPromise();
-      console.log(data);
-      this.degrees = data.data;
-  
-      this.degrees.sort((a, b) => a.degree_order - b.degree_order);
-  
-      // Inactive color
-      this.degrees.forEach(degree => {
-        degree.inactive_color = this.lightenColor(degree.color, 30);
-      });
-  
-      // Filter by sport
-      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportId);
-      console.log('Processed Degrees:', this.degrees);
-      console.log('Sport Degrees:', this.sportDegrees);
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }  
-
-  async getSports() {
-    try {
-      const data: any = await this.teachService.getData('sports').toPromise();
-      console.log(data);
-      this.sports = data.data;
-      this.sportEvaluation = this.sports.find(sport => sport.id === this.sportId);
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }
-
   async getGoals() {
     try {
       const data: any = await this.teachService.getData('degrees-school-sport-goals').toPromise();
@@ -169,12 +159,12 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   }
 
   async getClientSports() {
-    this.teachService.getData('client-sports', null, { client_id: this.clientId }).subscribe(
+    this.teachService.getData('client-sports', null, { client_id: this.clientIdBooking }).subscribe(
       (data: any) => {
         console.log(data);
   
         const filteredSports = data.data.filter((sport:any) => 
-          sport.client_id === this.clientId && sport.sport_id === this.sportId);
+          sport.client_id === this.clientIdBooking && sport.sport_id === this.sportIdBooking);
   
         if (filteredSports.length === 0) {
           this.currentClientSport = null;
@@ -194,7 +184,11 @@ export class ClientLevelPage implements OnInit, OnDestroy {
 
   async getClientEvaluations() {
     try {
-      const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientId }).toPromise();
+      // Filter by sport
+      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
+      this.sportEvaluation = this.sports.find(sport => sport.id === this.sportIdBooking);
+      
+      const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientIdBooking }).toPromise();
       console.log(data);
       this.clientEvaluations = data.data;
   
@@ -230,36 +224,21 @@ export class ClientLevelPage implements OnInit, OnDestroy {
         if (filteredEvaluations.length === 0) {
           this.clientDegreeEvaluation = null;
           this.observationsEvaluation = '';
+          this.allMultimedia = [];
         } else if (filteredEvaluations.length === 1) {
           this.clientDegreeEvaluation = filteredEvaluations[0];
           this.observationsEvaluation = this.clientDegreeEvaluation.observations;
+          this.allMultimedia = this.clientDegreeEvaluation.files;
         } else {
           this.clientDegreeEvaluation = filteredEvaluations.sort((a:any, b:any) => b.id - a.id)[0];
           this.observationsEvaluation = this.clientDegreeEvaluation.observations;
+          this.allMultimedia = this.clientDegreeEvaluation.files;
         }
   }
 
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
-  }
-
-  lightenColor(hexColor:any, percent:any) {
-    let r:any = parseInt(hexColor.substring(1, 3), 16);
-    let g:any = parseInt(hexColor.substring(3, 5), 16);
-    let b:any = parseInt(hexColor.substring(5, 7), 16);
-
-    // Increase the lightness
-    r = Math.round(r + (255 - r) * percent / 100);
-    g = Math.round(g + (255 - g) * percent / 100);
-    b = Math.round(b + (255 - b) * percent / 100);
-
-    // Convert RGB back to hex
-    r = r.toString(16).padStart(2, '0');
-    g = g.toString(16).padStart(2, '0');
-    b = b.toString(16).padStart(2, '0');
-
-    return `#${r}${g}${b}`;
   }
 
   onCurrentLevelChange(newLevel: number) {
@@ -288,6 +267,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   allGoalsCompleted() {
     return this.filteredGoals.every(goal => goal.score === 10);
   }
+  
 
   handleGoalsAndClientSport(evaluationId:any) {
     const goalPostPromises = this.filteredGoals.map(goal => {
@@ -304,52 +284,109 @@ export class ClientLevelPage implements OnInit, OnDestroy {
         }
     });
 
-    Promise.all(goalPostPromises).then(() => {
-        //Assign level to client
-        let nextLevel = this.currentLevelMain.id;
-        if (this.allGoalsCompleted() && this.completeLevel) {
-          if (this.sportDegrees[this.newLevel + 1] && this.sportDegrees[this.newLevel + 1].id) {
+    // First, handle all goals
+    Promise.all(goalPostPromises)
+        .then(() => {
+            // Then, process allMultimedia
+            return this.processAllMultimedia(evaluationId);
+        })
+        .then(() => {
+            // After that, process allMultimediaDelete
+            return this.processAllMultimediaDelete();
+        })
+        .then(() => {
+            // Finally, handle client-sports after all the above are done
+            return this.assignLevelToClient(evaluationId);
+        })
+        .catch(error => {
+            console.error('Error in processing:', error);
+            this.spinnerService.hide();
+        });
+  }
+
+  processAllMultimedia(evaluationId:any) {
+    if (this.allMultimedia && this.allMultimedia.length > 0) {
+        const multimediaPromises = this.allMultimedia.map(multimedia => {
+            if (!multimedia.id) {
+                let dataMultimedia = {
+                    evaluation_id: evaluationId,
+                    name: '',
+                    type: multimedia.type,
+                    file: multimedia.file
+                };
+                return this.teachService.postData('evaluation-files', dataMultimedia).toPromise();
+            } else {
+                return Promise.resolve(null); // Resolve to null for existing items
+            }
+        });
+        return Promise.all(multimediaPromises);
+    } else {
+        return Promise.resolve([]); // Resolve to an empty array
+    }
+  }
+
+  processAllMultimediaDelete() {
+      if (this.allMultimediaDelete && this.allMultimediaDelete.length > 0) {
+          const deletePromises = this.allMultimediaDelete.map(multimedia => {
+              return this.teachService.deleteData('evaluation-files', multimedia.id).toPromise();
+          });
+          return Promise.all(deletePromises);
+      } else {
+          return Promise.resolve([]);
+      }
+  }
+
+  assignLevelToClient(evaluationId:any) {
+    let nextLevel = this.currentLevelMain.id;
+    if (this.allGoalsCompleted() && this.completeLevel) {
+        if (this.sportDegrees[this.newLevel + 1] && this.sportDegrees[this.newLevel + 1].id) {
             nextLevel = this.sportDegrees[this.newLevel + 1].id;
-          }
         }
+    }
 
-        let dataClient = {
-          client_id: this.clientId,
-          sport_id: this.sportId,
-          degree_id: nextLevel
-        };
+    let dataClient = {
+        client_id: this.clientIdBooking,
+        sport_id: this.sportIdBooking,
+        degree_id: nextLevel
+    };
 
-        //Check if a client-sport already exists
-        if (this.currentClientSport) {
-          this.teachService.updateData('client-sports', this.currentClientSport.id, dataClient).subscribe(
-              response => {
-                  console.log('Response:', response);
-                  this.goTo('client-detail',this.clientId);
-              },
-              error => {
-                  console.error('Error:', error);
-              }
-          );
-        } else {
-          this.teachService.postData('client-sports', dataClient).subscribe(
-              response => {
-                  console.log('Response:', response);
-                  this.goTo('client-detail',this.clientId);
-              },
-              error => {
-                  console.error('Error:', error);
-              }
-          );
-        }
-    }).catch(error => {
-        console.error('Error in posting/updating goals:', error);
-    });
-}
+    // Check if a client-sport already exists
+    if (this.currentClientSport) {
+        return this.teachService.updateData('client-sports', this.currentClientSport.id, dataClient).subscribe(
+            response => {
+                console.log('Response:', response);
+                this.spinnerService.hide();
+                this.goBackType();
+                this.toastr.success('Évaluation enregistrée');
+            },
+            error => {
+                console.error('Error:', error);
+                this.toastr.error('Erreur');
+                this.spinnerService.hide();
+            }
+        );
+    } else {
+        return this.teachService.postData('client-sports', dataClient).subscribe(
+            response => {
+                console.log('Response:', response);
+                this.spinnerService.hide();
+                this.goBackType();
+                this.toastr.success('Évaluation enregistrée');
+            },
+            error => {
+                console.error('Error:', error);
+                this.toastr.error('Erreur');
+                this.spinnerService.hide();
+            }
+        );
+    }
+  }
 
   saveEvaluation() {
 
+    this.spinnerService.show();
       const data = {
-        client_id: this.clientId,
+        client_id: this.clientIdBooking,
         degree_id: this.currentLevelMain.id,
         observations: this.observationsEvaluation
       };
@@ -358,15 +395,61 @@ export class ClientLevelPage implements OnInit, OnDestroy {
             this.handleGoalsAndClientSport(this.clientDegreeEvaluation.id);
         }, error => {
             console.error('Error in updating evaluation:', error);
+            this.spinnerService.hide();
         });
     } else {
         this.teachService.postData('evaluations', data).subscribe(response => {
             this.handleGoalsAndClientSport(response.data.id);
         }, error => {
             console.error('Error in posting evaluation:', error);
+            this.spinnerService.hide();
         });
     }
 
+  }
+
+  addMultimedia(fileData: { base64: string, isVideo: boolean }): void {
+    if(fileData.base64) {
+      const newFile = {
+        type: fileData.isVideo ? 'video' : 'image',
+        file: fileData.base64
+      }
+      this.allMultimedia.push(newFile);
+    }
+  }
+
+  deleteMultimedia(index:number) {
+    if(this.allMultimedia[index]){
+      if(this.allMultimedia[index].id){
+        this.allMultimediaDelete.push(this.allMultimedia[index]);
+      }
+      this.allMultimedia.splice(index, 1);
+    }
+  }
+
+  viewMultimedia(type:string,file:string) {
+    if(type && file){
+      this.viewTypeSelected = type;
+      this.viewFileSelected = file;
+      this.toggleView();
+    }
+  }
+
+  toggleMultimedia(): void {
+    this.showMultimedia = !this.showMultimedia;
+  }
+
+  toggleView(): void {
+    this.showView = !this.showView;
+  }
+
+  goBackType() {
+    if(this.typeRoute == 'course'){
+      this.goTo('course-detail-level',this.bookingId,this.dateBooking,this.clientIdBooking,this.sportIdBooking);
+    }
+    else{
+      this.goTo('client-detail',this.clientIdBooking);
+    }
   }
 
   goTo(...urls: string[]) {
@@ -374,7 +457,9 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
 
 @Component({
@@ -54,72 +57,107 @@ export class CalendarPage implements OnInit, OnDestroy {
     {date:'2023-11-11',hour_start:'09:00',hour_end:'11:00',type:'block'},
   ];*/
 
-  hourStartDay: string = '07:00';
+  hourStartDay: string = '08:00';
   hourEndDay: string = '18:00';
   hoursRange: string[] = [];
 
   bookingsCurrent: any[] = [];
+  nwdsCurrent: any[] = [];
   degrees: any[] = [];
   sports: any[] = [];
   monthBoundaries:any;
+  canRestart:boolean=false;
 
-  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
 
   async ngOnInit() {
-    this.selectedDate = new Date();
-    this.currentMonth = this.selectedDate.getMonth();
-    this.currentYear = this.selectedDate.getFullYear();
-    this.currentDay = this.selectedDate.getDate();
-    const { firstDay, lastDay } = this.getMonthBoundaries(this.currentYear, this.currentMonth);
-    this.initializeMonthNames();
-    await this.generateHoursRange();
-    await this.loadBookings(firstDay,lastDay);
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
+      if (monitorData) {
+        this.spinnerService.show();
+        this.monitorData = monitorData;
+        try {
+          this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.toastr.error("Erreur lors du chargement des données");
+        }
+
+        this.selectedDate = new Date();
+        this.currentMonth = this.selectedDate.getMonth();
+        this.currentYear = this.selectedDate.getFullYear();
+        this.currentDay = this.selectedDate.getDate();
+        const { firstDay, lastDay } = this.getMonthBoundaries(this.currentYear, this.currentMonth);
+        this.initializeMonthNames();
+        await this.generateHoursRange();
+        this.loadBookings(firstDay,lastDay);
+      }
+    });
+  }
+
+  //Reload tasks for block updates
+  ionViewDidEnter() {
+    this.restartTasksAgain();
   }
 
   getMonthBoundaries(year:any, month:any) {
-    const firstDay = new Date(year, month, 1);
-    const formattedFirstDay = firstDay.toISOString().split('T')[0];
-  
-    const lastDay = new Date(year, month + 1, 0);
-    const formattedLastDay = lastDay.toISOString().split('T')[0];
-  
-    return { firstDay: formattedFirstDay, lastDay: formattedLastDay };
+    const firstDay = moment(new Date(year, month, 1)).format('YYYY-MM-DD');
+    const lastDay = moment(new Date(year, month + 1, 0)).format('YYYY-MM-DD');
+    return { firstDay: firstDay, lastDay: lastDay };
   }
 
-  restInitialization() {
-    this.renderCalendar();
-  }
-
-  async restartTasks() {
+  restartTasks() {
     const { firstDay, lastDay } = this.getMonthBoundaries(this.currentYear, this.currentMonth);
-    await this.loadBookings(firstDay,lastDay);
+    this.loadBookings(firstDay,lastDay);
   }
 
-  async restartTasksRange(firstDay:string,lastDay:string) {
-    await this.loadBookings(firstDay,lastDay);
+  restartTasksRange(firstDay:string,lastDay:string) {
+    this.loadBookings(firstDay,lastDay);
   }
 
-  async loadBookings(firstDay:string,lastDay:string) {
-    this.teachService.getData('teach/getAgenda', null, { date_start: firstDay, date_end: lastDay }).subscribe(
-      async (data:any) => {
+  restartTasksAgain() {
+    if(this.canRestart){
+      if(this.showMonth){
+        this.restartTasks();
+      }
+      else if(this.showWeek){
+        const formattedWeekStart = moment(this.weekStart).format('YYYY-MM-DD');
+        const formattedWeekEnd = moment(this.weekEnd).format('YYYY-MM-DD');
+        this.restartTasksRange(formattedWeekStart,formattedWeekEnd);
+      }
+      else if(this.showDay){
+        const formattedDay = moment(this.selectedDate).format('YYYY-MM-DD');
+        this.restartTasksRange(formattedDay,formattedDay);
+      }
+    }
+    else{
+      this.canRestart = true;
+    }
+  }
+
+  loadBookings(firstDay:string,lastDay:string) {
+    this.spinnerService.show();
+    this.teachService.getData('teach/getAgenda', null, { date_start: firstDay, date_end: lastDay, school_id: this.monitorData.active_school }).subscribe(
+      (data:any) => {
         console.log(data);
-        await this.processBookings(data.data.bookings);
+        this.processBookings(data.data.bookings, data.data.nwd);
       },
       error => {
         console.error('There was an error!', error);
+        this.spinnerService.hide();
       }
     );
   }
 
-  async processBookings(bookings: any[]) {
+  processBookings(bookings: any[], nwds: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsCurrent = [];
+    this.nwdsCurrent = nwds;
   
     bookings.forEach(booking => {
       if (booking.course) {
         let key = `${booking.course_id}-${booking.course_date_id}`;
         if(booking.course.course_type == 1){
-          key = `${booking.course_id}-${booking.course_date_id}-${booking.course_group_id}`;
+          key = `${booking.course_id}-${booking.course_date_id}-${booking.course_subgroup_id}`;
         }
         if (!uniqueCourseGroups.has(key)) {
           uniqueCourseGroups.set(key, {
@@ -135,40 +173,70 @@ export class CalendarPage implements OnInit, OnDestroy {
   
     console.log('Processed Bookings:', this.bookingsCurrent);
 
-    this.tasksCalendar = this.bookingsCurrent.map(booking => {
-      let type;
-      switch(booking.course.course_type) {
-        case 1:
-          type = 'collective';
-          break;
-        case 2:
-          type = 'private';
-          break;
-        default:
-          type = 'unknown';
-      }
-  
-      const dateTotalAndIndex = booking.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
-        date_total: booking.course.course_dates.length,
-        date_index: this.getPositionDate(booking.course.course_dates, booking.course_date_id)
-      };
-  
-      return {
-        booking_id: booking.id,
-        date: moment(booking.date).format('YYYY-MM-D'),
-        hour_start: booking.hour_start.substring(0, 5),
-        hour_end: booking.hour_end.substring(0, 5),
-        type: type,
-        name: booking.course.name,
-        sport_id: booking.course.sport_id,
-        clients: booking.all_clients.length,
-        max_participants: booking.course.max_participants,
-        ...dateTotalAndIndex
-      };
-    });
-  
-    console.log('Tasks Calendar:', this.tasksCalendar);
-    await this.updateTasksWithStyles();
+    this.tasksCalendar = [
+      //BOOKINGS
+      ...this.bookingsCurrent.map(booking => {
+        let type;
+        switch(booking.course.course_type) {
+          case 1:
+            type = 'collective';
+            break;
+          case 2:
+            type = 'private';
+            break;
+          default:
+            type = 'unknown';
+        }
+    
+        const dateTotalAndIndex = booking.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
+          date_total: booking.course.course_dates.length,
+          date_index: this.getPositionDate(booking.course.course_dates, booking.course_date_id)
+        };
+        
+        const sport = this.sports.find(s => s.id === booking.course.sport_id);
+    
+        return {
+          booking_id: booking.id,
+          date: moment(booking.date).format('YYYY-MM-DD'),
+          hour_start: booking.hour_start.substring(0, 5),
+          hour_end: booking.hour_end.substring(0, 5),
+          type: type,
+          name: booking.course.name,
+          sport_id: booking.course.sport_id,
+          sport_name: sport ? sport.name : '',
+          clients: booking.all_clients.length,
+          max_participants: booking.course.max_participants,
+          ...dateTotalAndIndex
+        };
+      }),
+      //NWDS -> for active_school
+      ...this.nwdsCurrent.filter(nwd => nwd.school_id === this.monitorData.active_school)
+      .map(nwd => {
+
+        const hourTimesNwd = nwd.full_day ? {
+            hour_start: this.hourStartDay,
+            hour_end: this.hourEndDay
+          } : {
+          hour_start: nwd.start_time.substring(0, 5),
+          hour_end: nwd.end_time.substring(0, 5)
+        };
+
+        return {
+          school_id: nwd.school_id,
+          block_id: nwd.id,
+          date: moment(nwd.start_date).format('YYYY-MM-DD'),
+          full_day: nwd.full_day,
+          type: nwd.user_nwd_subtype_id == 1 ? 'block' : 'block_payed',
+          color: nwd.color,
+          name: nwd.description,
+          ...hourTimesNwd
+        };
+      })
+    ];
+    
+    console.log('Combined Tasks Calendar:', this.tasksCalendar);
+    this.updateTasksWithStyles();
+    this.spinnerService.hide();
   }  
 
   getPositionDate(courseDates: any[], courseDateId: string): number {
@@ -176,28 +244,17 @@ export class CalendarPage implements OnInit, OnDestroy {
     return index >= 0 ? index + 1 : 0;
   }
 
-  getDegrees() {
-    this.teachService.getData('degrees').subscribe(
-      (data:any) => {
-        console.log(data);
-        this.degrees = data.data;
-      },
-      error => {
-        console.error('There was an error!', error);
-      }
-    );
-  }
-
-  getSports() {
-    this.teachService.getData('sports').subscribe(
-      (data:any) => {
-        console.log(data);
-        this.sports = data.data;
-      },
-      error => {
-        console.error('There was an error!', error);
-      }
-    );
+  getTaskStyle(task: any, weekStyle: boolean = false) {
+    let baseStyle = weekStyle ? task.styleWeek : task.style;
+  
+    if (task.type === 'block' || task.type === 'block_payed') {
+      return {
+        ...baseStyle,
+        'background': task.color
+      };
+    } else {
+      return baseStyle;
+    }
   }
 
   toggleMenu() {
@@ -284,6 +341,8 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   calculateDayRange() {
     const formattedDay = moment(this.selectedDate).format('YYYY-MM-DD');
+    this.currentMonth = this.selectedDate.getMonth();
+    this.currentYear = this.selectedDate.getFullYear();
     this.restartTasksRange(formattedDay,formattedDay);
   }
 
@@ -321,6 +380,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
   
   renderCalendar() {
+    this.spinnerService.show();
     const startDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
     
@@ -345,9 +405,11 @@ export class CalendarPage implements OnInit, OnDestroy {
       spanDate.setHours(0, 0, 0, 0);
       
       const isPast = spanDate < currentDate;
-      const dateStr = `${this.currentYear}-${this.currentMonth + 1}-${i}`;
+      //Format month/day 2 digits
+      const monthStr = `${this.currentMonth + 1}`.padStart(2, '0');
+      const dayStr = `${i}`.padStart(2, '0');
+      const dateStr = `${this.currentYear}-${monthStr}-${dayStr}`;
       const isToday = i === currentDay && this.currentMonth === currentMonth && this.currentYear === currentYear;
-      const isActive = this.tasksCalendar.some(task => task.date === dateStr && task.type !== 'block');
       
       const taskTypes = this.tasksCalendar.reduce((accumulator, task) => {
         if (task.date === dateStr) {
@@ -373,7 +435,10 @@ export class CalendarPage implements OnInit, OnDestroy {
     }
 
     // Filter tasks for day
-    const selectedDateStr = `${this.currentYear}-${this.currentMonth + 1}-${this.currentDay}`;
+    //Format month/day 2 digits
+    const monthStrDay = `${this.currentMonth + 1}`.padStart(2, '0');
+    const dayStrDay = `${this.currentDay}`.padStart(2, '0');
+    const selectedDateStr = `${this.currentYear}-${monthStrDay}-${dayStrDay}`;
     this.filteredTasks = this.tasksCalendar.filter(task => task.date === selectedDateStr);
     // Filter tasks for week
     this.filteredTasksWeek = this.tasksCalendar.filter(task => {
@@ -381,9 +446,11 @@ export class CalendarPage implements OnInit, OnDestroy {
       taskDate.setHours(0, 0, 0, 0);
       return taskDate >= this.weekStart && taskDate <= this.weekEnd;
     });
+    this.spinnerService.hide();
   }
 
   selectDay(day:any): void {
+
     if(day.number) {
       this.selectedDate = new Date(this.currentYear, this.currentMonth, day.number);
       this.currentDay = day.number;
@@ -391,7 +458,10 @@ export class CalendarPage implements OnInit, OnDestroy {
       this.showDay=true;this.showMonth=false;this.showWeek=false;
 
       // Filter tasks for day
-      const selectedDateStr = `${this.currentYear}-${this.currentMonth + 1}-${this.currentDay}`;
+      //Format month/day 2 digits
+      const monthStrDay = `${this.currentMonth + 1}`.padStart(2, '0');
+      const dayStrDay = `${this.currentDay}`.padStart(2, '0');
+      const selectedDateStr = `${this.currentYear}-${monthStrDay}-${dayStrDay}`;
       this.filteredTasks = this.tasksCalendar.filter(task => task.date === selectedDateStr);
     }
   }
@@ -463,7 +533,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       };
     });
 
-    this.restInitialization()
+    this.renderCalendar()
   }
 
   getDayOfWeek(dateStr: string): number {
@@ -482,12 +552,28 @@ export class CalendarPage implements OnInit, OnDestroy {
     }
   }
 
+  openAvailables(id_edit?: any, date?: string) {
+    if(id_edit && date){
+      this.goTo('calendar-available','day',date,id_edit);
+    }
+    else{
+      if(this.showDay){
+        this.goTo('calendar-available','day',moment(this.selectedDate).format('YYYY-MM-DD'));
+      }
+      else{
+        this.goTo('calendar-available');
+      }
+    }
+  }
+
   goTo(...urls: string[]) {
     this.router.navigate(urls);
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

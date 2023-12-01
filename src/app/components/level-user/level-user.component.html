@@ -4,7 +4,7 @@
       <img [src]="userImage" class="level-image" [style.width.px]="imageSize" [style.height.px]="imageSize" />
       <!--Levels-->
       <svg [attr.width]="size" [attr.height]="size" [attr.viewBox]="viewBox" xmlns="http://www.w3.org/2000/svg">
-        <path *ngFor="let level of dataLevels; let i = index" 
+        <path *ngFor="let level of allLevels; let i = index" 
               [attr.d]="getCirclePath(i)" 
               [attr.stroke]="getCircleColor(i, selectLevel)" 
               fill="none" 

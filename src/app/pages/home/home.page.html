@@ -3,24 +3,26 @@
 
       <div class="content-img-wrapper">
         <div class="wrapper-back"></div>
-        <img src="assets/images/test-station.jpg" class="content-img-back" />
+        <img *ngIf="monitorStation && monitorStation.image" [src]="monitorStation.image" class="content-img-back" />
         <img src="assets/images/boukii-logo.png" class="box-icon-logo" />
+        <!-- PENDIENTEHACER
         <div class="box-icon-left cursor-pointer" (click)="goTo('notifications')">
           <img src="assets/icon/icon-notification.png" />
           <div class="bullet-notification"></div>
         </div>
+        -->
         <div class="box-icon-right cursor-pointer" (click)="toggleMenu()">
           <img src="assets/icon/icon-menu.png" />
         </div>
 
-        <div class="content-img-text cursor-pointer" (click)="goTo('monitor-detail')">
+        <div *ngIf="monitorData" class="content-img-text cursor-pointer" (click)="goTo('monitor-profile')">
           <div class="content-img-text-img">
-            <img src="assets/images/test-photo.jpg" />
+            <img [src]="monitorData.image ? monitorData.image : 'assets/icon/icons-outline-default-avatar.svg'" />
           </div>
           <div class="flex-user-text">
-            <div class="color-light flex-user-subtitle" >ESS LES PACCOTS</div>
+            <div *ngIf="monitorSchool && monitorSchool.name" class="color-light flex-user-subtitle uppercase">{{monitorSchool.name}}</div>
             <div class="flex-user-title">
-              <div>{{ monitorData?.first_name }} {{ monitorData?.last_name }}</div>
+              <div>{{ monitorData.first_name }} {{ monitorData.last_name }}</div>
               <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
             </div>
           </div>
@@ -38,17 +40,29 @@
         <div class="content-title-day-header">La journee</div>
       </div>
       
-      <div class="montserrat mb-8 color-light title-selector-small">
-        MÉTÉO
-      </div>
-
-      <div class="background-color-dark box-radius flex-weather">
-        <div *ngFor="let day of weatherWeek" class="flex-weather-item">
-          <div class="color-light montserrat">{{day.hour}}</div>
-          <img [src]="day.img" />
-          <div class="montserrat">{{day.degrees}}º</div>
+      <ng-container *ngIf="meteo && meteo.length">
+        <div class="montserrat mb-8 color-light title-selector-small">
+          MÉTÉO
         </div>
-      </div>
+
+        <div class="background-color-dark box-radius flex-weather">
+          <div class="flex-weather-item">
+            <div class="color-light montserrat">{{meteo[0].time}}</div>
+            <img [src]="'assets/icon/weather/' + meteo[0].icon + '.png'" />
+            <div class="montserrat">{{meteo[0].temperature}}º</div>
+          </div>
+          <div class="flex-weather-item">
+            <div class="color-light montserrat">{{meteo[4].time}}</div>
+            <img [src]="'assets/icon/weather/' + meteo[4].icon + '.png'" />
+            <div class="montserrat">{{meteo[4].temperature}}º</div>
+          </div>
+          <div class="flex-weather-item">
+            <div class="color-light montserrat">{{meteo[8].time}}</div>
+            <img [src]="'assets/icon/weather/' + meteo[8].icon + '.png'" />
+            <div class="montserrat">{{meteo[8].temperature}}º</div>
+          </div>
+        </div>
+      </ng-container>
 
       <!--Title selector-->
       <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('calendar')">
@@ -109,19 +123,19 @@
                       Collectif
                     </ng-container>
                     <ng-container *ngIf="booking.course.course_type == 2">
-                      Private
+                      Privé
                     </ng-container>
-                    <!--CAMBIAR CUANDO TENGAS SPORTS CORRECTOS-->
-                    <ng-container *ngIf="booking.course.sport_id && sports.length">
-                      {{sports[booking.course.sport_id].name}}
+                    <ng-container *ngIf="booking.course_sport && sports.length">
+                      {{booking.course_sport.name}}
                     </ng-container>
                   </span>
                 </div>
               </div>
             </div>
             <!--CAMBIAR CUANDO TENGAS DEGREES CORRECTOS-->
-            <div class="box-selector-level" *ngIf="booking.degree_id && degrees.length">
-              {{degrees[booking.degree_id].annotation}}
+            <div class="box-selector-level color-light" *ngIf="booking.course.course_type == 1 && booking.course_degree && degrees.length"
+                [ngStyle]="{'background': booking.course_degree.color}">
+              {{booking.course_degree.annotation}}
             </div>
           </div>
 

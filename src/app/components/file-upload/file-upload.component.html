@@ -1,0 +1,17 @@
+<div class="modal">
+  <div class="modal-content content-background-image">
+    <img src="assets/icon/icons-outline-close.svg" class="cursor-pointer modal-close" (click)="doCloseModal()" />
+
+    <div class="title-upload mt-24 mb-24">{{title}}</div>
+    <div class="file-upload">
+      <input type="file" #fileInput (change)="onFileSelected($event)" [accept]="acceptTypes" style="display: none;">
+      <button (click)="fileInput.click()" class="content-button btn-back-grey montserrat">Choisir le fichier</button>
+    </div>
+    <div *ngIf="filePreview" class="mt-24 mb-32">
+      <img *ngIf="!isVideo" [src]="filePreview" class="preview">
+      <video *ngIf="isVideo" [src]="filePreview" class="preview" muted playsinline></video>
+
+      <button (click)="saveFile()" class="content-button btn-back-primary montserrat mt-24">Sauvegarder</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<ion-content class="ion-content-scan">
+    <div class="content-size">
+        <div class="background-color-dark padding-wrapper status-bar-overlap-wrapper header-index">
+          <div class="header-section-content">
+            <div class="header-section-title">
+              <img src="assets/icon/icon-scan-blue.png" />
+              <div>Analyse</div>
+            </div>
+            <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+          </div>
+        </div>
+    
+        <div class="qr-scanner-wrapper">
+            <div class="qr-scanner-frame display-none">
+                <div class="corner top-left"></div>
+                <div class="corner top-right"></div>
+                <div class="corner bottom-left"></div>
+                <div class="corner bottom-right"></div>
+            </div>
+        </div>
+    </div>
+</ion-content>
+  
+  <app-footer section="scan"></app-footer>

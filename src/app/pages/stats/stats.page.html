@@ -10,12 +10,14 @@
           <div>Statistiques</div>
         </div>
       </div>
+      <!--
       <div class="input-form-icon-b margin-auto remove-bottom cursor-pointer">
         <select [(ngModel)]="selectedYear" class="montserrat" (change)="updateChartData()">
           <option value="year">Cette année</option>
           <option value="all">Toutes données</option>
         </select>
       </div>
+      -->
 
     </div>
 
@@ -46,13 +48,13 @@
 
       <div class="table-line no-border padding-wrapper pb-8">
         <div class="width-big">
-          Cours
+          Mois
         </div>
         <div class="width-small">
-          Heures
+          Collectif
         </div>
         <div class="width-small">
-          Revenu
+          Privé
         </div>
       </div>
 
@@ -62,62 +64,22 @@
             TOTAL
           </div>
           <div class="montserrat width-small">
-            XXXX h
+            {{totalCollectiveDurationFormatted}}
           </div>
           <div class="montserrat width-small">
-            XX,XX CHF
+            {{totalPrivateDurationFormatted}}
           </div>
         </div>
 
-        <div class="table-line pb-8 mb-8">
+        <div *ngFor="let month of reversedMonthsData" class="table-line pb-8 mb-8">
           <div class="montserrat width-big table-line-text">
-            <div>Advanced</div>
-            <span class="montserrat color-light">Collectif Ski</span>
+            <div>{{month.name}}</div>
           </div>
           <div class="montserrat width-small">
-            XXXX h
+            {{month.collectiveCourses}}
           </div>
           <div class="montserrat width-small">
-            XX,XX CHF
-          </div>
-        </div>
-
-        <div class="table-line pb-8 mb-8">
-          <div class="montserrat width-big table-line-text">
-            <div>Advanced</div>
-            <span class="montserrat color-light">Collectif Ski</span>
-          </div>
-          <div class="montserrat width-small">
-            XXXX h
-          </div>
-          <div class="montserrat width-small">
-            XX,XX CHF
-          </div>
-        </div>
-
-        <div class="table-line pb-8 mb-8">
-          <div class="montserrat width-big table-line-text">
-            <div>Advanced</div>
-            <span class="montserrat color-light">Collectif Ski</span>
-          </div>
-          <div class="montserrat width-small">
-            XXXX h
-          </div>
-          <div class="montserrat width-small">
-            XX,XX CHF
-          </div>
-        </div>
-
-        <div class="table-line pb-8 mb-8">
-          <div class="montserrat width-big table-line-text">
-            <div>Advanced</div>
-            <span class="montserrat color-light">Collectif Ski</span>
-          </div>
-          <div class="montserrat width-small">
-            XXXX h
-          </div>
-          <div class="montserrat width-small">
-            XX,XX CHF
+            {{month.privateCourses}}
           </div>
         </div>
 
@@ -126,10 +88,10 @@
             TOTAL
           </div>
           <div class="montserrat width-small">
-            XXXX h
+            {{totalCollectiveDurationFormatted}}
           </div>
           <div class="montserrat width-small">
-            XX,XX CHF
+            {{totalPrivateDurationFormatted}}
           </div>
         </div>
         

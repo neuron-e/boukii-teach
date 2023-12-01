@@ -5,7 +5,7 @@
 
       <div class="padding-wrapper">
         <div class="header-content mb-8">
-          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail')">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail',bookingId,dateBooking)">
             Cancel
           </div>
           <div class="header-top-title">
@@ -22,115 +22,28 @@
         </div>
         
         
-        <div class="member-list">
+        <div *ngIf="monitorSubgroup" class="member-list">
 
-          <div class="pb-8 mb-8 member-list-item">
+          <div *ngFor="let booking of monitorSubgroup.bookings_number" class="pb-8 mb-8 member-list-item">
             <div class="custom-radio">
               <label class="simple-check-option">
-                  <input type="checkbox" />
-                  <div class="custom-check"></div>
+                <input type="checkbox" [checked]="isBookingChecked(booking)" (change)="handleCheckboxChange(booking, $event)" />
+                <div class="custom-check"></div>
               </label>
             </div>
-            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+            <app-level-user *ngIf="sportDegrees && sportDegrees.length" [allLevels]="sportDegrees" [selectLevel]="getClientLevel(booking.client.sports,courseBookings.sport_id)" [size]="60" [userImage]="booking.client.image ? booking.client.image : 'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
+                  <div class="montserrat">{{booking.client.first_name}} {{booking.client.last_name}}</div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat">FR · Suisse · 40 ans</span>
-                  <!--<div class="montserrat">
-                    <div class="member-item-bullet"></div>NON PAYÉ
-                  </div>-->
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item">
-            <div class="custom-radio">
-              <label class="simple-check-option">
-                  <input type="checkbox" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat">FR · Suisse · 40 ans</span>
-                  <!--<div class="montserrat">
-                    <div class="member-item-bullet"></div>NON PAYÉ
-                  </div>-->
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item">
-            <div class="custom-radio">
-              <label class="simple-check-option">
-                  <input type="checkbox" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat">FR · Suisse · 40 ans</span>
-                  <div class="montserrat">
-                    <div class="member-item-bullet"></div>NON PAYÉ
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item">
-            <div class="custom-radio">
-              <label class="simple-check-option">
-                  <input type="checkbox" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat">FR · Suisse · 40 ans</span>
-                  <!--<div class="montserrat">
-                    <div class="member-item-bullet"></div>NON PAYÉ
-                  </div>-->
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item no-border">
-            <div class="custom-radio">
-              <label class="simple-check-option">
-                  <input type="checkbox" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="48" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat">FR · Suisse · 40 ans</span>
+                  <span class="montserrat">
+                    <ng-container *ngIf="booking.client.language1_id">
+                      {{getLanguageById(booking.client.language1_id)}} ·
+                    </ng-container>
+                    {{getCountryById(booking.client.country)}} · {{getBirthYears(booking.client.birth_date)}} ans
+                  </span>
                   <!--<div class="montserrat">
                     <div class="member-item-bullet"></div>NON PAYÉ
                   </div>-->
@@ -141,7 +54,7 @@
           
         </div>
 
-        <button (click)="confirmTransfer=true;" class="content-button btn-back-primary montserrat mb-32 mt-32">
+        <button (click)="continueTransfer()" [disabled]="isDisabledContinue()" class="content-button btn-back-primary montserrat mb-32 mt-32">
           Continuer
         </button>
 
@@ -153,7 +66,7 @@
 
       <div class="padding-wrapper">
         <div class="header-content mb-8">
-          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail')">
+          <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail',bookingId,dateBooking)">
             Cancel
           </div>
           <div class="header-top-title">
@@ -173,24 +86,14 @@
         </div>
         
         <div class="user-list-flex">
-          <div class="user-list-flex-item">
+
+          <div *ngFor="let booking of checkedBookings" class="user-list-flex-item">
             <div class="user-list-flex-item-img">
-              <img src="assets/images/test-photo.jpg" />
+              <img [src]="booking.client.image ? booking.client.image : 'assets/icon/icons-outline-default-avatar.svg'" />
             </div>
-            <div class="montserrat">Nom</div>
+            <div class="montserrat">{{booking.client.first_name}} {{booking.client.last_name}}</div>
           </div>
-          <div class="user-list-flex-item">
-            <div class="user-list-flex-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="montserrat">Nom</div>
-          </div>
-          <div class="user-list-flex-item">
-            <div class="user-list-flex-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="montserrat">Nom</div>
-          </div>
+
         </div>
 
         <div class="border-separator mt-24 mb-24"></div>
@@ -199,101 +102,45 @@
           <div class="menu-section-title">Choisir groupe</div>
         </div>
 
-        <div class="member-list">
+        <div *ngIf="restSubgroups && restSubgroups.length" class="member-list">
 
-          <div class="pb-8 mb-8 member-list-item-b">
-            <div class="custom-radio pt-12">
+          <div *ngFor="let subgroup of restSubgroups" class="pb-8 mb-8 member-list-item-b">
+            <img *ngIf="subgroup.bookings_number && (subgroup.bookings_number.length + checkedBookings.length) >= subgroup.max_participants" class="no-radio pt-12" src="assets/icon/icon-close-box.png" />
+            <div *ngIf="!subgroup.bookings_number || (subgroup.bookings_number && (subgroup.bookings_number.length + checkedBookings.length) < subgroup.max_participants)" class="custom-radio pt-12">
               <label class="simple-check-option">
-                  <input type="radio" name="groupSelection" />
+                  <input type="radio" name="groupSelection" [(ngModel)]="selectedSubgroup" [value]="subgroup" />
                   <div class="custom-check"></div>
               </label>
             </div>
             <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
+              <img *ngIf="!subgroup.monitor" src='assets/icon/icons-outline-default-avatar.svg' />
+              <img *ngIf="subgroup.monitor" 
+                [src]="subgroup.monitor.image ? subgroup.monitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
             </div>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
+                  <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
+                  <div *ngIf="!subgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
+                    {{subgroup.degree_data.annotation}}
+                  </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
+                  <span class="montserrat color-light">{{subgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
+                    {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
+                  </div>
                 </div>
                 <div class="member-item-data">
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
+                      <span *ngIf="subgroup.bookings_number && subgroup.bookings_number.length" class="montserrat color-light">{{subgroup.bookings_number.length}}/{{subgroup.max_participants}}</span>
+                      <span *ngIf="!subgroup.bookings_number || !subgroup.bookings_number.length" class="montserrat color-light">0/{{subgroup.max_participants}}</span>
                     </div>
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item-b">
-            <div class="custom-radio pt-12">
-              <label class="simple-check-option">
-                  <input type="radio" name="groupSelection" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
-                </div>
-                <div class="member-item-data">
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
-                    </div>
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item-b no-border">
-            <div class="custom-radio pt-12">
-              <label class="simple-check-option">
-                  <input type="radio" name="groupSelection" />
-                  <div class="custom-check"></div>
-              </label>
-            </div>
-            <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
-                </div>
-                <div class="member-item-data">
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
-                    </div>
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
+                      <span class="montserrat color-light">{{courseDateIndex+1}}/{{courseBookings.course_dates.length}}</span>
                     </div>
                 </div>
               </div>
@@ -302,7 +149,7 @@
 
         </div>
 
-        <button (click)="goTo('course-detail')" class="content-button btn-back-primary montserrat mb-32 mt-32">
+        <button (click)="saveTransfer()" [disabled]="isDisabledSave()" class="content-button btn-back-primary montserrat mb-32 mt-32">
           Confirmer
         </button>
 

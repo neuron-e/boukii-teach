@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 
 @Component({
@@ -14,6 +16,8 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
   monitorData: any;
   private subscription: Subscription;
 
+  showMultimedia:boolean = false;
+  showView:boolean = false;
   completeLevel:boolean = false;
 
   degrees: any[] = [];
@@ -39,12 +43,23 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
   clientDegreeEvaluation:any;
   allGoalScores:any[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+  allMultimedia:any[] = [];
+  viewTypeSelected:string;
+  viewFileSelected:string;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService) {}
 
   async ngOnInit() {
-    this.subscription = this.monitorDataService.getMonitorData().subscribe( monitorData => {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
       if (monitorData) {
         this.monitorData = monitorData;
+        try {
+          this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
+          this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.toastr.error("Erreur lors du chargement des données");
+        }
   
         this.activatedRoute.params.subscribe( async params => {
           this.bookingId = +params['id'];
@@ -52,8 +67,6 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
           this.clientIdBooking = +params['client'];
           this.sportIdBooking = +params['sport'];
           if (this.bookingId && this.dateBooking && this.clientIdBooking && this.sportIdBooking) {
-            await this.getDegrees();
-            await this.getSports();
             await this.getClientEvaluations();
             this.getClient();
             this.getClientSports();
@@ -117,39 +130,6 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
     );
   }
 
-  async getDegrees() {
-    try {
-      const data: any = await this.teachService.getData('degrees').toPromise();
-      console.log(data);
-      this.degrees = data.data;
-  
-      this.degrees.sort((a, b) => a.degree_order - b.degree_order);
-  
-      // Inactive color
-      this.degrees.forEach(degree => {
-        degree.inactive_color = this.lightenColor(degree.color, 30);
-      });
-  
-      // Filter by sport
-      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
-      console.log('Processed Degrees:', this.degrees);
-      console.log('Sport Degrees:', this.sportDegrees);
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }  
-
-  async getSports() {
-    try {
-      const data: any = await this.teachService.getData('sports').toPromise();
-      console.log(data);
-      this.sports = data.data;
-      this.sportEvaluation = this.sports.find(sport => sport.id === this.sportIdBooking);
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }
-
   async getGoals() {
     try {
       const data: any = await this.teachService.getData('degrees-school-sport-goals').toPromise();
@@ -198,6 +178,10 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
 
   async getClientEvaluations() {
     try {
+      // Filter by sport
+      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
+      this.sportEvaluation = this.sports.find(sport => sport.id === this.sportIdBooking);
+
       const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientIdBooking }).toPromise();
       console.log(data);
       this.clientEvaluations = data.data;
@@ -246,24 +230,6 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
-  }
-
-  lightenColor(hexColor:any, percent:any) {
-    let r:any = parseInt(hexColor.substring(1, 3), 16);
-    let g:any = parseInt(hexColor.substring(3, 5), 16);
-    let b:any = parseInt(hexColor.substring(5, 7), 16);
-
-    // Increase the lightness
-    r = Math.round(r + (255 - r) * percent / 100);
-    g = Math.round(g + (255 - g) * percent / 100);
-    b = Math.round(b + (255 - b) * percent / 100);
-
-    // Convert RGB back to hex
-    r = r.toString(16).padStart(2, '0');
-    g = g.toString(16).padStart(2, '0');
-    b = b.toString(16).padStart(2, '0');
-
-    return `#${r}${g}${b}`;
   }
 
   onCurrentLevelChange(newLevel: number) {
@@ -373,12 +339,46 @@ export class CourseDetailLevelUpdatePage implements OnInit, OnDestroy {
 
   }
 
+  addMultimedia(fileData: { base64: string, isVideo: boolean }): void {
+    if(fileData.base64) {
+      const newFile = {
+        type: fileData.isVideo ? 'video' : 'image',
+        file: fileData.base64
+      }
+      this.allMultimedia.push(newFile);
+    }
+  }
+
+  deleteMultimedia(index:number) {
+    if(this.allMultimedia[index]){
+      this.allMultimedia.splice(index, 1);
+    }
+  }
+
+  viewMultimedia(type:string,file:string) {
+    if(type && file){
+      this.viewTypeSelected = type;
+      this.viewFileSelected = file;
+      this.toggleView();
+    }
+  }
+
+  toggleMultimedia(): void {
+    this.showMultimedia = !this.showMultimedia;
+  }
+
+  toggleView(): void {
+    this.showView = !this.showView;
+  }
+
   goTo(...urls: string[]) {
     this.router.navigate(urls);
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

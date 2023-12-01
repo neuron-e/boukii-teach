@@ -2,7 +2,10 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { MenuService } from '../../services/menu.service';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-menu',
@@ -24,7 +27,7 @@ export class MenuComponent  implements OnInit {
   @Output() close = new EventEmitter<void>();
   showMenu$ = this.menuService.showMenu$;
 
-  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService) { }
+  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
 
   ngOnInit() {}
 
@@ -33,9 +36,15 @@ export class MenuComponent  implements OnInit {
   }
 
   logout() {
+    this.spinnerService.show();
     localStorage.removeItem('token');
     localStorage.removeItem('monitorId');
     this.monitorDataService.clearMonitorData();
+    this.sharedDataService.clearDegreesData();
+    this.sharedDataService.clearSportsData();
+    this.sharedDataService.clearLanguagesData();
+    this.spinnerService.hide();
+    this.toastr.success('Déconnecté');
     this.goTo('start');
   }
 

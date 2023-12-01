@@ -7,14 +7,27 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class LevelUserComponent  implements OnInit {
 
-  @Input() dataLevels: any[] = [];
+  @Input() allLevels: any[] = [];
   @Input() selectLevel: number = 0;
   @Input() size: number;
   @Input() userImage: string;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if(this.selectLevel){
+      let index = this.allLevels.findIndex(obj => obj.id === this.selectLevel);
+      if (index === -1) {
+        this.selectLevel = 0;
+      }
+      else{
+        this.selectLevel = index;
+      }
+    }
+    else{
+      this.selectLevel = 0;
+    }
+  }
 
   get viewBox(): string {
     return `-${this.size * 0.5625} -${this.size * 0.5625} ${this.size * 1.125} ${this.size * 1.125}`;
@@ -34,7 +47,7 @@ export class LevelUserComponent  implements OnInit {
 
   getCirclePath(index: number): string {
     const circleRadius = this.size / 2;
-    const circleAngleSize = 360 / 9;
+    const circleAngleSize = 360 / this.allLevels.length;
 
     const gapAngleSize = ((this.size / 50) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
@@ -58,15 +71,15 @@ export class LevelUserComponent  implements OnInit {
 
   getMarkerPosition() {
     const circleRadius = this.size / 2;
-    const circleAngleSize = 360 / 9;
+    const circleAngleSize = 360 / this.allLevels.length;
     const sizeMarker = this.markerRadius * 2;
   
     const gapAngleSize = ( (this.size / 20) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
   
     // Start angle for the selected level
-    const shiftAdjustment = circleAngleSize;
-    const startAngle = (this.selectLevel * circleAngleSize) - shiftAdjustment;
+    const shiftAdjustment = circleAngleSize; //manually to fit in gap;
+    const startAngle = ( (this.selectLevel + 1) * circleAngleSize) - shiftAdjustment;
     const markerAngle = startAngle + levelAngleSize + sizeMarker; // middle of the gap
   
     const x =   circleRadius * Math.cos(this.degToRad(markerAngle - 90));
@@ -80,10 +93,10 @@ export class LevelUserComponent  implements OnInit {
   }
 
   getCircleColor(index: number, selectLevel: number): string {
-    if (index < selectLevel) {
-      return this.dataLevels[index].color;
+    if (index <= selectLevel) {
+      return this.allLevels[index].color;
     } else {
-      return this.dataLevels[index].inactive_color;
+      return this.allLevels[index].inactive_color;
     }
   }
 

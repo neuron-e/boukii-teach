@@ -9,7 +9,7 @@
         <img [src]="section === 'calendar' ? 'assets/icon/icons-outline-calendar-1-blue.svg' : 'assets/icon/icons-outline-calendar-1-white.svg'" />
         <div class="montserrat color-light"[ngClass]="{'selected': section === 'calendar'}">Agenda</div>
       </div>
-      <div class="icon-button cursor-pointer" (click)="goTo('scan-client')">
+      <div class="icon-button cursor-pointer" (click)="goTo('scan')">
         <img [src]="section === 'scan' ? 'assets/icon/icon-scan-blue.png' : 'assets/icon/icon-scan.png'" />
         <div class="montserrat color-light" [ngClass]="{'selected': section === 'scan'}">Analyse</div>
       </div>
@@ -17,11 +17,13 @@
         <img [src]="section === 'clients' ? 'assets/icon/icon-clients-blue.png' : 'assets/icon/icon-clients.png'" />
         <div class="montserrat color-light" [ngClass]="{'selected': section === 'clients'}">Clients</div>
       </div>
+      <!-- PENDIENTEHACER
       <div class="icon-button cursor-pointer" (click)="goTo('messages')">
         <img [src]="section === 'messages' ? 'assets/icon/icons-outline-messages-blue.svg' : 'assets/icon/icons-outline-messages-white.svg'" />
         <div class="montserrat color-light"[ngClass]="{'selected': section === 'messages'}">Messages</div>
         <div class="bullet-notification"></div>
       </div>
+      -->
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

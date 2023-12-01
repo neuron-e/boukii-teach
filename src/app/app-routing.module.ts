@@ -117,7 +117,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'client-level/:client/:sport',
+    path: 'client-level/:type/:id/:date/:client/:sport',
     loadChildren: () => import('./pages/client-level/client-level.module').then( m => m.ClientLevelPageModule),
     canActivate: [AuthGuard]
   },
@@ -159,17 +159,17 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'course-group',
+    path: 'course-group/:id/:date/:course/:hour/:group/:subgroup',
     loadChildren: () => import('./pages/course-group/course-group.module').then( m => m.CourseGroupPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'course-participation',
+    path: 'course-participation/:id/:date/:course',
     loadChildren: () => import('./pages/course-participation/course-participation.module').then( m => m.CourseParticipationPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'course-transfer',
+    path: 'course-transfer/:id/:date/:course/:hour/:group/:subgroup',
     loadChildren: () => import('./pages/course-transfer/course-transfer.module').then( m => m.CourseTransferPageModule),
     canActivate: [AuthGuard]
   },
@@ -179,12 +179,22 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'calendar-available/:type/:date',
+    loadChildren: () => import('./pages/calendar-available/calendar-available.module').then( m => m.CalendarAvailablePageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'calendar-available/:type/:date/:id_edit',
+    loadChildren: () => import('./pages/calendar-available/calendar-available.module').then( m => m.CalendarAvailablePageModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'stats',
     loadChildren: () => import('./pages/stats/stats.module').then( m => m.StatsPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'scan-client',
+    path: 'scan-client/:client',
     loadChildren: () => import('./pages/scan-client/scan-client.module').then( m => m.ScanClientPageModule),
     canActivate: [AuthGuard]
   },

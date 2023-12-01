@@ -9,7 +9,9 @@
           <img src="assets/icon/ecoles.png" />
           <div>Écoles</div>
         </div>
+        <!--
         <img src="assets/icon/icon-add-square.png" class="header-top-side-img-b cursor-pointer" (click)="goTo('school-add')" />
+        -->
       </div>
 
     </div>
@@ -50,8 +52,9 @@
                 </div>
               </div>
               <div class="box-school-icons">
-                <img src="assets/icon/icon-calendar-edit.png" class="box-item-icon cursor-pointer" (click)="goTo('calendar')" />
-                <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore()" />
+                <img *ngIf="school.id === monitorData.active_school" src="assets/icon/icon-check-radius.png" class="box-item-icon cursor-pointer" />
+                <img *ngIf="school.id !== monitorData.active_school" src="assets/icon/icon-check-radius-grey.png" class="box-item-icon cursor-pointer" (click)="changeSchoolActive(school.id, station.id)" />
+                <img src="assets/icon/icon-more.png" class="box-item-icon cursor-pointer" (click)="toggleMore(school)" />
               </div>
             </div>
           </div>
@@ -70,47 +73,35 @@
   <div class="padding-wrapper dark-background member-modal">
 
     <div class="header-member mt-12">
-      <img src="assets/icon/icon-close-box.png" class="cursor-pointer" (click)="toggleMore()" />
+      <img src="assets/icon/icon-close-box.png" class="cursor-pointer" (click)="toggleMoreHide()" />
     </div>
 
-    <div class="pb-24 mb-8 list-boxes-item">
+    <div *ngIf="selectedSchool" class="pb-24 mb-8 list-boxes-item">
       <div class="box-item-top">
         <div class="box-item-left">
           <div class="box-item-left-img">
-            <!--<img src="assets/icon/icon-no-image.png" class="box-item-img-none" />-->
-            <img src="assets/images/test-course.jpg" class="box-item-img" />
+            <img [src]="selectedSchool.image ? selectedSchool.image : 'assets/icon/icon-no-image.png'"
+              [ngClass]="{'box-item-img': selectedSchool.image, 'box-item-img-none': !selectedSchool.image}" />
           </div>
           <div class="box-item-left-text">
-            <div class="montserrat">ESS Les Paccots</div>
+            <div class="montserrat">{{selectedSchool.name}}</div>
             <div class="box-item-left-text-icons">
-              <img src="assets/icon/main_ski_on.png" />
-              <img src="assets/icon/main_snowboard_on.png" />
-              <img src="assets/icon/main_srando_off.png" />
-              <img src="assets/icon/main_telemark_off.png" />
+              <img [src]="selectedSchool.has_ski ? 'assets/icon/main_ski_on.png' : 'assets/icon/main_ski_off.png'" />
+              <img [src]="selectedSchool.has_snowboard ? 'assets/icon/main_snowboard_on.png' : 'assets/icon/main_snowboard_off.png'" />
+              <img [src]="selectedSchool.has_rando ? 'assets/icon/main_srando_on.png' : 'assets/icon/main_srando_off.png'" />
+              <img [src]="selectedSchool.has_telemark ? 'assets/icon/main_telemark_on.png' : 'assets/icon/main_telemark_off.png'" />
             </div>
           </div>
         </div>
       </div>
       <div class="box-item-bottom">
-        <div class="montserrat">Cours privés, collectifs</div>
+        <div class="montserrat">{{selectedSchool.description}}</div>
       </div>
     </div>
 
     <div class="member-list background-color-dark padding-wrapper">
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
-        
-        <div class="member-item-flex">
-          <div class="member-item-content">
-            <div class="member-item-title">
-              <img src="assets/icon/icon-calendar-edit-blue.png" (click)="goTo('calendar-available')" />
-              <div class="montserrat">Établir disponibilité</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
+      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMoreHide()">
         
         <div class="member-item-flex">
           <div class="member-item-content">
@@ -122,7 +113,7 @@
         </div>
       </div>
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMore()">
+      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMoreHide()">
         
         <div class="member-item-flex">
           <div class="member-item-content">
@@ -134,7 +125,7 @@
         </div>
       </div>
 
-      <div class="member-list-item cursor-pointer no-border" (click)="toggleMore()">
+      <div class="member-list-item cursor-pointer no-border" (click)="toggleMoreHide()">
         
         <div class="member-item-flex">
           <div class="member-item-content">

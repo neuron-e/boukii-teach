@@ -1,0 +1,7 @@
+<div class="modal">
+  <img src="assets/icon/icons-outline-close.svg" class="cursor-pointer modal-close" (click)="doCloseModal()" />
+  <div *ngIf="file" class="modal-content">
+    <img *ngIf="type == 'image'" [src]="file" class="preview">
+    <video *ngIf="type == 'video'" [src]="file" class="preview" controls></video>
+  </div>
+</div>

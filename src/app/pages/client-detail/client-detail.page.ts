@@ -1,9 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
+import { MOCK_COUNTRIES } from '../../mocks/countries-data';
+import { MOCK_PROVINCES } from '../../mocks/province-data';
 
 @Component({
   selector: 'app-client-detail',
@@ -37,20 +42,29 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   sportDegrees: any[] = [];
   sports: any[] = [];
   sportSelected:any;
+  languages: any[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
 
   async ngOnInit() {
-    this.subscription = this.monitorDataService.getMonitorData().subscribe(monitorData => {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
       if (monitorData) {
         this.monitorData = monitorData;
+        try {
+          this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
+          this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+          this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.toastr.error("Erreur lors du chargement des données");
+        }
   
         this.activatedRoute.params.subscribe(async params => {
           this.clientId = +params['id'];
           if (this.clientId) {
+            this.spinnerService.show();
             await this.getClient();
-            await this.getDegrees();
-            await this.getSports();            
+            this.spinnerService.hide();
 
           } else {
             this.goTo('clients');
@@ -59,6 +73,21 @@ export class ClientDetailPage implements OnInit, OnDestroy {
       }
     });
   }  
+
+  getLanguageById(languageId: number): string {
+    const language = this.languages.find(c => c.id === languageId);
+    return language ? language.code.toUpperCase() : '';
+  }
+
+  getCountryById(countryId: number): string {
+    const country = MOCK_COUNTRIES.find(c => c.id === countryId);
+    return country ? country.iso : 'Aucun';
+  }
+
+  getProvinceById(provinceId: number): string {
+    const province = MOCK_PROVINCES.find(c => c.id === provinceId);
+    return province ? province.name : 'Aucune';
+  }
 
   async getClient() {
     try {
@@ -80,6 +109,16 @@ export class ClientDetailPage implements OnInit, OnDestroy {
           }
         }
         this.clientMonitor = client;
+
+          // Filter by sport
+        let useSport = 1;
+        if(this.clientMonitor && this.clientMonitor.sports && this.clientMonitor.sports.length) {
+          if(this.clientMonitor.sports[0].id){
+            useSport = this.clientMonitor.sports[0].id;
+          }
+        }
+        this.sportSelected = useSport;
+        this.sportDegrees = this.degrees.filter(degree => degree.sport_id === useSport);
         console.log(this.clientMonitor);
       } else {
         // Not a client of monitor
@@ -89,45 +128,6 @@ export class ClientDetailPage implements OnInit, OnDestroy {
       console.error('There was an error fetching clients!', error);
     }
   }  
-
-  async getDegrees() {
-    try {
-      const data: any = await this.teachService.getData('degrees').toPromise();
-      console.log(data);
-      this.degrees = data.data;
-  
-      this.degrees.sort((a, b) => a.degree_order - b.degree_order);
-  
-      // Inactive color
-      this.degrees.forEach(degree => {
-        degree.inactive_color = this.lightenColor(degree.color, 30);
-      });
-  
-      // Filter by sport
-      let useSport = 1;
-      if(this.clientMonitor && this.clientMonitor.sports && this.clientMonitor.sports.length) {
-        if(this.clientMonitor.sports[0].id){
-          useSport = this.clientMonitor.sports[0].id;
-        }
-      }
-      this.sportSelected = useSport;
-      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === useSport);
-      console.log('Processed Degrees:', this.degrees);
-      console.log('Sport Degrees:', this.sportDegrees);
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }  
-
-  async getSports() {
-    try {
-      const data: any = await this.teachService.getData('sports').toPromise();
-      console.log(data);
-      this.sports = data.data;
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  }
 
   changeSport(index:any) {
     let newDegree = 0;
@@ -150,24 +150,6 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
-  }
-
-  lightenColor(hexColor:any, percent:any) {
-    let r:any = parseInt(hexColor.substring(1, 3), 16);
-    let g:any = parseInt(hexColor.substring(3, 5), 16);
-    let b:any = parseInt(hexColor.substring(5, 7), 16);
-
-    // Increase the lightness
-    r = Math.round(r + (255 - r) * percent / 100);
-    g = Math.round(g + (255 - g) * percent / 100);
-    b = Math.round(b + (255 - b) * percent / 100);
-
-    // Convert RGB back to hex
-    r = r.toString(16).padStart(2, '0');
-    g = g.toString(16).padStart(2, '0');
-    b = b.toString(16).padStart(2, '0');
-
-    return `#${r}${g}${b}`;
   }
   
   doShowLevel(sport:any) {
@@ -192,7 +174,9 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

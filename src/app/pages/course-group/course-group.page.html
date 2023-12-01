@@ -3,13 +3,21 @@
 
     <div class="padding-wrapper">
       <div class="header-content mb-8">
-        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail')" />
-        <div class="header-top-title">
-          Advance
+        <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail',bookingId,dateBooking)" />
+        <div *ngIf="courseBookings" class="header-top-title">
+          {{courseBookings.name}}
         </div>
       </div>
-      <div class="montserrat color-light header-top-subtitle">
-        Collectif Ski
+      <div *ngIf="courseBookings" class="montserrat color-light header-top-subtitle">
+        <ng-container *ngIf="courseBookings.course_type == 1">
+          Collectif
+        </ng-container>
+        <ng-container *ngIf="courseBookings.course_type == 2">
+          Private
+        </ng-container>
+        <ng-container *ngIf="courseSport && sports.length">
+          {{courseSport.name}}
+        </ng-container>
       </div>
 
     </div>
@@ -26,28 +34,35 @@
         
         <div class="member-list">
     
-          <div class="pb-8 mb-8 member-list-item no-border cursor-pointer" (click)="goTo('course-detail')">
+          <div *ngIf="monitorSubgroup" class="pb-8 mb-8 member-list-item no-border">
             <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
+              <img *ngIf="!monitorSubgroup.monitor" src='assets/icon/icons-outline-default-avatar.svg' />
+              <img *ngIf="monitorSubgroup.monitor" 
+                [src]="monitorSubgroup.monitor.image ? monitorSubgroup.monitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
             </div>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
+                  <div *ngIf="monitorSubgroup.monitor" class="montserrat">{{monitorSubgroup.monitor.first_name}} {{monitorSubgroup.monitor.last_name}}</div>
+                  <div *ngIf="!monitorSubgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div class="box-selector-level color-light" [ngStyle]="{'background': monitorSubgroup.degree_data.color}" *ngIf="monitorSubgroup.degree_data && degrees.length">
+                    {{monitorSubgroup.degree_data.annotation}}
+                  </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Vous</span>
-                  <div class="box-selector-subgroup">DKV-1</div>
+                  <span class="montserrat color-light">{{monitorSubgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <div *ngIf="monitorSubgroup.degree_data && degrees.length" class="box-selector-subgroup">
+                    {{monitorSubgroup.degree_data.annotation}}-{{monitorSubgroup.subgroup_order}}
+                  </div>
                 </div>
                 <div class="member-item-data">
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
+                      <span class="montserrat color-light">{{monitorSubgroup.bookings_number}}/{{monitorSubgroup.max_participants}}</span>
                     </div>
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
+                      <span class="montserrat color-light">{{courseDateIndex+1}}/{{courseBookings.course_dates.length}}</span>
                     </div>
                 </div>
               </div>
@@ -60,86 +75,37 @@
           <div class="menu-section-title-b color-light">AUTRES GROUPES</div>
         </div>
         
-        <div class="member-list">
+        <div *ngIf="restSubgroups && restSubgroups.length" class="member-list">
 
-          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail')">
+          <div *ngFor="let subgroup of restSubgroups" class="pb-8 mb-8 member-list-item">
             <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
+              <img *ngIf="!subgroup.monitor" src='assets/icon/icons-outline-default-avatar.svg' />
+              <img *ngIf="subgroup.monitor" 
+                [src]="subgroup.monitor.image ? subgroup.monitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
             </div>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
+                  <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
+                  <div *ngIf="!subgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
+                    {{subgroup.degree_data.annotation}}
+                  </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
-                  <div class="box-selector-subgroup">DKV-1</div>
+                  <span class="montserrat color-light">{{subgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
+                    {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
+                  </div>
                 </div>
                 <div class="member-item-data">
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
+                      <span class="montserrat color-light">{{subgroup.bookings_number}}/{{subgroup.max_participants}}</span>
                     </div>
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail')">
-            <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
-                  <div class="box-selector-subgroup">DKV-1</div>
-                </div>
-                <div class="member-item-data">
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
-                    </div>
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pb-8 mb-8 member-list-item no-border cursor-pointer" (click)="goTo('course-detail')">
-            <div class="member-list-item-img">
-              <img src="assets/images/test-photo.jpg" />
-            </div>
-            <div class="member-item-flex">
-              <div class="member-item-content">
-                <div class="member-item-title">
-                  <div class="montserrat">Marco Raymond</div>
-                  <div class="box-selector-level">ROI</div>
-                </div>
-                <div class="member-item-subtitle">
-                  <span class="montserrat color-light">Professeur</span>
-                  <div class="box-selector-subgroup">DKV-1</div>
-                </div>
-                <div class="member-item-data">
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-user-tick.png" />
-                      <span class="montserrat color-light">5/6</span>
-                    </div>
-                    <div class="task-content-icon">
-                      <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">3/6</span>
+                      <span class="montserrat color-light">{{courseDateIndex+1}}/{{courseBookings.course_dates.length}}</span>
                     </div>
                 </div>
               </div>

@@ -1,0 +1,45 @@
+.content-size {
+    width:100%;min-height:100%;
+}
+.padding-wrapper {
+    padding:20px 16px;
+}
+.header-section-content {
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;
+}
+.header-section-title {
+    display:flex;gap:10px;align-items:center;justify-content:center;
+}
+.header-section-title img {
+    width:24px;
+}
+.header-section-title div {
+    color:#fff;font-size:16px;font-weight:600;
+}
+.header-section-menu {
+    position:absolute;right:0;top: 50%;transform: translateY(-50%);width:22px;display:flex;align-items:center;justify-content:center;
+}
+.header-index {
+    z-index: 10;position: relative;
+}
+.qr-scanner-wrapper {
+    width: 100%;height: 100vh;position: fixed;top: 0;left: 0;
+}
+.qr-scanner-frame {
+    position: absolute;top:50%;left:50%;transform:translate(-50%,-50%);width: 210px;height: 210px;border: 1px solid transparent;
+}
+.corner {
+    position: absolute;width: 32px;height: 32px;background-color: transparent;border: 4px solid var(--ion-color-primary);
+}
+.top-left {
+    top: 0;left: 0;border-bottom: none;border-right: none;
+}
+.top-right {
+    top: 0;right: 0;border-bottom: none;border-left: none;
+}
+.bottom-left {
+    bottom: 0;left: 0;border-top: none;border-right: none;
+}
+.bottom-right {
+    bottom: 0;right: 0;border-top: none;border-left: none;
+}

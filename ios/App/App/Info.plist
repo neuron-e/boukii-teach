@@ -21,7 +21,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSCameraUsageDescription</key>
-	<string>The app enables the scanning of various qr to find the client within the app.</string>
+	<string>We need access to your camera to scan QR codes to search for clients.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

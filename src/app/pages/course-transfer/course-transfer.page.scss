@@ -160,7 +160,10 @@
     border:none !important;
 }
 .box-selector-level {
-    font-size: 12px !important;color: #faafaf !important;background: #613136;padding: 4px 8px;border-radius: 20px;
+    font-size: 12px;padding: 4px 6px;border-radius: 20px;
+}
+.box-selector-subgroup {
+    font-size:12px;color:#fff;
 }
 .member-item-data {
     display:flex;align-items:center;gap:12px;
@@ -175,6 +178,9 @@
     font-size:12px;
 }
 
+.no-radio {
+    display: flex;flex-wrap: wrap;gap: 16px;width:25px;
+}
 .custom-radio {
     display: flex;flex-wrap: wrap;gap: 16px;
 }
@@ -217,4 +223,8 @@
 }
 .border-separator {
     width:100%;border-bottom:1px solid #444953;height:1px;
+}
+
+button[disabled] {
+    opacity: 0.4;pointer-events: none;
 }

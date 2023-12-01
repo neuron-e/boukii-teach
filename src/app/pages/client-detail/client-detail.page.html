@@ -5,25 +5,28 @@
       <div class="header-content mb-12">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('clients')" />
         <!--Only if group-->
-        <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-top-title">
+        <div *ngIf="clientMonitor && clientMonitor.main" class="header-top-title">
           Groupe
         </div>
         <!--/Only if group-->
       </div>
 
       <!--Only if group-->
-      <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-user-data mt-24">
+      <div *ngIf="clientMonitor && clientMonitor.main" class="header-user-data mt-24">
         <div class="header-user-data-img">
-          <img [src]="clientMonitor.main[0].image ? clientMonitor.main[0].image : 'assets/icon/icons-outline-default-avatar.svg'" />
+          <img [src]="clientMonitor.main.image ? clientMonitor.main.image : 'assets/icon/icons-outline-default-avatar.svg'" />
         </div>
         <div class="header-user-data-text">
           <div class="header-user-data-text-top">
             <div class="color-light">
-              {{clientMonitor.main[0].country}} · {{getBirthYears(clientMonitor.main[0].birth_date)}} ans
+              <ng-container *ngIf="clientMonitor.main.language1_id">
+                {{getLanguageById(clientMonitor.main.language1_id)}} ·
+              </ng-container>
+              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} ans
             </div>
           </div>
           <div class="header-user-data-text-title">
-            <div>{{clientMonitor.main[0].first_name}} {{clientMonitor.main[0].last_name}}</div>
+            <div>{{clientMonitor.main.first_name}} {{clientMonitor.main.last_name}}</div>
             <img src="assets/icon/icon-crown.png" />
           </div>
           <div class="header-user-data-text-icons">
@@ -38,14 +41,17 @@
       <!--/Only if group-->
 
       <!--Only if admin-->
-      <div *ngIf="clientMonitor && !clientMonitor.main.length" class="header-user-data mt-24">
+      <div *ngIf="clientMonitor && !clientMonitor.main" class="header-user-data mt-24">
         <div class="header-user-data-img">
           <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
         </div>
         <div class="header-user-data-text">
           <div class="header-user-data-text-top">
             <div class="color-light">
-              {{clientMonitor.country}} · {{clientMonitor.birth_years}} ans
+              <ng-container *ngIf="clientMonitor.language1_id">
+                {{getLanguageById(clientMonitor.language1_id)}} ·
+              </ng-container>
+              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -69,19 +75,21 @@
       <div class="background-color-dark box-radius">
 
         <!--Only if group-->
-        <div *ngIf="clientMonitor && clientMonitor.main.length" class="header-user-data padding-wrapper">
+        <div *ngIf="clientMonitor && clientMonitor.main" class="header-user-data padding-wrapper">
           <div class="header-user-data-img">
-            <img [src]="clientMonitor.main[0].image ? clientMonitor.main[0].image : 'assets/icon/icons-outline-default-avatar.svg'" />
+            <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
           </div>
           <div class="header-user-data-text">
             <div class="header-user-data-text-top">
               <div class="color-light">
-                {{clientMonitor.main[0].country}} · {{getBirthYears(clientMonitor.main[0].birth_date)}} ans
+                <ng-container *ngIf="clientMonitor.language1_id">
+                  {{getLanguageById(clientMonitor.language1_id)}} ·
+                </ng-container>
+                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
               </div>
             </div>
             <div class="header-user-data-text-title">
-              <div>{{clientMonitor.main[0].first_name}} {{clientMonitor.main[0].last_name}}</div>
-              <img src="assets/icon/icon-crown.png" />
+              <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
             </div>
             <div class="header-user-data-text-icons">
               <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
@@ -104,10 +112,10 @@
 
         </div>
         <div class="pt-24">
-          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length" (click)="goTo('client-level',clientId,sportSelected)" [allLevels]="sportDegrees" [selectLevel]="clientMonitor.degree_sport" [size]="280" class="cursor-pointer"></app-level-full>
+          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length" (click)="goTo('client-level','client','1','1',clientId,sportSelected)" [allLevels]="sportDegrees" [selectLevel]="clientMonitor.degree_sport" [size]="280" class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">
-            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level',clientId,sportSelected)">
+            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level','client','1','1',clientId,sportSelected)">
               Évaluer les progrès
             </button>
           </div>

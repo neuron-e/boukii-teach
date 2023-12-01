@@ -11,13 +11,13 @@
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
 
-      <input type="text" placeholder="Chercher clients..." class="montserrat mt-12 header-input-search" />
+      <input [(ngModel)]="searchTerm" (keyup)="searchClients()" type="text" placeholder="Chercher clients..." class="montserrat mt-12 header-input-search" />
 
     </div>
 
     <div class="padding-wrapper">
 
-      <div *ngFor="let client of clientsMonitor" class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail',client.id)">
+      <div *ngFor="let client of filteredClients" class="background-color-dark mb-24 box-message cursor-pointer" (click)="goTo('client-detail',client.id)">
         <div class="box-message-img-wrapper">
           <img [src]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"
             class="box-message-img" />
@@ -26,7 +26,12 @@
           <div class="box-message-name-flex">
             <div class="montserrat box-message-name">{{client.first_name}} {{client.last_name}}</div>
           </div>
-          <div class="montserrat color-light box-message-text">{{client.country}} · {{client.birth_years}} ans</div>
+          <div class="montserrat color-light box-message-text">
+            <ng-container *ngIf="client.language1_id">
+              {{getLanguageById(client.language1_id)}} ·
+            </ng-container>
+            {{getCountryById(client.country)}} · {{client.birth_years}} ans
+          </div>
         </div>
       </div>
   

@@ -7,13 +7,16 @@ import { LevelUserComponent } from './level-user/level-user.component';
 import { LevelFullComponent } from './level-full/level-full.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FileViewComponent } from './file-view/file-view.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 @NgModule({
-  declarations: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent],
+  declarations: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent, FileUploadComponent, FileViewComponent, SpinnerComponent],
   imports: [
     CommonModule, FormsModule, IonicModule.forRoot()
   ],
-  exports: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent]
+  exports: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent, FileUploadComponent, FileViewComponent, SpinnerComponent]
 })
 export class ComponentsModule { }

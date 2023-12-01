@@ -1,12 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription, forkJoin } from 'rxjs';
+import { MonitorDataService } from '../../services/monitor-data.service';
+import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-calendar-available',
   templateUrl: './calendar-available.page.html',
   styleUrls: ['./calendar-available.page.scss'],
 })
-export class CalendarAvailablePage implements OnInit {
+export class CalendarAvailablePage implements OnInit, OnDestroy {
+  monitorData: any;
+  private subscription: Subscription;
   
   showMonthAvailable:boolean = true;
   showDayAvailable:boolean = false;
@@ -20,7 +28,7 @@ export class CalendarAvailablePage implements OnInit {
   weekdaysShort: string[] = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
   weekdayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   days: any[] = [];
-  hourStartDay: string = '07:00';
+  hourStartDay: string = '08:00';
   hourEndDay: string = '18:00';
   hoursRange: string[] = [];
   
@@ -31,26 +39,98 @@ export class CalendarAvailablePage implements OnInit {
   
   showDayCalendar:boolean=false;
 
-  constructor(private router: Router) {}
+  allHoursMonth:boolean=false;
+  startTimeMonth:string;
+  endTimeMonth:string;
+  nameBlockMonth:string;
+  allHoursDay:boolean=false;
+  startTimeDay:string;
+  endTimeDay:string;
+  nameBlockDay:string;
 
-  ngOnInit() {
-    this.generateHoursRange();
-    this.initializeMonthNames();
-    this.selectedDate = new Date();
-    this.currentMonth = this.selectedDate.getMonth();
-    this.currentYear = this.selectedDate.getFullYear();
-    this.currentDay = this.selectedDate.getDate();
-    this.renderCalendar();
+  typeVisual:string;
+  dateVisual:string;
+  idEditBlock:any;
+  editBlock:any;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+
+  async ngOnInit() {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
+      if (monitorData) {
+        this.monitorData = monitorData;
+  
+        this.activatedRoute.params.subscribe( async params => {
+          this.spinnerService.show();
+
+          this.typeVisual = params['type'];
+          this.dateVisual = params['date'];
+          this.idEditBlock = +params['id_edit'];
+
+          if(this.dateVisual) {
+            this.selectedDate = new Date(this.dateVisual);
+          }
+          else {
+            this.selectedDate = new Date();
+          }
+
+          if(this.typeVisual){
+            if(this.typeVisual == 'day') {
+              this.showMonthAvailable=false;
+              this.showDayAvailable=true;
+            }
+            else {
+              this.showMonthAvailable=true;
+              this.showDayAvailable=false;
+            }
+          }
+
+          if(this.idEditBlock){
+            this.getEditBlock();
+          }
+
+            await this.generateHoursRange();
+            this.initializeMonthNames();
+            this.currentMonth = this.selectedDate.getMonth();
+            this.currentYear = this.selectedDate.getFullYear();
+            this.currentDay = this.selectedDate.getDate();
+            this.renderCalendar();
+          
+        });
+      }
+    });
   }
 
-  generateHoursRange(): void {
+  getEditBlock() {
+    this.teachService.getData('monitor-nwds', this.idEditBlock).subscribe(
+      (data:any) => {
+        console.log(data);
+        this.editBlock = data.data;
+        this.allHoursDay = this.editBlock.full_day;
+        if(this.editBlock.start_time){
+          this.startTimeDay = this.editBlock.start_time.substring(0, 5);
+        }
+        if(this.editBlock.end_time){
+          this.endTimeDay = this.editBlock.end_time.substring(0, 5);
+        }
+        this.nameBlockDay = this.editBlock.description;
+        this.allHoursDay = this.editBlock.full_day;
+      },
+      error => {
+        console.error('There was an error!', error);
+        this.idEditBlock = null;
+      }
+    );
+  }
+
+  async generateHoursRange() {
     const startTime = this.parseTime(this.hourStartDay);
     const endTime = this.parseTime(this.hourEndDay);
     let currentTime = new Date(startTime);
 
     while (currentTime <= endTime) {
       this.hoursRange.push(this.formatTime(currentTime));
-      currentTime.setHours(currentTime.getHours() + 1);
+      currentTime = new Date(currentTime.getTime() + 15 * 60000);
     }
   }
 
@@ -63,6 +143,32 @@ export class CalendarAvailablePage implements OnInit {
 
   formatTime(date: Date): string {
     return date.toTimeString().substring(0, 5);
+  }
+
+  onStartTimeMonthChange() {
+    const filteredEndHours = this.filteredEndHoursMonth;
+  
+    if (!filteredEndHours.includes(this.endTimeMonth)) {
+      this.endTimeMonth = filteredEndHours[0] || '';
+    }
+  }
+
+  get filteredEndHoursMonth() {
+    const startIndex = this.hoursRange.indexOf(this.startTimeMonth);
+    return this.hoursRange.slice(startIndex + 1);
+  }
+
+  onStartTimeDayChange() {
+    const filteredEndHours = this.filteredEndHoursDay;
+  
+    if (!filteredEndHours.includes(this.endTimeDay)) {
+      this.endTimeDay = filteredEndHours[0] || '';
+    }
+  }
+
+  get filteredEndHoursDay() {
+    const startIndex = this.hoursRange.indexOf(this.startTimeDay);
+    return this.hoursRange.slice(startIndex + 1);
   }
 
   initializeMonthNames() {
@@ -104,6 +210,7 @@ export class CalendarAvailablePage implements OnInit {
   }
 
   renderCalendar() {
+    this.spinnerService.show();
     const startDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
     
@@ -142,6 +249,8 @@ export class CalendarAvailablePage implements OnInit {
 
     // Reapply selected days
     this.applyRange();
+
+    this.spinnerService.hide();
   }
 
   getWeekdayName(date: Date): string {
@@ -158,13 +267,14 @@ export class CalendarAvailablePage implements OnInit {
     if (!this.firstDateSelected || (this.secondDateSelected && this.firstDateSelected)) {
       this.resetSelection();
       this.firstDateSelected = date;
+      console.log(date);
       this.firstDateSelectedFormat = this.formatDate(date);
       day.activeSelected = true;
     } else {
       if (date < this.firstDateSelected) {
+        this.resetSelection();
         this.firstDateSelected = date;
         this.firstDateSelectedFormat = this.formatDate(date);
-        this.resetSelection();
         day.activeSelected = true;
       } else {
         this.secondDateSelected = date;
@@ -224,9 +334,147 @@ export class CalendarAvailablePage implements OnInit {
       this.showDayCalendar=false;
     }
   }
+  
+  isButtonMonthEnabled() {
+    return this.nameBlockMonth && this.firstDateSelected && this.secondDateSelected && (this.allHoursMonth || (this.startTimeMonth && this.endTimeMonth));
+  }  
+
+  isButtonDayEnabled() {
+    return this.nameBlockDay && this.selectedDate && (this.allHoursDay || (this.startTimeDay && this.endTimeDay));
+  }  
+
+  saveBlockDay() {
+    const formattedDayDate = moment(this.selectedDate).format('YYYY-MM-DD');
+
+    this.spinnerService.show();
+    if(this.idEditBlock){
+      const dataDay = {
+        monitor_id: this.editBlock.monitor_id,
+        school_id: this.editBlock.school_id,
+        station_id: this.editBlock.station_id,
+        start_date: formattedDayDate,
+        end_date: formattedDayDate,
+        start_time: this.allHoursDay ? '' : `${this.startTimeDay}:00`,
+        end_time: this.allHoursDay ? '' : `${this.endTimeDay}:00`,
+        full_day: this.allHoursDay,
+        description: this.nameBlockDay,
+        color: this.editBlock.color,
+        user_nwd_subtype_id: this.editBlock.user_nwd_subtype_id,
+      };
+      this.teachService.updateData('monitor-nwds', this.idEditBlock, dataDay).subscribe(
+        response => {
+            console.log('Response:', response);
+            this.spinnerService.hide();
+            this.toastr.success('Enregistré correctement');
+            this.goTo('calendar');
+        },
+        error => {
+            console.error('Error:', error);
+            this.spinnerService.hide();
+            this.toastr.error('Erreur');
+        }
+      );
+    }
+    else{
+      const dataDay = {
+        monitor_id: this.monitorData.id,
+        school_id: this.monitorData.active_school,
+        station_id: this.monitorData.active_station,
+        start_date: formattedDayDate,
+        end_date: formattedDayDate,
+        start_time: this.allHoursDay ? '' : `${this.startTimeDay}:00`,
+        end_time: this.allHoursDay ? '' : `${this.endTimeDay}:00`,
+        full_day: this.allHoursDay,
+        description: this.nameBlockDay,
+        color: '#89add1',
+        user_nwd_subtype_id: 1,
+      };
+      this.teachService.postData('monitor-nwds', dataDay).subscribe(
+        response => {
+            console.log('Response:', response);
+            this.spinnerService.hide();
+            this.toastr.success('Enregistré correctement');
+            this.goTo('calendar');
+        },
+        error => {
+            console.error('Error:', error);
+            this.spinnerService.hide();
+            this.toastr.error('Erreur');
+        }
+      );
+    }
+  }
+
+  saveBlockMonth() {
+    const startDate = moment(this.firstDateSelected);
+    const endDate = moment(this.secondDateSelected);
+    const requests = [];
+
+    this.spinnerService.show();
+    for (let date = startDate; date.diff(endDate, 'days') <= 0; date.add(1, 'days')) {
+        const formattedDate = date.format('YYYY-MM-DD');
+        const dataDay = {
+            monitor_id: this.monitorData.id,
+            school_id: this.monitorData.active_school,
+            station_id: this.monitorData.active_station,
+            start_date: formattedDate,
+            end_date: formattedDate,
+            start_time: this.allHoursMonth ? '' : `${this.startTimeMonth}:00`,
+            end_time: this.allHoursMonth ? '' : `${this.endTimeMonth}:00`,
+            full_day: this.allHoursMonth,
+            description: this.nameBlockMonth,
+            color: '#89add1',
+            user_nwd_subtype_id: 1,
+        };
+
+        requests.push(this.teachService.postData('monitor-nwds', dataDay));
+    }
+
+    forkJoin(requests).subscribe(
+        responses => {
+            console.log('All requests completed', responses);
+            this.spinnerService.hide();
+            this.toastr.success('Enregistré correctement');
+            this.goTo('calendar');
+        },
+        error => {
+            console.error('An error occurred', error);
+            this.spinnerService.hide();
+            this.toastr.error('Erreur');
+        }
+    );
+  }
+
+  deleteBlockDay() {
+    if (this.idEditBlock) {
+        const isConfirmed = confirm('Êtes-vous sûr de vouloir supprimer le blocage?');
+        if (isConfirmed) {
+          this.spinnerService.show();
+            this.teachService.deleteData('monitor-nwds', this.idEditBlock).subscribe(
+                response => {
+                    console.log('Response:', response);
+                    this.spinnerService.hide();
+                    this.toastr.success('Supprimé correctement');
+                    this.goTo('calendar');
+                },
+                error => {
+                    console.error('Error:', error);
+                    this.spinnerService.hide();
+                    this.toastr.error('Erreur');
+                }
+            );
+        }
+    }
+  }
 
   goTo(...urls: string[]) {
     this.router.navigate(urls);
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

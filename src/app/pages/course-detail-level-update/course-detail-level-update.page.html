@@ -72,20 +72,17 @@
 
           <div class="media-list">
             <div class="media-list-item">
-              <img src="assets/icon/icon-camera-photo-box.png" class="box-selector-image cursor-pointer" />
+              <img (click)="toggleMultimedia()" src="assets/icon/icon-camera-photo-box.png" class="box-selector-image cursor-pointer" />
             </div>
-            <div class="media-list-item">
-              <img src="assets/images/test-photo.jpg" class="box-selector-image cursor-pointer" />
-              <div class="media-close-box cursor-pointer">
-                <img src="assets/icon/icon-close.png" />
-              </div>
-            </div>
-            <div class="media-list-item">
-              <img src="assets/images/test-photo.jpg" class="box-selector-image cursor-pointer" />
-              <div class="media-list-video cursor-pointer">
+
+            <!--Multimedia-->
+            <div *ngFor="let multimedia of allMultimedia;let i = index" class="media-list-item">
+              <img *ngIf="multimedia.type == 'image'" [src]="multimedia.file" (click)="viewMultimedia(multimedia.type,multimedia.file)" class="box-selector-image cursor-pointer">
+              <video *ngIf="multimedia.type == 'video'" [src]="multimedia.file" (click)="viewMultimedia(multimedia.type,multimedia.file)" class="box-selector-image cursor-pointer" muted playsinline></video>
+              <div *ngIf="multimedia.type == 'video'" class="media-list-video cursor-pointer" (click)="viewMultimedia(multimedia.type,multimedia.file)">
                 <img src="assets/icon/play.png" />
               </div>
-              <div class="media-close-box cursor-pointer">
+              <div (click)="deleteMultimedia(i)" class="media-close-box cursor-pointer">
                 <img src="assets/icon/icon-close.png" />
               </div>
             </div>
@@ -102,3 +99,17 @@
 
   </div>
 </ion-content>
+
+<app-file-upload *ngIf="showMultimedia"
+  title="Ajouter du multimédia"
+  [allowImage]="true" 
+  [allowVideo]="true" 
+  (fileSelected)="addMultimedia($event)"
+  (close)="toggleMultimedia()">
+</app-file-upload>
+
+<app-file-view *ngIf="showView"
+  [type]="viewTypeSelected"
+  [file]="viewFileSelected"
+  (close)="toggleView()">
+</app-file-view>

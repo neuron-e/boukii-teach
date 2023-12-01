@@ -28,7 +28,6 @@ export class LevelFullComponent  implements OnInit, OnChanges {
   processInputs() {
     if(this.selectLevel){
       let index = this.allLevels.findIndex(obj => obj.id === this.selectLevel);
-      console.log(index);
       if (index === -1) {
         this.selectLevel = 0;
         this.indexSelectLevel = 0;

@@ -11,22 +11,48 @@
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
 
-      <!--Only if individual-->
-      <div class="header-user-data-b mt-8">
-        <app-level-user [dataLevels]="dataLevels" [selectLevel]="5" [size]="54" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+      <!--Only if group-->
+      <div *ngIf="clientMonitor && clientMonitor.main" class="header-user-data-b mt-24">
+        <div class="header-user-data-img">
+          <img [src]="clientMonitor.main.image ? clientMonitor.main.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+        </div>
         <div class="header-user-data-text">
           <div class="header-user-data-text-top">
             <div class="color-light">
-              FR · SUISSE · 31 ANS
+              <ng-container *ngIf="clientMonitor.main.language1_id">
+                {{getLanguageById(clientMonitor.main.language1_id)}} ·
+              </ng-container>
+              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} ans
             </div>
           </div>
           <div class="header-user-data-text-title">
-            <div>Marco Raymond</div>
+            <div>{{clientMonitor.main.first_name}} {{clientMonitor.main.last_name}}</div>
             <img src="assets/icon/icon-crown.png" />
           </div>
         </div>
       </div>
-      <!--/Only if individual-->
+      <!--/Only if group-->
+
+      <!--Only if admin-->
+      <div *ngIf="clientMonitor && !clientMonitor.main" class="header-user-data-b mt-24">
+        <div class="header-user-data-img">
+          <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+        </div>
+        <div class="header-user-data-text">
+          <div class="header-user-data-text-top">
+            <div class="color-light">
+              <ng-container *ngIf="clientMonitor.language1_id">
+                {{getLanguageById(clientMonitor.language1_id)}} ·
+              </ng-container>
+              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
+            </div>
+          </div>
+          <div class="header-user-data-text-title">
+            <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
+          </div>
+        </div>
+      </div>
+      <!--/Only if admin-->
 
     </div>
 
@@ -35,134 +61,203 @@
       <div class="background-color-dark box-radius padding-wrapper">
 
         <!--Only if group-->
-        <div class="header-user-data-b pb-12">
-          <app-level-user [dataLevels]="dataLevels" [selectLevel]="2" [size]="54" [userImage]="'assets/images/test-photo.jpg'"></app-level-user>
+        <div *ngIf="clientMonitor && clientMonitor.main" class="header-user-data-b mb-32">
+          <div class="header-user-data-img">
+            <img [src]="clientMonitor.image ? clientMonitor.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+          </div>
           <div class="header-user-data-text">
             <div class="header-user-data-text-top">
               <div class="color-light">
-                FR · SUISSE · 11 ANS
+                <ng-container *ngIf="clientMonitor.language1_id">
+                  {{getLanguageById(clientMonitor.language1_id)}} ·
+                </ng-container>
+                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
               </div>
             </div>
             <div class="header-user-data-text-title">
-              <div>Jr. Marco Raymond</div>
+              <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
             </div>
           </div>
         </div>
         <!--/Only if group-->
 
-        <!--1-->
 
-        <div class="mt-24 mb-12 content-title-c">
-          RESERVATION
+        <!--TODAY-->
+        <div *ngIf="bookingsToday" class="mb-24 content-title-separator">
+          {{todayDateFull}}
         </div>
 
-        <div class="box-selector-full">
-          <div class="box-selector-top">
-            <div class="box-selector-date">
-              Lun 15, 10:00-12:00
-            </div>
-          </div>
+        <div *ngIf="bookingsToday && !bookingsToday.length" class="content-title-c">
+          Vous n'avez aucune réservation aujourd'hui
+        </div>
 
-          <div class="box-selector-middle">
-            <div class="box-selector-middle-interior">
-              <div class="box-selector-image-wrapper">
-                <img src="assets/icon/course-collective-box.png" class="box-selector-image" />
-              </div>
-              <div class="box-selector-text">
-                <div class="montserrat box-selector-title">
-                  Advanced
-                </div>
-                <div class="montserrat color-light box-selector-subtitle">
-                  <span>Collectif Ski</span>
-                </div>
+        <ng-container *ngFor="let booking of bookingsToday;let i = index">
+
+          <div *ngIf="i!==0" class="border-separator mt-24 mb-24"></div>
+
+          <div class="box-selector-full">
+            <div class="box-selector-top">
+              <div class="box-selector-date">
+                {{formatTimeRange(booking.hour_start,booking.hour_end)}}
               </div>
             </div>
-            <div class="box-selector-level">
-              ROI RED
-            </div>
-          </div>
 
-          <div class="montserrat color-light box-selector-bottom">
-            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
-            <span>Les Paccots</span>
-          </div>
-        </div>
-
-        <div class="mt-24 mb-12 content-title-c">
-          PROFESSEUR
-        </div>
-
-        <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
-          <div class="user-booking-img">
-            <img src="assets/images/test-photo.jpg" />
-          </div>
-          <div class="user-booking-content">
-            <div class="user-booking-header">
-              <div class="user-booking-title">Nom</div>
-            </div>
-            <div class="color-light user-booking-subheader">
-              French, English
-            </div>
-          </div>
-        </div>
-
-        <div class="border-separator mt-24 mb-24"></div>
-
-        <!--2-->
-
-        <div class="mt-24 mb-12 content-title-c">
-          RESERVATION
-        </div>
-
-        <div class="box-selector-full">
-          <div class="box-selector-top">
-            <div class="box-selector-date">
-              Lun 15, 14:00-16:00
-            </div>
-          </div>
-
-          <div class="box-selector-middle">
-            <div class="box-selector-middle-interior">
-              <div class="box-selector-image-wrapper">
-                <img src="assets/icon/course-private-box.png" class="box-selector-image" />
-              </div>
-              <div class="box-selector-text">
-                <div class="montserrat box-selector-title">
-                  Advanced
+            <div class="box-selector-middle">
+              <div class="box-selector-middle-interior">
+                <div class="box-selector-image-wrapper">
+                  <img *ngIf="booking.course.course_type == 1" src="assets/icon/course-collective-box.png" class="box-selector-image" />
+                  <img *ngIf="booking.course.course_type == 2" src="assets/icon/course-private-box.png" class="box-selector-image" />
                 </div>
-                <div class="montserrat color-light box-selector-subtitle">
-                  <span>Privé Ski</span>
+                <div class="box-selector-text">
+                  <div class="montserrat box-selector-title">
+                    {{booking.course.name}}
+                  </div>
+                  <div class="montserrat color-light box-selector-subtitle">
+                    <span>
+                      <ng-container *ngIf="booking.course.course_type == 1">
+                        Collectif
+                      </ng-container>
+                      <ng-container *ngIf="booking.course.course_type == 2">
+                        Privé
+                      </ng-container>
+                      <ng-container *ngIf="booking.sport_data && sports.length">
+                        {{booking.sport_data.name}}
+                      </ng-container>
+                    </span>
+                  </div>
                 </div>
               </div>
+              <div class="box-selector-level color-light" *ngIf="booking.course.course_type == 1 && booking.degree_data && degrees.length"
+                  [ngStyle]="{'background': booking.degree_data.color}">
+                {{booking.degree_data.annotation}}
+              </div>
             </div>
-            <div class="box-selector-level">
-              ROI RED
+
+            <div class="montserrat color-light box-selector-bottom" *ngIf="booking.station_data">
+              <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+              <span>{{booking.station_data.name}}</span>
+              <span *ngIf="booking.station_data"> - {{booking.school_data.name}}</span>
             </div>
           </div>
 
-          <div class="montserrat color-light box-selector-bottom">
-            <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
-            <span>Les Paccots</span>
-          </div>
+          <ng-container *ngIf="booking.monitor_data">
+            <div class="mt-24 mb-12 content-title-c">
+              PROFESSEUR
+            </div>
+
+            <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
+              <div class="user-booking-img">
+                <img [src]="booking.monitor_data.image ? booking.monitor_data.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+              </div>
+              <div class="user-booking-content">
+                <div class="user-booking-header">
+                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
+                </div>
+                <div class="color-light user-booking-subheader">
+                  <ng-container *ngIf="booking.monitor_data.language1_id">
+                    {{getLanguageById(booking.monitor_data.language1_id)}}
+                  </ng-container>
+                  <ng-container *ngIf="booking.monitor_data.language2_id">
+                    · {{getLanguageById(booking.monitor_data.language2_id)}}
+                  </ng-container>
+                  <ng-container *ngIf="booking.monitor_data.language3_id">
+                    · {{getLanguageById(booking.monitor_data.language3_id)}}
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+
+        <!--TOMORROW-->
+        <div *ngIf="bookingsTomorrow" class="pt-12 mt-32 mb-24 content-title-separator">
+          {{tomorrowDateFull}}
         </div>
 
-        <div class="mt-24 mb-12 content-title-c">
-          PROFESSEUR
+        <div *ngIf="bookingsTomorrow && !bookingsTomorrow.length" class="content-title-c">
+          Vous n'avez aucune réservation demain
         </div>
 
-        <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
-          <div class="user-booking-img">
-            <img src="assets/images/test-photo.jpg" />
-          </div>
-          <div class="user-booking-content">
-            <div class="user-booking-header">
-              <div class="user-booking-title">Nom</div>
+        <ng-container *ngFor="let booking of bookingsTomorrow;let i = index">
+
+          <div *ngIf="i!==0" class="border-separator mt-24 mb-24"></div>
+
+          <div class="box-selector-full">
+            <div class="box-selector-top">
+              <div class="box-selector-date">
+                {{formatTimeRange(booking.hour_start,booking.hour_end)}}
+              </div>
             </div>
-            <div class="color-light user-booking-subheader">
-              French, English
+
+            <div class="box-selector-middle">
+              <div class="box-selector-middle-interior">
+                <div class="box-selector-image-wrapper">
+                  <img *ngIf="booking.course.course_type == 1" src="assets/icon/course-collective-box.png" class="box-selector-image" />
+                  <img *ngIf="booking.course.course_type == 2" src="assets/icon/course-private-box.png" class="box-selector-image" />
+                </div>
+                <div class="box-selector-text">
+                  <div class="montserrat box-selector-title">
+                    {{booking.course.name}}
+                  </div>
+                  <div class="montserrat color-light box-selector-subtitle">
+                    <span>
+                      <ng-container *ngIf="booking.course.course_type == 1">
+                        Collectif
+                      </ng-container>
+                      <ng-container *ngIf="booking.course.course_type == 2">
+                        Privé
+                      </ng-container>
+                      <ng-container *ngIf="booking.sport_data && sports.length">
+                        {{booking.sport_data.name}}
+                      </ng-container>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="box-selector-level color-light" *ngIf="booking.course.course_type == 1 && booking.degree_data && degrees.length"
+                  [ngStyle]="{'background': booking.degree_data.color}">
+                {{booking.degree_data.annotation}}
+              </div>
+            </div>
+
+            <div class="montserrat color-light box-selector-bottom" *ngIf="booking.station_data">
+              <img src="assets/icon/icon-location-grey.png" class="box-selector-location" />
+              <span>{{booking.station_data.name}}</span>
+              <span *ngIf="booking.station_data"> - {{booking.school_data.name}}</span>
             </div>
           </div>
-        </div>
+
+          <ng-container *ngIf="booking.monitor_data">
+            <div class="mt-24 mb-12 content-title-c">
+              PROFESSEUR
+            </div>
+
+            <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
+              <div class="user-booking-img">
+                <img [src]="booking.monitor_data.image ? booking.monitor_data.image : 'assets/icon/icons-outline-default-avatar.svg'" />
+              </div>
+              <div class="user-booking-content">
+                <div class="user-booking-header">
+                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
+                </div>
+                <div class="color-light user-booking-subheader">
+                  <ng-container *ngIf="booking.monitor_data.language1_id">
+                    {{getLanguageById(booking.monitor_data.language1_id)}}
+                  </ng-container>
+                  <ng-container *ngIf="booking.monitor_data.language2_id">
+                    · {{getLanguageById(booking.monitor_data.language2_id)}}
+                  </ng-container>
+                  <ng-container *ngIf="booking.monitor_data.language3_id">
+                    · {{getLanguageById(booking.monitor_data.language3_id)}}
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+        </ng-container>
         
       </div>
       

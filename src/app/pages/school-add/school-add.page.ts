@@ -4,6 +4,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { Subscription, forkJoin } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
 import { TeachService } from '../../services/teach.service';
+import { MOCK_COUNTRIES } from '../../mocks/countries-data';
+import { MOCK_PROVINCES } from '../../mocks/province-data';
 
 @Component({
   selector: 'app-school-add',
@@ -75,6 +77,16 @@ export class SchoolAddPage implements OnInit, OnDestroy {
         console.error('Error fetching data:', error);
       }
     });
+  }
+
+  getCountryById(countryId: number): string {
+    const country = MOCK_COUNTRIES.find(c => c.id === countryId);
+    return country ? country.iso : 'Aucun';
+  }
+
+  getProvinceById(provinceId: number): string {
+    const province = MOCK_PROVINCES.find(c => c.id === provinceId);
+    return province ? province.name : 'Aucune';
   }
 
   associateStationsWithSchools() {
@@ -153,7 +165,9 @@ export class SchoolAddPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }

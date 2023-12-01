@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
 import { TeachService } from '../../services/teach.service';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
 
 @Component({
@@ -13,6 +15,8 @@ import * as moment from 'moment';
 export class MonitorProfilePage implements OnInit, OnDestroy {
   monitorData: any;
   private subscription: Subscription;
+
+  showPhotoMonitor: boolean = false;
 
   starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
   dataLevels:any[] = [
@@ -83,12 +87,14 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   userId: number;
   workLicense: string;
 
-  constructor(private router: Router, private monitorDataService: MonitorDataService, private teachService: TeachService) {}
+  constructor(private router: Router, private monitorDataService: MonitorDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
 
   ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(data => {
       if (data) {
+        this.spinnerService.show();
         this.monitorData = data;
+
         //Initiliaze data
         this.email = data.email;
         this.phone = data.phone;
@@ -119,6 +125,8 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
         this.updatedAt = data.updated_at;
         this.userId = data.user_id;
         this.workLicense = data.work_license;
+
+        this.spinnerService.hide();
       }
     });
   }
@@ -153,6 +161,8 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   }  
 
   saveChanges(): void {
+    this.spinnerService.show();
+
     const updateData = {
       //email: this.email,
       phone: this.phone,
@@ -179,13 +189,67 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       response => {
         // Handle response
         console.log('Update successful', response);
-        this.goTo('monitor-detail');
+        //Update monitor subscription
+        this.monitorDataService.fetchMonitorData(this.monitorData.id);
+        this.spinnerService.hide();
+        this.toastr.success('Mis à jour correctement');
+        this.goTo('home');
       },
       error => {
         // Handle error
+        this.spinnerService.hide();
+        this.toastr.error('Mise à jour a échoué');
         console.error('Update failed', error);
       }
     );
+  }
+
+  changeMonitorPhoto(fileData: { base64: string, isVideo: boolean }): void {
+    if(fileData.base64) {
+      this.spinnerService.show();
+
+      const updateData = {
+        image: fileData.base64,
+
+        //Required for put
+        phone: this.phone,
+        telephone: this.telephone,
+        first_name: this.firstName,
+        last_name: this.lastName,
+        birth_date: moment.utc(this.birth).format('YYYY-MM-DDTHH:mm:ss.SSS') + '000Z',
+        address: this.address,
+        city: this.city,
+        cp: this.cp,
+        country: this.country,
+        avs: this.avs,
+        bank_details: this.bankDetails,
+        children: this.children,
+        partner_work_license: this.partnerWorkLicense,
+        work_license: this.workLicense
+      };
+
+      this.teachService.updateData('monitors', this.monitorData.id, updateData).subscribe(
+        response => {
+          // Handle response
+          console.log('Update successful', response);
+          //Update monitor subscription
+          this.monitorDataService.fetchMonitorData(this.monitorData.id);
+          this.spinnerService.hide();
+          this.toastr.success('Mis à jour correctement');
+          this.goTo('home');
+        },
+        error => {
+          // Handle error
+          this.spinnerService.hide();
+          this.toastr.error('Mise à jour a échoué');
+          console.error('Update failed', error);
+        }
+      );
+    }
+  }
+
+  togglePhotoMonitor(): void {
+    this.showPhotoMonitor = !this.showPhotoMonitor;
   }
 
   goTo(...urls: string[]) {
@@ -193,7 +257,9 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+        this.subscription.unsubscribe();
+    }
   }
 
 }
