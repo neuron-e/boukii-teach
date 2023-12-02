@@ -267,6 +267,15 @@
 .flex-normal {
     flex:1;
 }
+.list-dates-chips {
+    display:flex;width:100%;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.chip-date {
+    width: fit-content;padding:4px 6px;font-size: 11px;border-radius: 8px;
+}
+.chip-selected {
+    font-weight:600;
+}
 
 .capitalize {
     text-transform:capitalize;

@@ -19,6 +19,10 @@
         <app-level-wheel *ngIf="clientMonitor && sportDegrees && sportDegrees.length" [allLevels]="sportDegrees" 
           [currentLevel]="clientMonitor.degree_sport" (currentLevelChange)="onCurrentLevelChange($event)"></app-level-wheel>
 
+
+        <div *ngIf="alreadyCompleted" class="completed-banner background-color-dark mt-12 pt-24 pb-24">
+          Niveau terminé
+        </div>
         
         <div class="padding-wrapper mt-12 mb-12">
           <div class="circle-list-title mb-24">
@@ -32,7 +36,7 @@
                   {{goal.name}}
                 </div>
               </div>
-              <ion-range [(ngModel)]="goal.score" [ticks]="true" [snaps]="true" step="5" [min]="0" [max]="10"></ion-range>
+              <ion-range [disabled]="alreadyCompleted" [(ngModel)]="goal.score" [ticks]="true" [snaps]="true" step="5" [min]="0" [max]="10"></ion-range>
               <div class="range-labels mb-24">
                 <div class="montserrat color-light">Non accompli</div>
                 <div class="montserrat color-light">À améliorer</div>
@@ -44,7 +48,7 @@
           <div class="input-label color-light montserrat mt-32">
             Observations:
           </div>
-          <textarea [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
+          <textarea [disabled]="alreadyCompleted" [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
 
           <ng-container *ngIf="allGoalsCompleted() && !alreadyCompleted">
             <div class="input-label color-light montserrat mt-12">
@@ -82,7 +86,7 @@
               <div *ngIf="multimedia.type == 'video'" class="media-list-video cursor-pointer" (click)="viewMultimedia(multimedia.type,multimedia.file)">
                 <img src="assets/icon/play.png" />
               </div>
-              <div (click)="deleteMultimedia(i)" class="media-close-box cursor-pointer">
+              <div *ngIf="!alreadyCompleted" (click)="deleteMultimedia(i)" class="media-close-box cursor-pointer">
                 <img src="assets/icon/icon-close.png" />
               </div>
             </div>

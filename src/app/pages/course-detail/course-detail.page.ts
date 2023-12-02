@@ -199,6 +199,10 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     return `${formatTime(hour_end)}`;
   }
 
+  formatDate(date:string) {
+    return moment(date).format('DD-MM-YYYY');
+  }
+
   getPositionDate(courseDates: any[], courseDateId: string): number {
     const index = courseDates.findIndex(date => date.id === courseDateId);
     return index >= 0 ? index + 1 : 0;

@@ -22,9 +22,15 @@
     </div>
 
     <div class="background-color-dark padding-wrapper mt-24 mb-24">
-      <div class="input-form-icon-b background-grey-translucent mb-24">
-        <div class="montserrat">
-          Heures totales
+      <div class="stats-titles mb-24">
+        <div class="input-form-icon-b background-grey-translucent">
+          <div class="montserrat">
+            Heures totales
+          </div>
+        </div>
+        <div class="stats-icons">
+          <img src="assets/icon/icons-outline-arrow-left-2.svg" class="cursor-pointer" (click)="changeMonths(3)" />
+          <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="cursor-pointer" (click)="changeMonths(-3)" />
         </div>
       </div>
       
@@ -71,9 +77,10 @@
           </div>
         </div>
 
-        <div *ngFor="let month of reversedMonthsData" class="table-line pb-8 mb-8">
+        <div *ngFor="let month of reversedMonthsData;let i = index" class="table-line pb-8 mb-8">
           <div class="montserrat width-big table-line-text">
-            <div>{{month.name}}</div>
+            <div [ngClass]="{'color-selected': i>=currentEndIndex && i<currentStartIndex}">{{month.name}}</div>
+            <span [ngClass]="{'color-selected': i>=currentEndIndex && i<currentStartIndex}">{{month.year}}</span>
           </div>
           <div class="montserrat width-small">
             {{month.collectiveCourses}}

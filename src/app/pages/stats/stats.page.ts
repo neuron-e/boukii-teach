@@ -81,6 +81,8 @@ export class StatsPage implements OnInit, OnDestroy {
   totalCollectiveDurationFormatted:any;
   totalPrivateDurationFormatted:any;
 
+  currentStartIndex: number = 3;
+  currentEndIndex: number = 0;
 
   constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
   monitorData: any;
@@ -165,7 +167,7 @@ export class StatsPage implements OnInit, OnDestroy {
         this.reversedMonthsData = this.monthsData.slice().reverse();
 
         // Update chart
-        this.updateChartData(this.monthsData);
+        this.updateChartData();
       },
       error => {
         this.spinnerService.hide();
@@ -182,9 +184,21 @@ export class StatsPage implements OnInit, OnDestroy {
     const [hours, minutes] = durationString.split('h').map(part => parseInt(part, 10));
     return hours + minutes / 60; // Convert to decimal hours
   }
-  
-  updateChartData(monthsData: any[]): void {
-    const combinedCourseData = monthsData.map(m => {
+
+  changeMonths(count:number) {
+    if(this.currentEndIndex + count >= 0 && this.currentStartIndex + count <= 24){
+      this.currentStartIndex += count;
+      this.currentEndIndex += count;
+
+      this.updateChartData();
+    }
+  }
+
+  updateChartData() {
+    const startIndex = this.monthsData.length - this.currentStartIndex;
+    const lastIndex = this.monthsData.length - this.currentEndIndex;
+
+    const combinedCourseData = this.monthsData.slice(startIndex, lastIndex).map(m => {
       const collectiveDuration = this.durationInHours(m.collectiveCourses);
       const privateDuration = this.durationInHours(m.privateCourses);
       return collectiveDuration + privateDuration; // Sum of collective and private courses
@@ -193,17 +207,33 @@ export class StatsPage implements OnInit, OnDestroy {
     this.lineChartData.datasets[0].data = combinedCourseData;
   
     // Update labels with the months from monthsData
-    this.lineChartData.labels = monthsData.map(m => m.name);
+    this.lineChartData.labels = this.monthsData.slice(startIndex, lastIndex).map(m => m.name);
   
     if (this.chart) {
       this.chart.update();
+    }
+  }
+
+  navigateToPreviousMonths() {
+    if (this.currentStartIndex > 0) {
+      this.currentStartIndex -= 3;
+      this.currentEndIndex -= 3;
+      this.updateChartData();
+    }
+  }
+  
+  navigateToNextMonths() {
+    if (this.currentEndIndex < this.monthsData.length) {
+      this.currentStartIndex += 3;
+      this.currentEndIndex += 3;
+      this.updateChartData();
     }
   }
   
   initializeMonthsData() {
     const monthsData = [];
     let currentMonth = moment();
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 24; i++) {
       const monthYear = currentMonth.format('MMM YYYY').toUpperCase();
       monthsData.unshift({ 
         name: monthYear.split(' ')[0], 

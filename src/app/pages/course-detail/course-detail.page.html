@@ -48,6 +48,12 @@
           </div>
         </div>
 
+        <div class="list-dates-chips mt-24 mb-24">
+          <div *ngFor="let date of selectedBooking.course.course_dates" class="background-grey-translucent montserrat chip-date" [ngClass]="{'chip-selected': selectedBooking.course_date_id == date.id}">
+            {{formatDate(date.date)}}
+          </div>
+        </div>
+
         <div *ngIf="selectedBooking.course.course_type == 1" class="cursor-pointer menu-section-content" (click)="goTo('course-group',bookingId,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)">
           <div class="menu-section-title">Groupe</div>
           <div class="menu-section-text">

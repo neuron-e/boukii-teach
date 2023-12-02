@@ -8,10 +8,15 @@
       <input type="file" #fileInput (change)="onFileSelected($event)" [accept]="acceptTypes" style="display: none;">
       <button (click)="fileInput.click()" class="content-button btn-back-grey montserrat">Choisir le fichier</button>
     </div>
-    <div class="camera-upload mt-24">
+    <div class="camera-upload mt-12">
       <button (click)="openCamera()" class="content-button btn-back-grey montserrat">Utiliser la caméra</button>
     </div>
+    <div class="file-upload mt-12">
+      <input type="file" #videoInput (change)="onVideoSelected($event)" accept="video/*" capture="user" style="display: none;">
+      <button *ngIf="allowVideo" (click)="videoInput.click()" class="content-button btn-back-grey montserrat">Enregistrer une vidéo</button>
+    </div>
     
+    <!-- Preview Section -->
     <div *ngIf="filePreview" class="mt-24 mb-32">
       <img *ngIf="!isVideo" [src]="filePreview" class="preview">
       <video *ngIf="isVideo" [src]="filePreview" class="preview" muted playsinline></video>

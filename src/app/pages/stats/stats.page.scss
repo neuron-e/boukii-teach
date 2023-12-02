@@ -94,13 +94,19 @@
 .remove-bottom {
     margin-bottom:-12px !important;
 }
+.stats-titles {
+    display:flex;width:100%;justify-content:space-between;align-items:center;
+}
+.stats-icons {
+    display:flex;align-items:center;gap:20px;
+}
+.stats-icons img {
+    width:32px;
+}
+.color-selected {
+    color:var(--ion-color-primary) !important;
+}
 
-.chart-scroll-wrapper {
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch; /* For momentum scrolling on iOS */
-  }
-  
-  .chart-container {
-    display: block; /* Important for correct rendering in some browsers */
-    width: 100% !important;
-  }
+.chart-container {
+    display: block;width: 100% !important;
+}
