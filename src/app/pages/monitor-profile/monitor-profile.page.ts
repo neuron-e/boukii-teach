@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, filter, firstValueFrom, forkJoin } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
+import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { MOCK_COUNTRIES } from '../../mocks/countries-data';
+import { MOCK_PROVINCES } from '../../mocks/province-data';
 import * as moment from 'moment';
 
 @Component({
@@ -47,13 +50,11 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   isChildYes:boolean = false;
   isChildNo:boolean = false;
 
-  dataSports:any[] = [
-    {id:1,name:'Ski',image:'assets/icon/icons-outline-disciplinas-1.svg',checked:false},
-    {id:2,name:'Snowboard',image:'assets/icon/icons-outline-disciplinas-2.svg',checked:false},
-    {id:3,name:'Telemark',image:'assets/icon/icons-outline-disciplinas-3.svg',checked:false},
-    {id:4,name:'S.Rando',image:'assets/icon/icons-outline-disciplinas-4.svg',checked:false},
-  ];
-
+  languages: any[] = [];
+  sports: any[] = [];
+  degrees: any[] = [];
+  filteredSports: any[] = [];
+  sportDegrees: any[] = [];
   selectedSport:any;
   currentLevel: number = 0;
 
@@ -73,12 +74,15 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   avs: string;
   bankDetails: string;
   children: boolean;
-  civilStatus: boolean;
+  civilStatus: any;
   familyAllowance: boolean;
   image: string;
-  language1Id: number;
-  language2Id: number;
-  language3Id: number;
+  language1Id: any;
+  language2Id: any;
+  language3Id: any;
+  language4Id: any;
+  language5Id: any;
+  language6Id: any;
   partnerPercentage: number;
   partnerWorkLicense: string;
   partnerWorks: boolean;
@@ -86,14 +90,40 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   updatedAt: string;
   userId: number;
   workLicense: string;
+  worldCountry: string;
 
-  constructor(private router: Router, private monitorDataService: MonitorDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  typeSport:number=1;
 
-  ngOnInit() {
-    this.subscription = this.monitorDataService.getMonitorData().subscribe(data => {
+  countries = MOCK_COUNTRIES;
+  provinces = MOCK_PROVINCES;
+
+  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+
+  async ngOnInit() {
+    this.subscription = this.monitorDataService.getMonitorData().subscribe(async data => {
       if (data) {
         this.spinnerService.show();
         this.monitorData = data;
+        console.log(this.countries);
+        console.log(this.provinces);
+        try {
+          this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
+          await this.getMonitorSports();
+          this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
+          this.degrees.sort((a, b) => a.degree_order - b.degree_order);
+          this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+          this.sports.sort((a, b) => a.id - b.id);
+          this.sports = this.sports.map(sport => {
+            // Check if this sport's id is in monitorData.sports
+            const isChecked = this.monitorData.sports.some((monitorSport:any) => monitorSport.id === sport.id);
+            return { ...sport, checked: isChecked };
+          });
+          
+          this.filteredSports = this.sports.filter(sport => sport.sport_type === this.typeSport);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.toastr.error("Erreur lors du chargement des données");
+        }
 
         //Initiliaze data
         this.email = data.email;
@@ -118,17 +148,45 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
         this.language1Id = data.language1_id;
         this.language2Id = data.language2_id;
         this.language3Id = data.language3_id;
-        this.partnerPercentage = data.partner_percentage;
+        this.language4Id = data.language4_id;
+        this.language5Id = data.language5_id;
+        this.language6Id = data.language6_id;
+        this.partnerPercentage = data.partner_percentaje;
         this.partnerWorkLicense = data.partner_work_license;
         this.partnerWorks = data.partner_works;
         this.province = data.province;
         this.updatedAt = data.updated_at;
         this.userId = data.user_id;
         this.workLicense = data.work_license;
+        this.worldCountry = data.world_country;
 
         this.spinnerService.hide();
       }
     });
+  }
+
+  async getMonitorSports() {
+    try {
+      const data: any = await this.teachService.getData('monitor-sports-degrees', null, { monitor_id: this.monitorData.id }).toPromise();
+      this.sportDegrees = data.data;
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }
+
+  filterSports(type:number) {
+    this.filteredSports = this.sports.filter(sport => sport.sport_type === type);
+    this.typeSport = type;
+  }
+
+  checkSport(id:any){
+    this.sports = this.sports.map(sport => {
+      if (sport.id === id) {
+        return { ...sport, checked: !sport.checked };
+      }
+      return sport;
+    });
+    this.filterSports(this.typeSport);
   }
   
   doShowLevel(sport:any) {
@@ -160,6 +218,50 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
     return false;
   }  
 
+  saveSports() {
+    const checkedSports = this.sports.filter(sport => sport.checked);
+    const addObjects = checkedSports.filter(checkedSport => 
+      !this.monitorData.sports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
+    const deleteObjects = this.monitorData.sports.filter((monitorSport:any) => 
+      !checkedSports.some(checkedSport => checkedSport.id === monitorSport.id));
+
+    const addRequests = addObjects.map(obj => {
+      let filteredDegrees = this.degrees.filter(degree => degree.sport_id === obj.id);
+      const data = {
+        sport_id: obj.id,
+        school_id: this.monitorData.active_school,
+        degree_id: filteredDegrees && filteredDegrees.length ? filteredDegrees[filteredDegrees.length - 1].id : this.degrees[0].id,
+        monitor_id: this.monitorData.id,
+        salary_level: 1,
+        allow_adults: true,
+        is_default: false
+      };
+      return this.teachService.postData('monitor-sports-degrees', data);
+    });
+  
+    const deleteRequests = deleteObjects.map((obj:any) => {
+      const sportDegreeId = this.sportDegrees.find(sd => sd.sport_id === obj.id && sd.monitor_id === this.monitorData.id)?.id;
+      if (sportDegreeId) {
+        return this.teachService.deleteData('monitor-sports-degrees', sportDegreeId);
+      }
+      return null;
+    }).filter((request:any) => request !== null);
+  
+    const allRequests = [...addRequests, ...deleteRequests];
+  
+    if (allRequests.length > 0) {
+      forkJoin(allRequests).subscribe(results => {
+        console.log('All add and delete operations completed:', results);
+        this.router.navigate(['home']); // Navigate to 'home' after completion
+      }, error => {
+        console.error('An error occurred:', error);
+      });
+    } else {
+      // No operations to perform, directly navigate to 'home'
+      this.router.navigate(['home']);
+    }
+  }
+
   saveChanges(): void {
     this.spinnerService.show();
 
@@ -175,14 +277,26 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       city: this.city,
       cp: this.cp,
       country: this.country,
+      language1_id: this.language1Id,
+      language2_id: this.language2Id,
+      language3_id: this.language3Id,
+      language4_id: this.language4Id,
+      language5_id: this.language5Id,
+      language6_id: this.language6Id,
 
       // Additional fields
       active_school: this.activeSchool,
       avs: this.avs,
       bank_details: this.bankDetails,
       children: this.children,
+      civil_status: this.civilStatus,
+      family_allowance: this.familyAllowance,
+      partner_percentaje: this.partnerPercentage,
       partner_work_license: this.partnerWorkLicense,
-      work_license: this.workLicense
+      partner_works: this.partnerWorks,
+      province: this.province,
+      work_license: this.workLicense,
+      world_country: this.worldCountry
     };
 
     this.teachService.updateData('monitors', this.monitorData.id, updateData).subscribe(

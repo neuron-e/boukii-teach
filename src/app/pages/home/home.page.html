@@ -41,11 +41,11 @@
       </div>
       
       <ng-container *ngIf="meteo && meteo.length">
-        <div class="montserrat mb-8 color-light title-selector-small">
+        <div class="montserrat mb-8 color-light title-selector-small cursor-pointer" (click)="goTo('meteo')">
           MÉTÉO
         </div>
 
-        <div class="background-color-dark box-radius flex-weather">
+        <div class="background-color-dark box-radius flex-weather pt-12 pb-12 cursor-pointer" (click)="goTo('meteo')">
           <div class="flex-weather-item">
             <div class="color-light montserrat">{{meteo[0].time}}</div>
             <img [src]="'assets/icon/weather/' + meteo[0].icon + '.png'" />

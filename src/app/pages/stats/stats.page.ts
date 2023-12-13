@@ -67,7 +67,7 @@ export class StatsPage implements OnInit, OnDestroy {
     },
     plugins: {
       legend: {
-        display: false,
+        display: true,
       },
     },
 
@@ -80,9 +80,15 @@ export class StatsPage implements OnInit, OnDestroy {
   reversedMonthsData:any[];
   totalCollectiveDurationFormatted:any;
   totalPrivateDurationFormatted:any;
+  totalNwdDurationFormatted:any;
+  totalPayedDurationFormatted:any;
+  totalNotPayedDurationFormatted:any;
 
   currentStartIndex: number = 3;
   currentEndIndex: number = 0;
+
+  hourStartDay: string = '08:00';
+  hourEndDay: string = '18:00';
 
   constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
   monitorData: any;
@@ -116,6 +122,9 @@ export class StatsPage implements OnInit, OnDestroy {
         this.monthsData = this.initializeMonthsData();
         let collectiveCourses:any = { totalDuration: 0 };
         let privateCourses:any = { totalDuration: 0 };
+        let blockPayed:any = { totalDuration: 0 };
+        let blockNwd:any = { totalDuration: 0 };
+        let blockNotPayed:any = { totalDuration: 0 };
     
         // Group bookings by date
         data.data.bookings.forEach((booking: any) => {
@@ -131,38 +140,84 @@ export class StatsPage implements OnInit, OnDestroy {
             }
           }
         });
+    
+        // Group nwds by date
+        data.data.nwd.forEach((nwd: any) => {
+          const nwdMonthYear = moment(nwd.start_date).format('MMM YYYY').toUpperCase();
+          const monthData = this.monthsData.find((m:any) => `${m.name} ${m.year}` === nwdMonthYear);
+  
+          if (monthData) {
+            let duration;
+            if(nwd.full_day){
+              duration = this.calculateDuration(this.hourStartDay, this.hourEndDay);
+            }
+            else{
+              duration = this.calculateDuration(nwd.start_time, nwd.end_time);
+            } 
+            if (nwd.user_nwd_subtype_id === 1) {
+              monthData.blockNwd += duration;
+            } else if (nwd.user_nwd_subtype_id === 2) {
+              monthData.blockPayed += duration;
+            } else if (nwd.user_nwd_subtype_id === 3) {
+              monthData.blockNotPayed += duration;
+            }
+          }
+        });
   
         // Convert total duration to hours and minutes
         collectiveCourses.totalDuration = this.formatDuration(collectiveCourses.totalDuration);
         privateCourses.totalDuration = this.formatDuration(privateCourses.totalDuration);
+        blockNwd.totalDuration = this.formatDuration(blockNwd.totalDuration);
+        blockPayed.totalDuration = this.formatDuration(blockPayed.totalDuration);
+        blockNotPayed.totalDuration = this.formatDuration(blockNotPayed.totalDuration);
   
         // Convert monthly durations to hours and minutes
         Object.keys(this.monthsData).forEach((month:any) => {
           this.monthsData[month].collectiveCourses = this.formatDuration(this.monthsData[month].collectiveCourses);
           this.monthsData[month].privateCourses = this.formatDuration(this.monthsData[month].privateCourses);
+          this.monthsData[month].blockNwd = this.formatDuration(this.monthsData[month].blockNwd);
+          this.monthsData[month].blockPayed = this.formatDuration(this.monthsData[month].blockPayed);
+          this.monthsData[month].blockNotPayed = this.formatDuration(this.monthsData[month].blockNotPayed);
         });
   
         console.log('Collective Courses:', collectiveCourses);
         console.log('Private Courses:', privateCourses);
+        console.log('Nwd blocks:', blockNwd);
+        console.log('Payed blocks:', blockPayed);
+        console.log('Not Payed blocks:', blockNotPayed);
         console.log('Monthly Data:', this.monthsData);
 
         // Prepare chart data
         const collectiveCourseData = this.monthsData.map((m:any) => this.durationInHours(m.collectiveCourses));
         const privateCourseData = this.monthsData.map((m:any) => this.durationInHours(m.privateCourses));
+        const blockNwdData = this.monthsData.map((m:any) => this.durationInHours(m.blockNwd));
+        const blockPayedData = this.monthsData.map((m:any) => this.durationInHours(m.blockPayed));
+        const blockNotPayedData = this.monthsData.map((m:any) => this.durationInHours(m.blockNotPayed));
 
         //TABLE
         let totalCollectiveDuration = 0;
         let totalPrivateDuration = 0;
+        let totalNwdDuration = 0;
+        let totalPayedDuration = 0;
+        let totalNotPayedDuration = 0;
 
         this.monthsData.forEach(month => {
           totalCollectiveDuration += this.hoursToMinutes(this.durationInHours(month.collectiveCourses));
           totalPrivateDuration += this.hoursToMinutes(this.durationInHours(month.privateCourses));
+          totalNwdDuration += this.hoursToMinutes(this.durationInHours(month.blockNwd));
+          totalPayedDuration += this.hoursToMinutes(this.durationInHours(month.blockPayed));
+          totalNotPayedDuration += this.hoursToMinutes(this.durationInHours(month.blockNotPayed));
         });
 
         // Convert the total durations from minutes to hours and minutes format
         this.totalCollectiveDurationFormatted = this.formatDuration(totalCollectiveDuration);
         this.totalPrivateDurationFormatted = this.formatDuration(totalPrivateDuration);
+        this.totalNwdDurationFormatted = this.formatDuration(totalNwdDuration);
+        this.totalPayedDurationFormatted = this.formatDuration(totalPayedDuration);
+        this.totalNotPayedDurationFormatted = this.formatDuration(totalNotPayedDuration);
         console.log(this.totalCollectiveDurationFormatted);console.log(this.totalPrivateDurationFormatted);
+        console.log(this.totalNwdDurationFormatted);console.log(this.totalPayedDurationFormatted);
+        console.log(this.totalNotPayedDurationFormatted);
 
         this.reversedMonthsData = this.monthsData.slice().reverse();
 
@@ -197,18 +252,53 @@ export class StatsPage implements OnInit, OnDestroy {
   updateChartData() {
     const startIndex = this.monthsData.length - this.currentStartIndex;
     const lastIndex = this.monthsData.length - this.currentEndIndex;
+  
+    // Data for collective courses
+    const collectiveCourseData = this.monthsData.slice(startIndex, lastIndex).map(m => this.durationInHours(m.collectiveCourses));
+  
+    // Data for private courses
+    const privateCourseData = this.monthsData.slice(startIndex, lastIndex).map(m => this.durationInHours(m.privateCourses));
+  
+    // Data for block payed
+    const blockPayedData = this.monthsData.slice(startIndex, lastIndex).map(m => this.durationInHours(m.blockPayed));
+    
+    // Data for combined courses
+    const combinedCourseData = this.monthsData.slice(startIndex, lastIndex).map(m => 
+      this.durationInHours(m.collectiveCourses) + this.durationInHours(m.privateCourses) + this.durationInHours(m.blockPayed));
 
-    const combinedCourseData = this.monthsData.slice(startIndex, lastIndex).map(m => {
-      const collectiveDuration = this.durationInHours(m.collectiveCourses);
-      const privateDuration = this.durationInHours(m.privateCourses);
-      return collectiveDuration + privateDuration; // Sum of collective and private courses
-    });
   
-    this.lineChartData.datasets[0].data = combinedCourseData;
-  
+    // Update datasets in lineChartData
+    this.lineChartData.datasets = [
+      {
+        data: collectiveCourseData,
+        label: 'Cours collectifs',
+        yAxisID: 'y',
+        borderColor: 'rgba(252,196,47,1)'
+      },
+      {
+        data: privateCourseData,
+        label: 'Cours privés',
+        yAxisID: 'y',
+        borderColor: 'rgba(56,199,77,1)'
+      },
+      {
+        data: blockPayedData,
+        label: 'Blocs payé',
+        yAxisID: 'y',
+        borderColor: 'rgba(100,100,100,1)'
+      },
+      {
+        data: combinedCourseData,
+        label: 'Toute',
+        yAxisID: 'y',
+        borderColor: 'rgba(51,153,255,1)'
+      }
+    ];
+    
     // Update labels with the months from monthsData
     this.lineChartData.labels = this.monthsData.slice(startIndex, lastIndex).map(m => m.name);
-  
+    
+    // Update the chart
     if (this.chart) {
       this.chart.update();
     }
@@ -239,7 +329,10 @@ export class StatsPage implements OnInit, OnDestroy {
         name: monthYear.split(' ')[0], 
         year: monthYear.split(' ')[1],
         collectiveCourses: 0, 
-        privateCourses: 0 
+        privateCourses: 0,
+        blockNwd: 0,
+        blockPayed: 0,
+        blockNotPayed: 0
       });
       currentMonth.subtract(1, 'months');
     }

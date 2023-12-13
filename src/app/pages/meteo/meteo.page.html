@@ -1,0 +1,54 @@
+<ion-content>
+  <div class="content-size dark-background">
+
+      <div class="content-img-wrapper">
+        <div class="wrapper-back"></div>
+        <img *ngIf="monitorStation && monitorStation.image" [src]="monitorStation.image" class="content-img-back" />
+        <div class="box-icon-left cursor-pointer" (click)="goTo('home')">
+          <img src="assets/icon/arrow-left.svg" />
+        </div>
+
+        <div class="content-img-text">
+          <div *ngIf="monitorStation && monitorStation.name" class="content-img-title">{{monitorStation.name}}</div>
+          <div class="content-img-text-flex">
+            <img src="assets/icon/icon-location-blue.png" />
+            <div *ngIf="monitorStation && monitorStation.city" class="montserrat">{{monitorStation.city}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="padding-wrapper">
+
+        <div class="montserrat mb-8 color-light title-selector-small uppercase">
+          Aujourd'hui
+        </div>
+
+        <div class="background-color-dark flex-weather pt-24">
+          <div *ngFor="let hour of meteo" class="flex-weather-item pb-24">
+            <div class="color-light montserrat">{{hour.time}}</div>
+            <img [src]="'assets/icon/weather/' + hour.icon + '.png'" />
+            <div class="montserrat">{{hour.temperature}}º</div>
+          </div>
+        </div>
+
+
+        <div class="montserrat mt-24 mb-8 color-light title-selector-small uppercase">
+          Prochains jours
+        </div>
+
+        <div *ngIf="meteoWeek && meteoWeek.length" class="background-color-dark flex-weather pt-24  pb-24">
+          <div *ngFor="let day of meteoWeek" class="flex-weather-item">
+            <div class="color-light montserrat">{{weekdays[getDayIndex(day.day)]}}</div>
+            <img [src]="'assets/icon/weather/' + day.icon + '.png'" />
+            <div style="display:flex;align-items:center;gap:4px;">
+              <div class="montserrat">{{day.temperature_min}}º</div>
+              <div class="montserrat">{{day.temperature_max}}º</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+  </div>
+</ion-content>

@@ -19,7 +19,7 @@ export class MonitorDataService {
   }
 
   fetchMonitorData(id: number) {
-    return this.teachService.getData('monitors', id).subscribe(
+    return this.teachService.getData('monitors', id, {'with[]':'sports'}).subscribe(
       (data:any) => {
         this.setMonitorData(data.data);
         console.log(data.data);

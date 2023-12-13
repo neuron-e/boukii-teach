@@ -11,6 +11,7 @@ export class LevelUserComponent  implements OnInit {
   @Input() selectLevel: number = 0;
   @Input() size: number;
   @Input() userImage: string;
+  applyAngle:number=0;
 
   constructor() { }
 
@@ -26,6 +27,13 @@ export class LevelUserComponent  implements OnInit {
     }
     else{
       this.selectLevel = 0;
+    }
+
+    if(this.size < 150){
+      this.applyAngle = (360 / this.allLevels.length) * (150 - this.size) / 800;
+    }
+    else{
+      this.applyAngle = (360 / this.allLevels.length) * (150 - this.size) / 1000;
     }
   }
 
@@ -52,7 +60,7 @@ export class LevelUserComponent  implements OnInit {
     const gapAngleSize = ((this.size / 50) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
 
-    const startingOffset = circleRadius / 20;
+    const startingOffset = 0;
     // Marker to the right of level
     const startAngle = (index * circleAngleSize) + startingOffset;
     const endAngle = startAngle + levelAngleSize;
@@ -68,19 +76,19 @@ export class LevelUserComponent  implements OnInit {
 
     return `M ${startX} ${startY} A ${circleRadius} ${circleRadius} 0 ${largeArcFlag} 1 ${endX} ${endY}`;
   }
-
+  
   getMarkerPosition() {
     const circleRadius = this.size / 2;
     const circleAngleSize = 360 / this.allLevels.length;
-    const sizeMarker = this.markerRadius * 2;
+    const sizeMarker = this.markerRadius / 2;
   
     const gapAngleSize = ( (this.size / 20) / circleRadius) * (180 / Math.PI);
     const levelAngleSize = circleAngleSize - gapAngleSize;
   
     // Start angle for the selected level
-    const shiftAdjustment = circleAngleSize; //manually to fit in gap;
-    const startAngle = ( (this.selectLevel + 1) * circleAngleSize) - shiftAdjustment;
-    const markerAngle = startAngle + levelAngleSize + sizeMarker; // middle of the gap
+    const shiftAdjustment = circleAngleSize; //manually to fit in gap
+    const startAngle = ( (this.selectLevel) * circleAngleSize);
+    const markerAngle = startAngle + levelAngleSize + sizeMarker + this.applyAngle; // middle of the gap
   
     const x =   circleRadius * Math.cos(this.degToRad(markerAngle - 90));
     const y = circleRadius * Math.sin(this.degToRad(markerAngle - 90));

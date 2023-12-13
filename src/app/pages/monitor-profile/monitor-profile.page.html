@@ -16,7 +16,7 @@
         </div>
         <div class="user-image-title mb-12">
           <div>{{ monitorData.first_name }} {{ monitorData.last_name }}</div>
-          <span class="montserrat color-primary">@{{ monitorData.first_name }}</span> <!--missing username-->
+          <span class="montserrat color-primary">@{{ monitorData.first_name }}{{ monitorData.last_name }}</span> <!--missing username-->
         </div>
         <div class="mt-8 flex-buttons">
           <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;">
@@ -78,13 +78,6 @@
         </div>
 
         <div class="input-label color-light montserrat">
-          User
-        </div>
-        <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" [(ngModel)]="userName" />
-        </div>
-
-        <div class="input-label color-light montserrat">
           Date de naissance
         </div>
         <div class="input-form-icon background-color-dark">
@@ -106,7 +99,75 @@
             <input class="montserrat" type="text" placeholder="NPA" [(ngModel)]="cp" />
           </div>
           <div class="input-form-icon background-color-dark width-60">
-            <input class="montserrat" type="text" placeholder="Pays" [(ngModel)]="country" />
+            <select class="montserrat" placeholder="Pays" [(ngModel)]="country">
+              <option *ngFor="let pays of countries" [value]="pays.id">{{pays.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="inputs-flex">
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 1
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 1" [(ngModel)]="language1Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 2
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 2" [(ngModel)]="language2Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 3
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 3" [(ngModel)]="language3Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="inputs-flex">
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 4
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 4" [(ngModel)]="language4Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 5
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 5" [(ngModel)]="language5Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="input-label color-light montserrat">
+              Lang 6
+            </div>
+            <div class="input-form-icon background-color-dark">
+              <select class="montserrat" placeholder="Lang 6" [(ngModel)]="language6Id">
+                <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -120,27 +181,28 @@
       <div *ngIf="showSports" class="mb-24 pt-8">
 
         <div class="flex-sections mb-24">
-          <div [ngClass]="showWinter ? 'section-selected' : 'section-title'" (click)="showWinter=true;showSummer=false;showOther=false;">
+          <div [ngClass]="typeSport == 1 ? 'section-selected' : 'section-title'" (click)="filterSports(1)">
             Hiver
-            <div *ngIf="showWinter" class="section-bullet"></div>
+            <div *ngIf="typeSport == 1" class="section-bullet"></div>
           </div>
-          <div [ngClass]="showSummer ? 'section-selected' : 'section-title'" (click)="showWinter=false;showSummer=true;showOther=false;">
+          <div [ngClass]="typeSport == 2 ? 'section-selected' : 'section-title'" (click)="filterSports(2)">
             Été
-            <div *ngIf="showSummer" class="section-bullet"></div>
+            <div *ngIf="typeSport == 2" class="section-bullet"></div>
           </div>
-          <div [ngClass]="showOther ? 'section-selected' : 'section-title'" (click)="showWinter=false;showSummer=false;showOther=true;">
+          <div [ngClass]="typeSport == 3 ? 'section-selected' : 'section-title'" (click)="filterSports(3)">
             Autres
-            <div *ngIf="showOther" class="section-bullet"></div>
+            <div *ngIf="typeSport == 3" class="section-bullet"></div>
           </div>
         </div>
         
         <div class="custom-radio mb-32">
-          <label *ngFor="let sport of dataSports" class="radio-option background-color-dark" (click)="!sport.checked && doShowLevel(sport)">
+          <label *ngFor="let sport of filteredSports" class="radio-option background-color-dark" (click)="checkSport(sport.id)">
             <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" />
             <div class="radio-wrapper">
-              <img [src]="sport.image" />
+              <img [src]="sport.icon_selected" />
               <span class="montserrat">{{sport.name}}</span>
-              <div class="extra-check montserrat color-primary" (click)="doShowLevel(sport)">
+              <!--(click)="doShowLevel(sport)"-->
+              <div class="extra-check montserrat color-primary">
                 FORMATION
               </div>
             </div>
@@ -149,7 +211,7 @@
         
         </div>
 
-        <button (click)="goTo('home')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+        <button (click)="saveSports()" class="content-button btn-back-primary montserrat mt-24 mb-24">
           Sauvegarder
         </button>
 
@@ -168,33 +230,33 @@
             Nº AVS
           </div>
           <div class="input-form-icon background-color-dark">
-            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="avs" />
           </div>
           <div class="input-label color-light montserrat">
             Permis de travail
           </div>
           <div class="input-form-icon background-color-dark">
-            <input class="montserrat" placeholder="XXXX XXXX XX" type="text" />
+            <input class="montserrat" placeholder="XXXX XXXX XX" type="text" [(ngModel)]="workLicense" />
           </div>
           <div class="input-label color-light montserrat">
             Coordonnées bancaires
           </div>
           <div class="input-form-icon background-color-dark">
-            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+            <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="bankDetails" />
           </div>
           <div class="input-label color-light montserrat">
             Nationalité
           </div>
           <div class="input-form-icon background-color-dark">
-            <select class="montserrat">
-              <option value="Suisse">Suisse</option>
+            <select class="montserrat" placeholder="Nationalité" [(ngModel)]="worldCountry">
+              <option *ngFor="let pays of countries" [value]="pays.id">{{pays.name}}</option>
             </select>
           </div>
           <div class="input-label color-light montserrat">
             Nº enfants
           </div>
           <div class="input-form-icon background-color-dark">
-            <input class="montserrat" placeholder="0" min="0" step="1" type="number" />
+            <input class="montserrat" placeholder="0" min="0" step="1" type="number" [(ngModel)]="children" />
           </div>
 
         </div>
@@ -208,44 +270,44 @@
             Quel est votre etat civil?
           </div>
           <div class="list-chip mt-12">
-            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=true;isSingle=false;">
-              <img *ngIf="isMarried" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+            <div class="background-color-dark cursor-pointer chip-box" (click)="civilStatus='1'">
+              <img *ngIf="civilStatus=='1'" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
               <div class="montserrat chip-box-text">Mariée</div>
             </div>
-            <div class="background-color-dark cursor-pointer chip-box" (click)="isMarried=false;isSingle=true;">
-              <img *ngIf="isSingle" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+            <div class="background-color-dark cursor-pointer chip-box" (click)="civilStatus='2'">
+              <img *ngIf="civilStatus=='2'" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
               <div class="montserrat chip-box-text">Single</div>
             </div>
           </div>
 
-          <ng-container *ngIf="isMarried">
+          <ng-container *ngIf="civilStatus=='1'">
             <div class="input-label color-light montserrat mt-24">
               Permis travail du conjoint
             </div>
             <div class="input-form-icon background-color-dark">
-              <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" />
+              <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="partnerWorkLicense" />
             </div>
 
             <div class="input-label color-light montserrat">
               Conjoint travaille?
             </div>
             <div class="list-chip mt-12">
-              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=true;isWorkNo=false;">
-                <img *ngIf="isWorkYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="background-color-dark cursor-pointer chip-box" (click)="partnerWorks=true">
+                <img *ngIf="partnerWorks" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
                 <div class="montserrat chip-box-text">Oui</div>
               </div>
-              <div class="background-color-dark cursor-pointer chip-box" (click)="isWorkYes=false;isWorkNo=true;">
-                <img *ngIf="isWorkNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+              <div class="background-color-dark cursor-pointer chip-box" (click)="partnerWorks=false">
+                <img *ngIf="!partnerWorks" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
                 <div class="montserrat chip-box-text">Non</div>
               </div>
             </div>
 
-            <ng-container *ngIf="isWorkYes">
+            <ng-container *ngIf="partnerWorks">
               <div class="input-label color-light montserrat mt-24">
                 Pourcentage du conjoint (%)
               </div>
               <div class="input-form-icon background-color-dark">
-                <input class="montserrat" placeholder="XX" min="0" type="number" />
+                <input class="montserrat" placeholder="XX" min="0" type="number" [(ngModel)]="partnerPercentage" />
               </div>
             </ng-container>
 
@@ -257,16 +319,17 @@
             Demande d'allocation familiales?
           </div>
           <div class="list-chip mt-12">
-            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=true;isChildNo=false;">
-              <img *ngIf="isChildYes" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+            <div class="background-color-dark cursor-pointer chip-box" (click)="familyAllowance=true">
+              <img *ngIf="familyAllowance" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
               <div class="montserrat chip-box-text">Oui</div>
             </div>
-            <div class="background-color-dark cursor-pointer chip-box" (click)="isChildYes=false;isChildNo=true;">
-              <img *ngIf="isChildNo" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
+            <div class="background-color-dark cursor-pointer chip-box" (click)="familyAllowance=false">
+              <img *ngIf="!familyAllowance" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
               <div class="montserrat chip-box-text">Non</div>
             </div>
           </div>
 
+        <!--
           <ng-container *ngIf="isChildYes">
             <div class="input-label color-light montserrat mt-24">
               DONNÉES DE LES ENFANTS
@@ -291,11 +354,12 @@
               </div>
             </div>
           </ng-container>
+        -->
           
 
         </div>
 
-        <button (click)="goTo('home')" class="content-button btn-back-primary montserrat mt-24 mb-24">
+        <button (click)="saveChanges()" class="content-button btn-back-primary montserrat mt-24 mb-24">
           Sauvegarder
         </button>
 

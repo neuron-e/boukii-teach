@@ -53,6 +53,7 @@ export class HomePage implements OnInit, OnDestroy {
         await this.getStation();
         await this.getSchool();
         await this.getMeteo();
+        await this.getMeteoWeek();
         this.loadBookings();
       }
     });
@@ -74,6 +75,15 @@ export class HomePage implements OnInit, OnDestroy {
       const data: any = await this.teachService.getData('teach/weather', null, { station_id: this.monitorData.active_station }).toPromise();
       console.log(data);
       this.meteo = data.data;
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }
+
+  async getMeteoWeek() {
+    try {
+      const data: any = await this.teachService.getData('teach/weather/week', null, { station_id: this.monitorData.active_station }).toPromise();
+      console.log(data);
     } catch (error) {
       console.error('There was an error!', error);
     }

@@ -203,6 +203,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/scan/scan.module').then( m => m.ScanPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'meteo',
+    loadChildren: () => import('./pages/meteo/meteo.module').then( m => m.MeteoPageModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({
