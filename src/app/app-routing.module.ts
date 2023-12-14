@@ -32,38 +32,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'monitor-detail',
-    loadChildren: () => import('./pages/monitor-detail/monitor-detail.module').then( m => m.MonitorDetailPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'courses',
-    loadChildren: () => import('./pages/courses/courses.module').then( m => m.CoursesPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'stations',
-    loadChildren: () => import('./pages/stations/stations.module').then( m => m.StationsPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'new-booking',
-    loadChildren: () => import('./pages/new-booking/new-booking.module').then( m => m.NewBookingPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'cart',
-    loadChildren: () => import('./pages/cart/cart.module').then( m => m.CartPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'calendar',
     loadChildren: () => import('./pages/calendar/calendar.module').then( m => m.CalendarPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'station',
-    loadChildren: () => import('./pages/station/station.module').then( m => m.StationPageModule),
     canActivate: [AuthGuard]
   },
   {
@@ -77,28 +47,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'stations-list',
-    loadChildren: () => import('./pages/stations-list/stations-list.module').then( m => m.StationsListPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'monitor-profile',
     loadChildren: () => import('./pages/monitor-profile/monitor-profile.module').then( m => m.MonitorProfilePageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'group',
-    loadChildren: () => import('./pages/group/group.module').then( m => m.GroupPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'promotions',
-    loadChildren: () => import('./pages/promotions/promotions.module').then( m => m.PromotionsPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'booking-detail',
-    loadChildren: () => import('./pages/booking-detail/booking-detail.module').then( m => m.BookingDetailPageModule),
     canActivate: [AuthGuard]
   },
   {
@@ -151,11 +101,6 @@ const routes: Routes = [
   {
     path: 'course-detail-level/:id/:date/:client/:sport',
     loadChildren: () => import('./pages/course-detail-level/course-detail-level.module').then( m => m.CourseDetailLevelPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'course-detail-level-update/:id/:date/:client/:sport',
-    loadChildren: () => import('./pages/course-detail-level-update/course-detail-level-update.module').then( m => m.CourseDetailLevelUpdatePageModule),
     canActivate: [AuthGuard]
   },
   {

@@ -6,12 +6,12 @@
       <div class="header-section-content mb-12">
         <div class="header-section-title">
           <img src="assets/icon/icon-clients-blue.png" />
-          <div>Clients</div>
+          <div>{{ 'clients' | translate }}</div>
         </div>
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
 
-      <input [(ngModel)]="searchTerm" (keyup)="searchClients()" type="text" placeholder="Chercher clients..." class="montserrat mt-12 header-input-search" />
+      <input [(ngModel)]="searchTerm" (keyup)="searchClients()" type="text" placeholder="{{ 'search_clients' | translate }}" class="montserrat mt-12 header-input-search" />
 
     </div>
 
@@ -30,7 +30,7 @@
             <ng-container *ngIf="client.language1_id">
               {{getLanguageById(client.language1_id)}} ·
             </ng-container>
-            {{getCountryById(client.country)}} · {{client.birth_years}} ans
+            {{getCountryById(client.country)}} · {{client.birth_years}} {{ 'years' | translate }}
           </div>
         </div>
       </div>

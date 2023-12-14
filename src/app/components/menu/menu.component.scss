@@ -31,6 +31,9 @@
 .menu-list-text {
     display:flex;align-items:center;gap:12px;
 }
+.menu-list-options {
+    padding-left: 34px;padding-right: 34px;justify-content: space-between;width: 100%;
+}
 .menu-list-text img {
     width:22px;
 }
@@ -45,4 +48,13 @@
 }
 .menu-button img {
     width:22px;
+}
+.selected-option {
+    font-weight:bold;
+}
+.arrow-transition {
+    transition: transform 0.2s ease-in-out;
+}
+.arrow-rotate {
+    transform: rotate(90deg);
 }

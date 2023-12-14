@@ -8,6 +8,7 @@ import { CourseTransferPageRoutingModule } from './course-transfer-routing.modul
 
 import { CourseTransferPage } from './course-transfer.page';
 import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../components/components.module';
     FormsModule,
     IonicModule,
     CourseTransferPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    TranslateModule
   ],
   declarations: [CourseTransferPage]
 })

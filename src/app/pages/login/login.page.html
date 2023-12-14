@@ -10,18 +10,18 @@
 
     <div *ngIf="showLogin">
       <div class="content-title">
-        Login
+        {{ 'login' | translate }}
       </div>
       <div class="pb-24">
         <div class="input-label color-light montserrat">
-          Email
+          {{ 'email' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
           <input class="montserrat" [(ngModel)]="email" type="text" />
         </div>
         <div class="input-label color-light montserrat">
-          Password
+          {{ 'password' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-password.png" />
@@ -30,23 +30,25 @@
         </div>
       </div>
       <button (click)="onLogin()" [disabled]="!email || !password" class="content-button btn-back-primary montserrat">
-        Login
+        {{ 'login' | translate }}
       </button>
       <div class="content-footer cursor-pointer montserrat" (click)="showLogin=false">
-        Forgot your password?
+        {{ 'forgot_password' | translate }}
       </div>
     </div>
 
     <div *ngIf="!showLogin">
       <div class="content-title-b">
-        Recover your password
+        {{ 'recover_password' | translate }}
       </div>
+      <!--
       <div class="content-subtitle color-light montserrat">
         Lorem ipsum dolor sit amet, consectetur
       </div>
+      -->
       <div>
         <div class="input-label color-light montserrat">
-          Email
+          {{ 'email' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
@@ -54,7 +56,7 @@
         </div>
       </div>
       <button (click)="showLogin=true" class="content-button btn-back-primary montserrat">
-        Reset password
+        {{ 'reset_password' | translate }}
       </button>
     </div>
 

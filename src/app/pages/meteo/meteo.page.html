@@ -20,7 +20,7 @@
       <div class="padding-wrapper">
 
         <div class="montserrat mb-8 color-light title-selector-small uppercase">
-          Aujourd'hui
+          {{ 'today' | translate }}
         </div>
 
         <div class="background-color-dark flex-weather pt-24">
@@ -33,7 +33,7 @@
 
 
         <div class="montserrat mt-24 mb-8 color-light title-selector-small uppercase">
-          Prochains jours
+          {{ 'next_days' | translate }}
         </div>
 
         <div *ngIf="meteoWeek && meteoWeek.length" class="background-color-dark flex-weather pt-24  pb-24">

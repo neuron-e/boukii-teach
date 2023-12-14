@@ -7,7 +7,7 @@
         <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('home')" />
         <div class="header-section-title">
           <img src="assets/icon/statistiques.png" />
-          <div>Statistiques</div>
+          <div>{{ 'statistics' | translate }}</div>
         </div>
       </div>
       <!--
@@ -25,7 +25,7 @@
       <div class="stats-titles mb-24">
         <div class="input-form-icon-b background-grey-translucent">
           <div class="montserrat">
-            Heures totales
+            {{ 'total_hours' | translate }}
           </div>
         </div>
         <div class="stats-icons">
@@ -48,29 +48,29 @@
     <div class="padding-wrapper">
 
       <div class="cursor-pointer menu-section-content mb-12">
-        <div class="menu-section-title">Rapport d'activité</div>
+        <div class="menu-section-title">{{ 'activity_report' | translate }}</div>
       </div>
 
 
       <div class="table-line no-border padding-wrapper pb-8">
         <div class="width-big">
-          Mois
+          {{ 'month' | translate }}
         </div>
         <div class="width-small">
-          Collectif
+          {{ 'collective' | translate }}
         </div>
         <div class="width-small">
-          Privé
+          {{ 'private' | translate }}
         </div>
         <div class="width-small">
-          B. Payé
+          {{ 'block_paid_abbrev' | translate }}
         </div>
       </div>
 
       <div class="background-color-dark padding-wrapper table-wrapper">
         <div class="table-line table-line-total pb-8 mb-8">
-          <div class="width-big">
-            TOTAL
+          <div class="width-big uppercase">
+            {{ 'total' | translate }}
           </div>
           <div class="montserrat width-small">
             {{totalCollectiveDurationFormatted}}
@@ -100,8 +100,8 @@
         </div>
 
         <div class="table-line table-line-total pb-8 no-border">
-          <div class="width-big">
-            TOTAL
+          <div class="width-big uppercase">
+            {{ 'total' | translate }}
           </div>
           <div class="montserrat width-small">
             {{totalCollectiveDurationFormatted}}

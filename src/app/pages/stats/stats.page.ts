@@ -9,7 +9,6 @@ import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
-import 'moment/locale/fr';
 
 @Component({
   selector: 'app-stats',

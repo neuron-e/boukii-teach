@@ -6,7 +6,7 @@
       <div class="header-section-content mb-24">
         <div class="header-section-title">
           <img src="assets/icon/icon-scan-blue.png" />
-          <div>Analyse</div>
+          <div>{{ 'scan' | translate }}</div>
         </div>
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
@@ -22,7 +22,7 @@
               <ng-container *ngIf="clientMonitor.main.language1_id">
                 {{getLanguageById(clientMonitor.main.language1_id)}} ·
               </ng-container>
-              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} ans
+              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -44,7 +44,7 @@
               <ng-container *ngIf="clientMonitor.language1_id">
                 {{getLanguageById(clientMonitor.language1_id)}} ·
               </ng-container>
-              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
+              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -71,7 +71,7 @@
                 <ng-container *ngIf="clientMonitor.language1_id">
                   {{getLanguageById(clientMonitor.language1_id)}} ·
                 </ng-container>
-                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
+                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
               </div>
             </div>
             <div class="header-user-data-text-title">
@@ -88,7 +88,7 @@
         </div>
 
         <div *ngIf="bookingsToday && !bookingsToday.length" class="content-title-c">
-          Vous n'avez aucune réservation aujourd'hui
+          {{ 'no_reservations_today' | translate }}
         </div>
 
         <ng-container *ngFor="let booking of bookingsToday;let i = index">
@@ -115,10 +115,10 @@
                   <div class="montserrat color-light box-selector-subtitle">
                     <span>
                       <ng-container *ngIf="booking.course.course_type == 1">
-                        Collectif
+                        {{ 'collective' | translate }}
                       </ng-container>
                       <ng-container *ngIf="booking.course.course_type == 2">
-                        Privé
+                        {{ 'private' | translate }}
                       </ng-container>
                       <ng-container *ngIf="booking.sport_data && sports.length">
                         {{booking.sport_data.name}}
@@ -141,8 +141,8 @@
           </div>
 
           <ng-container *ngIf="booking.monitor_data">
-            <div class="mt-24 mb-12 content-title-c">
-              PROFESSEUR
+            <div class="mt-24 mb-12 content-title-c uppercase">
+              {{ 'teacher' | translate }}
             </div>
 
             <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">
@@ -177,7 +177,7 @@
         </div>
 
         <div *ngIf="bookingsTomorrow && !bookingsTomorrow.length" class="content-title-c">
-          Vous n'avez aucune réservation demain
+          {{ 'no_reservations_tomorrow' | translate }}
         </div>
 
         <ng-container *ngFor="let booking of bookingsTomorrow;let i = index">
@@ -204,10 +204,10 @@
                   <div class="montserrat color-light box-selector-subtitle">
                     <span>
                       <ng-container *ngIf="booking.course.course_type == 1">
-                        Collectif
+                        {{ 'collective' | translate }}
                       </ng-container>
                       <ng-container *ngIf="booking.course.course_type == 2">
-                        Privé
+                        {{ 'private' | translate }}
                       </ng-container>
                       <ng-container *ngIf="booking.sport_data && sports.length">
                         {{booking.sport_data.name}}
@@ -230,8 +230,8 @@
           </div>
 
           <ng-container *ngIf="booking.monitor_data">
-            <div class="mt-24 mb-12 content-title-c">
-              PROFESSEUR
+            <div class="mt-24 mb-12 content-title-c uppercase">
+              {{ 'teacher' | translate }}
             </div>
 
             <div class="montserrat mt-12 mb-24 pt-8 pb-8 user-booking">

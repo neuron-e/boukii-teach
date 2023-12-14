@@ -8,6 +8,7 @@ import { CourseParticipationPageRoutingModule } from './course-participation-rou
 
 import { CourseParticipationPage } from './course-participation.page';
 import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../components/components.module';
     FormsModule,
     IonicModule,
     CourseParticipationPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    TranslateModule
   ],
   declarations: [CourseParticipationPage]
 })

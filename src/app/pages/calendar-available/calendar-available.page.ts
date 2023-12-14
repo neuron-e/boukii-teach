@@ -5,6 +5,7 @@ import { MonitorDataService } from '../../services/monitor-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -24,9 +25,9 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   currentDay: number;
   selectedDate: Date;
   monthNames: string[] = [];
-  weekdays: string[] = ['LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM', 'DIM'];
-  weekdaysShort: string[] = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-  weekdayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  weekdays: string[] = [];
+  weekdaysShort: string[] = [];
+  weekdayNames: string[] = [];
   days: any[] = [];
   hourStartDay: string = '08:00';
   hourEndDay: string = '18:00';
@@ -56,7 +57,13 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   idEditBlock:any;
   editBlock:any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+    this.translate.onLangChange.subscribe(() => {
+      this.loadWeekdays();
+    });
+  
+    this.loadWeekdays();
+  }
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -102,6 +109,50 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  loadWeekdays() {
+    this.weekdays = [
+      this.translate.instant('days_abbrev.sunday'),
+      this.translate.instant('days_abbrev.monday'),
+      this.translate.instant('days_abbrev.tuesday'),
+      this.translate.instant('days_abbrev.wednesday'),
+      this.translate.instant('days_abbrev.thursday'),
+      this.translate.instant('days_abbrev.friday'),
+      this.translate.instant('days_abbrev.saturday'),
+    ];
+    this.weekdaysShort = [
+      this.translate.instant('days_abbrev_short.sunday'),
+      this.translate.instant('days_abbrev_short.monday'),
+      this.translate.instant('days_abbrev_short.tuesday'),
+      this.translate.instant('days_abbrev_short.wednesday'),
+      this.translate.instant('days_abbrev_short.thursday'),
+      this.translate.instant('days_abbrev_short.friday'),
+      this.translate.instant('days_abbrev_short.saturday'),
+    ];
+    this.weekdayNames = [
+      this.translate.instant('days.sunday'),
+      this.translate.instant('days.monday'),
+      this.translate.instant('days.tuesday'),
+      this.translate.instant('days.wednesday'),
+      this.translate.instant('days.thursday'),
+      this.translate.instant('days.friday'),
+      this.translate.instant('days.saturday'),
+    ];
+    this.monthNames = [
+      this.translate.instant('months.january'),
+      this.translate.instant('months.february'),
+      this.translate.instant('months.march'),
+      this.translate.instant('months.april'),
+      this.translate.instant('months.may'),
+      this.translate.instant('months.june'),
+      this.translate.instant('months.july'),
+      this.translate.instant('months.august'),
+      this.translate.instant('months.september'),
+      this.translate.instant('months.october'),
+      this.translate.instant('months.november'),
+      this.translate.instant('months.december'),
+    ];
   }
 
   getEditBlock() {

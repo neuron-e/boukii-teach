@@ -2,12 +2,12 @@
   <div class="content-menu content-background-image">
     <div class="padding-wrapper background-color-dark menu-header status-bar-overlap-wrapper">
       <img src="assets/icon/icons-outline-close.svg" class="cursor-pointer" (click)="onClose()" />
-      <div>Menu</div>
+      <div>{{ 'menu' | translate }}</div>
     </div>
 
     <div class="padding-wrapper">
-      <div class="color-light menu-list-title">
-        MON COMPTE
+      <div class="color-light menu-list-title uppercase">
+        {{ 'my_account' | translate }}
       </div>
 
       <div class="background-color-dark menu-list-box">
@@ -15,28 +15,28 @@
         <div class="menu-list-item cursor-pointer" (click)="goTo('monitor-profile')">
           <div class="menu-list-text">
             <img src="assets/icon/profil.png" />
-            <div class="montserrat">Profil</div>
+            <div class="montserrat">{{ 'profile' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
         <div class="menu-list-item cursor-pointer" (click)="goTo('schools')">
           <div class="menu-list-text">
             <img src="assets/icon/ecoles.png" />
-            <div class="montserrat">Écoles</div>
+            <div class="montserrat">{{ 'schools' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
         <div class="menu-list-item cursor-pointer" (click)="goTo('meteo')">
           <div class="menu-list-text">
             <img src="assets/icon/meteo.png" />
-            <div class="montserrat">Meteo</div>
+            <div class="montserrat">{{ 'meteo' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
         <div class="menu-list-item cursor-pointer no-border" (click)="goTo('stats')">
           <div class="menu-list-text">
             <img src="assets/icon/statistiques.png" />
-            <div class="montserrat">Statistiques</div>
+            <div class="montserrat">{{ 'statistics' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
@@ -44,8 +44,8 @@
       </div>
 
 
-      <div class="color-light menu-list-title mt-24">
-        CONFIGURATION
+      <div class="color-light menu-list-title mt-24 uppercase">
+        {{ 'configuration' | translate }}
       </div>
 
       <div class="background-color-dark menu-list-box">
@@ -53,21 +53,30 @@
         <div class="menu-list-item cursor-pointer">
           <div class="menu-list-text">
             <img src="assets/icon/sounds.png" />
-            <div class="montserrat">Sounds</div>
+            <div class="montserrat">{{ 'sounds' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
-        <div class="menu-list-item cursor-pointer">
+        <div class="menu-list-item cursor-pointer" (click)="showLang = !showLang">
           <div class="menu-list-text">
             <img src="assets/icon/langue.png" />
-            <div class="montserrat">Langue</div>
+            <div class="montserrat">{{ 'language' | translate }}</div>
           </div>
-          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+          <img src="assets/icon/arrow-right.svg" class="menu-list-arrow arrow-transition" [ngClass]="{'arrow-rotate': showLang}" />
+        </div>
+        <div *ngIf="showLang" class="menu-list-item cursor-pointer">
+          <div class="menu-list-text menu-list-options">
+            <div class="montserrat" (click)="changeLang('fr')" [ngClass]="{'selected-option': translate.currentLang === 'fr'}">FR</div>
+            <div class="montserrat" (click)="changeLang('en')" [ngClass]="{'selected-option': translate.currentLang === 'en'}">EN</div>
+            <div class="montserrat" (click)="changeLang('de')" [ngClass]="{'selected-option': translate.currentLang === 'de'}">DE</div>
+            <div class="montserrat" (click)="changeLang('it')" [ngClass]="{'selected-option': translate.currentLang === 'it'}">IT</div>
+            <div class="montserrat" (click)="changeLang('es')" [ngClass]="{'selected-option': translate.currentLang === 'es'}">ES</div>
+          </div>
         </div>
         <div class="menu-list-item cursor-pointer no-border">
           <div class="menu-list-text">
             <img src="assets/icon/supprimer_le_compte.png" />
-            <div class="montserrat">Supprimer le compte</div>
+            <div class="montserrat">{{ 'delete_account' | translate }}</div>
           </div>
         </div>
 
@@ -75,7 +84,7 @@
 
       <button class="menu-button mt-24 montserrat" (click)="logout()">
         <img src="assets/icon/icons-outline-logout-white.svg" />
-        <span>Se déconnecter</span>
+        <span>{{ 'sign_out' | translate }}</span>
       </button>
 
     </div>

@@ -20,7 +20,7 @@
               <ng-container *ngIf="clientMonitor.main.language1_id">
                 {{getLanguageById(clientMonitor.main.language1_id)}} ·
               </ng-container>
-              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} ans
+              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -49,7 +49,7 @@
               <ng-container *ngIf="clientMonitor.language1_id">
                 {{getLanguageById(clientMonitor.language1_id)}} ·
               </ng-container>
-              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
+              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -83,7 +83,7 @@
                 <ng-container *ngIf="clientMonitor.language1_id">
                   {{getLanguageById(clientMonitor.language1_id)}} ·
                 </ng-container>
-                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} ans
+                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
               </div>
             </div>
             <div class="header-user-data-text-title">
@@ -119,7 +119,7 @@
 
           <div class="padding-wrapper mt-8">
             <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level','course',bookingId,dateBooking,clientIdBooking,sportIdBooking)">
-              Évaluer les progrès
+              {{ 'evaluate_progress' | translate }}
             </button>
           </div>
         </div>
@@ -131,7 +131,7 @@
             <img src="assets/icon/icon-observations.png" />
           </div>
           <div class="flex-title-selector-text">
-            Observations
+            {{ 'observations' | translate }}
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
           {{clientMonitor.observations.general}}
         </div>
         <ng-container *ngIf="clientMonitor && clientMonitor.observations.notes">
-          <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
+          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'school_notes' | translate }}</div>
           <div class="montserrat color-light text-observations">
             {{clientMonitor.observations.notes}}
           </div>
@@ -154,7 +154,7 @@
             <img src="assets/icon/icon-historic.png" />
           </div>
           <div class="flex-title-selector-text">
-            Historique
+            {{ 'historical' | translate }}
           </div>
         </div>
       </div>

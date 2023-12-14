@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { MeteoPageRoutingModule } from './meteo-routing.module';
 
 import { MeteoPage } from './meteo.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MeteoPageRoutingModule
+    MeteoPageRoutingModule,
+    TranslateModule
   ],
   declarations: [MeteoPage]
 })

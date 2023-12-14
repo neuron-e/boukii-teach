@@ -10,10 +10,10 @@
       </div>
       <div *ngIf="courseBookings" class="montserrat color-light header-top-subtitle">
         <ng-container *ngIf="courseBookings.course_type == 1">
-          Collectif
+          {{ 'collective' | translate }}
         </ng-container>
         <ng-container *ngIf="courseBookings.course_type == 2">
-          Private
+          {{ 'private' | translate }}
         </ng-container>
         <ng-container *ngIf="courseSport && sports.length">
           {{courseSport.name}}
@@ -25,11 +25,11 @@
     <div class="padding-wrapper">
 
         <div class="menu-section-content mb-24">
-          <div class="menu-section-title">Groupes</div>
+          <div class="menu-section-title">{{ 'groups' | translate }}</div>
         </div>
 
         <div class="menu-section-content mt-24 mb-12">
-          <div class="menu-section-title-b color-light">MON GROUPE</div>
+          <div class="menu-section-title-b color-light uppercase">{{ 'my_group' | translate }}</div>
         </div>
         
         <div class="member-list">
@@ -44,13 +44,13 @@
               <div class="member-item-content">
                 <div class="member-item-title">
                   <div *ngIf="monitorSubgroup.monitor" class="montserrat">{{monitorSubgroup.monitor.first_name}} {{monitorSubgroup.monitor.last_name}}</div>
-                  <div *ngIf="!monitorSubgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div *ngIf="!monitorSubgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
                   <div class="box-selector-level color-light" [ngStyle]="{'background': monitorSubgroup.degree_data.color}" *ngIf="monitorSubgroup.degree_data && degrees.length">
                     {{monitorSubgroup.degree_data.annotation}}
                   </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">{{monitorSubgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <span class="montserrat color-light">{{ monitorSubgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
                   <div *ngIf="monitorSubgroup.degree_data && degrees.length" class="box-selector-subgroup">
                     {{monitorSubgroup.degree_data.annotation}}-{{monitorSubgroup.subgroup_order}}
                   </div>
@@ -72,7 +72,7 @@
         </div>
 
         <div class="menu-section-content mt-24 mb-12">
-          <div class="menu-section-title-b color-light">AUTRES GROUPES</div>
+          <div class="menu-section-title-b color-light uppercase">{{ 'other_groups' | translate }}</div>
         </div>
         
         <div *ngIf="restSubgroups && restSubgroups.length" class="member-list">
@@ -87,13 +87,13 @@
               <div class="member-item-content">
                 <div class="member-item-title">
                   <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
-                  <div *ngIf="!subgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div *ngIf="!subgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
                   <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
                     {{subgroup.degree_data.annotation}}
                   </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">{{subgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <span class="montserrat color-light">{{ subgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
                   <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
                     {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
                   </div>

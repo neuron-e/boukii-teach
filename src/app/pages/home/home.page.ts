@@ -7,8 +7,8 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import 'moment/locale/fr';
 
 @Component({
   selector: 'app-home',
@@ -32,9 +32,20 @@ export class HomePage implements OnInit, OnDestroy {
   monitorSchool:any;
 
   todayDate:string = moment().format('YYYY-MM-DD');
-  todayDateFull:string = moment().locale('fr').format('dddd, D MMMM');
+  todayDateFull:string;
 
-  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+    this.translate.onLangChange.subscribe((lang:any) => {
+      this.updateDate(lang.lang);
+    });
+  
+    this.updateDate(this.translate.currentLang);
+  }
+
+  updateDate(lang: string) {
+    moment.locale(lang);
+    this.todayDateFull = moment().format('dddd, D MMMM');
+  }
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async data => {

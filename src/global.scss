@@ -200,3 +200,9 @@ ion-spinner {
 .toast-success, .toast-info {
     background-color:rgb(7, 10, 14) !important;color: white !important;
 }
+.capitalize {
+    text-transform:capitalize;
+}
+.uppercase {
+    text-transform:uppercase;
+}

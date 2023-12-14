@@ -6,12 +6,12 @@
       <div class="header-section-content mb-12">
         <div class="header-section-title">
           <img src="assets/icon/icons-outline-messages-blue.svg" />
-          <div>Messages</div>
+          <div>{{ 'messages' | translate }}</div>
         </div>
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
 
-      <input type="text" placeholder="Chercher messages..." class="montserrat mt-12 header-input-search" />
+      <input type="text" placeholder="{{ 'search_messages' | translate }}" class="montserrat mt-12 header-input-search" />
 
     </div>
 
@@ -19,11 +19,11 @@
 
       <div class="flex-sections mb-24">
         <div [ngClass]="showClients ? 'section-selected' : 'section-title'" (click)="showClients=true;showSchools=false;">
-          Clients
+          {{ 'clients' | translate }}
           <div *ngIf="showClients" class="section-bullet"></div>
         </div>
         <div [ngClass]="showSchools ? 'section-selected' : 'section-title'" (click)="showClients=false;showSchools=true;">
-          École
+          {{ 'schools' | translate }}
           <div *ngIf="showSchools" class="section-bullet"></div>
         </div>
       </div>

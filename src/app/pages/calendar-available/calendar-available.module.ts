@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { CalendarAvailablePageRoutingModule } from './calendar-available-routing.module';
 
 import { CalendarAvailablePage } from './calendar-available.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CalendarAvailablePageRoutingModule
+    CalendarAvailablePageRoutingModule,
+    TranslateModule
   ],
   declarations: [CalendarAvailablePage]
 })

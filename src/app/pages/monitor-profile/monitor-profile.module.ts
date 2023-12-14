@@ -8,6 +8,7 @@ import { MonitorProfilePageRoutingModule } from './monitor-profile-routing.modul
 
 import { MonitorProfilePage } from './monitor-profile.page';
 import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../components/components.module';
     FormsModule,
     IonicModule,
     MonitorProfilePageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    TranslateModule
   ],
   declarations: [MonitorProfilePage]
 })

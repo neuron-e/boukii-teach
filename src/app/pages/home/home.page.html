@@ -37,12 +37,12 @@
           <img src="assets/icon/icons-outline-calendar-1-blue.svg" />
           <div class="montserrat capitalize">{{todayDateFull}}</div>
         </div>
-        <div class="content-title-day-header">La journee</div>
+        <div class="content-title-day-header capitalize">{{ 'working_day' | translate }}</div>
       </div>
       
       <ng-container *ngIf="meteo && meteo.length">
-        <div class="montserrat mb-8 color-light title-selector-small cursor-pointer" (click)="goTo('meteo')">
-          MÉTÉO
+        <div class="montserrat mb-8 color-light title-selector-small cursor-pointer uppercase" (click)="goTo('meteo')">
+          {{ 'meteo' | translate }}
         </div>
 
         <div class="background-color-dark box-radius flex-weather pt-12 pb-12 cursor-pointer" (click)="goTo('meteo')">
@@ -67,8 +67,8 @@
       <!--Title selector-->
       <div class="flex-title-selector mt-32 mb-8 cursor-pointer" (click)="goTo('calendar')">
         <div class="flex-title-selector-interior">
-          <div class="flex-title-selector-text">
-            Agenda
+          <div class="flex-title-selector-text capitalize">
+            {{ 'diary' | translate }}
           </div>
         </div>
         <img src="assets/icon/icons-outline-arrow-right-3-white.svg" class="flex-title-selector-arrow cursor-pointer" />
@@ -78,19 +78,19 @@
         <!--1-->
         <div class="background-grey-translucent box-selector-type cursor-pointer">
           <img src="assets/icon/course-collective-box.png" />
-          <div class="montserrat color-light">Collectif</div>
+          <div class="montserrat color-light">{{ 'collective' | translate }}</div>
           <span>{{courseCollectiveToday}}</span>
         </div>
         <!--2-->
         <div class="background-grey-translucent box-selector-type cursor-pointer">
           <img src="assets/icon/course-private-box.png" />
-          <div class="montserrat color-light">Privés</div>
+          <div class="montserrat color-light">{{ 'private' | translate }}</div>
           <span>{{coursePrivateToday}}</span>
         </div>
         <!--3-->
         <div class="background-grey-translucent box-selector-type cursor-pointer">
           <img src="assets/icon/course-other-box.png" />
-          <div class="montserrat color-light">Autres</div>
+          <div class="montserrat color-light">{{ 'other' | translate }}</div>
           <span>{{courseActivityToday}}</span>
         </div>
 
@@ -120,10 +120,10 @@
                 <div class="montserrat color-light box-selector-subtitle">
                   <span>
                     <ng-container *ngIf="booking.course.course_type == 1">
-                      Collectif
+                      {{ 'collective' | translate }}
                     </ng-container>
                     <ng-container *ngIf="booking.course.course_type == 2">
-                      Privé
+                      {{ 'private' | translate }}
                     </ng-container>
                     <ng-container *ngIf="booking.course_sport && sports.length">
                       {{booking.course_sport.name}}

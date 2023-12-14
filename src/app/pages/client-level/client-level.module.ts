@@ -8,6 +8,7 @@ import { ClientLevelPageRoutingModule } from './client-level-routing.module';
 
 import { ClientLevelPage } from './client-level.page';
 import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../components/components.module';
     FormsModule,
     IonicModule,
     ClientLevelPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    TranslateModule
   ],
   declarations: [ClientLevelPage]
 })

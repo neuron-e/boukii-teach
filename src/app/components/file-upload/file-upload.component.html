@@ -6,21 +6,21 @@
     
     <div class="file-upload">
       <input type="file" #fileInput (change)="onFileSelected($event)" [accept]="acceptTypes" style="display: none;">
-      <button (click)="fileInput.click()" class="content-button btn-back-grey montserrat">Choisir le fichier</button>
+      <button (click)="fileInput.click()" class="content-button btn-back-grey montserrat">{{ 'choose_file' | translate }}</button>
     </div>
     <div class="camera-upload mt-12">
-      <button (click)="openCamera()" class="content-button btn-back-grey montserrat">Utiliser la caméra</button>
+      <button (click)="openCamera()" class="content-button btn-back-grey montserrat">{{ 'use_camera' | translate }}</button>
     </div>
     <div class="file-upload mt-12">
       <input type="file" #videoInput (change)="onVideoSelected($event)" accept="video/*" capture="user" style="display: none;">
-      <button *ngIf="allowVideo" (click)="videoInput.click()" class="content-button btn-back-grey montserrat">Enregistrer une vidéo</button>
+      <button *ngIf="allowVideo" (click)="videoInput.click()" class="content-button btn-back-grey montserrat">{{ 'record_video' | translate }}</button>
     </div>
     
     <!-- Preview Section -->
     <div *ngIf="filePreview" class="mt-24 mb-32">
       <img *ngIf="!isVideo" [src]="filePreview" class="preview">
       <video *ngIf="isVideo" [src]="filePreview" class="preview" muted playsinline></video>
-      <button (click)="saveFile()" class="content-button btn-back-primary montserrat mt-24">Sauvegarder</button>
+      <button (click)="saveFile()" class="content-button btn-back-primary montserrat mt-24">{{ 'save' | translate }}</button>
     </div>
   </div>
 </div>

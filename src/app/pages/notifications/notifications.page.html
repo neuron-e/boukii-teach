@@ -5,16 +5,16 @@
         <img src="assets/icon/arrow-left.svg" class="header-top-side-img cursor-pointer" (click)="goTo('home')" />
         <div class="header-section-title">
           <img src="assets/icon/icon-notification-blue.png" />
-          <div>Notifications</div>
+          <div>{{ 'notifications' | translate }}</div>
         </div>
       </div>
 
       <div class="mt-24 mb-32 flex-buttons">
         <div [ngClass]="{'btn-back-primary': showCalendar, 'btn-back-grey': !showCalendar}" class="montserrat flex-buttons-button cursor-pointer" (click)="showCalendar=true;showActivities=false;">
-          Agenda
+          {{ 'diary' | translate }}
         </div>
         <div [ngClass]="{'btn-back-primary': showActivities, 'btn-back-grey': !showActivities}" class="montserrat flex-buttons-button cursor-pointer" (click)="showCalendar=false;showActivities=true;">
-          Activité
+          {{ 'activity' | translate }}
         </div>
       </div>
 

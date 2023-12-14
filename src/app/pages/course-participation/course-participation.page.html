@@ -5,7 +5,7 @@
       <div class="header-content mb-8">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail',bookingId,dateBooking)" />
         <div class="header-top-title">
-          Confirmer participation
+          {{ 'confirm_participation' | translate }}
         </div>
       </div>
 
@@ -30,7 +30,7 @@
                       <ng-container *ngIf="booking.client.client.language1_id">
                         {{getLanguageById(booking.client.client.language1_id)}} ·
                       </ng-container>
-                      {{getCountryById(booking.client.client.country)}} · {{getBirthYears(booking.client.client.birth_date)}} ans
+                      {{getCountryById(booking.client.client.country)}} · {{getBirthYears(booking.client.client.birth_date)}} {{ 'years' | translate }}
                     </span>
                     <!--<div class="montserrat">
                       <div class="member-item-bullet"></div>NON PAYÉ
@@ -61,7 +61,7 @@
         </div>
 
         <button (click)="saveConfirm()" class="content-button btn-back-primary montserrat mb-32 mt-32">
-          Confirmer
+          {{ 'confirm' | translate }}
         </button>
 
       </div>

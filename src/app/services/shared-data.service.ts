@@ -139,6 +139,14 @@ export class SharedDataService {
     this.schoolsSubject.next([]);
   }
 
+  clearAllData() {
+    this.clearDegreesData();
+    this.clearSportsData();
+    this.clearLanguagesData();
+    this.clearStationsData();
+    this.clearSchoolsData();
+  }
+
   private lightenColor(hexColor: string, percent: number): string {
     let r:any = parseInt(hexColor.substring(1, 3), 16);
     let g:any = parseInt(hexColor.substring(3, 5), 16);

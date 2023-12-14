@@ -7,7 +7,6 @@ import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import * as moment from 'moment';
-import 'moment/locale/fr';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
 

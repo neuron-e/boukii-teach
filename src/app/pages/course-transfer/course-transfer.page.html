@@ -6,10 +6,10 @@
       <div class="padding-wrapper">
         <div class="header-content mb-8">
           <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail',bookingId,dateBooking)">
-            Cancel
+            {{ 'cancel' | translate }}
           </div>
           <div class="header-top-title">
-            Transférer élèves
+            {{ 'transfer_students' | translate }}
           </div>
         </div>
 
@@ -18,7 +18,7 @@
       <div class="padding-wrapper">
 
         <div class="menu-section-content mb-24">
-          <div class="menu-section-title">Sélectionnez élèves</div>
+          <div class="menu-section-title">{{ 'select_students' | translate }}</div>
         </div>
         
         
@@ -42,7 +42,7 @@
                     <ng-container *ngIf="booking.client.language1_id">
                       {{getLanguageById(booking.client.language1_id)}} ·
                     </ng-container>
-                    {{getCountryById(booking.client.country)}} · {{getBirthYears(booking.client.birth_date)}} ans
+                    {{getCountryById(booking.client.country)}} · {{getBirthYears(booking.client.birth_date)}} {{ 'years' | translate }}
                   </span>
                   <!--<div class="montserrat">
                     <div class="member-item-bullet"></div>NON PAYÉ
@@ -55,7 +55,7 @@
         </div>
 
         <button (click)="continueTransfer()" [disabled]="isDisabledContinue()" class="content-button btn-back-primary montserrat mb-32 mt-32">
-          Continuer
+          {{ 'continue' | translate }}
         </button>
 
       </div>
@@ -67,10 +67,10 @@
       <div class="padding-wrapper">
         <div class="header-content mb-8">
           <div class="montserrat level-back color-light cursor-pointer" (click)="goTo('course-detail',bookingId,dateBooking)">
-            Cancel
+            {{ 'cancel' | translate }}
           </div>
           <div class="header-top-title">
-            Transférer élèves
+            {{ 'transfer_students' | translate }}
           </div>
         </div>
 
@@ -79,7 +79,7 @@
       <div class="padding-wrapper">
 
         <div class="menu-section-content mb-24">
-          <div class="menu-section-title">Élèves</div>
+          <div class="menu-section-title">{{ 'students' | translate }}</div>
           <div class="menu-section-text">
             <img src="assets/icon/icons-outline-edit-white.svg" class="cursor-pointer" (click)="confirmTransfer=false;" />
           </div>
@@ -99,7 +99,7 @@
         <div class="border-separator mt-24 mb-24"></div>
 
         <div class="menu-section-content mt-24 mb-24">
-          <div class="menu-section-title">Choisir groupe</div>
+          <div class="menu-section-title">{{ 'choose_group' | translate }}</div>
         </div>
 
         <div *ngIf="restSubgroups && restSubgroups.length" class="member-list">
@@ -121,13 +121,13 @@
               <div class="member-item-content">
                 <div class="member-item-title">
                   <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
-                  <div *ngIf="!subgroup.monitor" class="montserrat">Pas moniteur</div>
+                  <div *ngIf="!subgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
                   <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
                     {{subgroup.degree_data.annotation}}
                   </div>
                 </div>
                 <div class="member-item-subtitle">
-                  <span class="montserrat color-light">{{subgroup.monitor_id == monitorData.id ? 'Vous' : 'Professeur'}}</span>
+                  <span class="montserrat color-light">{{ subgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
                   <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
                     {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
                   </div>
@@ -150,7 +150,7 @@
         </div>
 
         <button (click)="saveTransfer()" [disabled]="isDisabledSave()" class="content-button btn-back-primary montserrat mb-32 mt-32">
-          Confirmer
+          {{ 'confirm' | translate }}
         </button>
 
       </div>

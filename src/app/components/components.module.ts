@@ -10,12 +10,13 @@ import { MenuComponent } from './menu/menu.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FileViewComponent } from './file-view/file-view.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
   declarations: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent, FileUploadComponent, FileViewComponent, SpinnerComponent],
   imports: [
-    CommonModule, FormsModule, IonicModule.forRoot()
+    CommonModule, FormsModule, IonicModule.forRoot(), TranslateModule
   ],
   exports: [LevelWheelComponent, LevelUserComponent, LevelFullComponent, FooterComponent, MenuComponent, FileUploadComponent, FileViewComponent, SpinnerComponent]
 })

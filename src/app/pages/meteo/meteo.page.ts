@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -21,9 +22,27 @@ export class MeteoPage implements OnInit, OnDestroy {
   meteo:any[] = [];
   meteoWeek:any[] = [];
   monitorStation:any;
-  weekdays: string[] = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  weekdays: string[];
 
-  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+    this.translate.onLangChange.subscribe(() => {
+      this.loadWeekdays();
+    });
+  
+    this.loadWeekdays();
+  }
+
+  loadWeekdays() {
+    this.weekdays = [
+      this.translate.instant('days_abbrev.sunday'),
+      this.translate.instant('days_abbrev.monday'),
+      this.translate.instant('days_abbrev.tuesday'),
+      this.translate.instant('days_abbrev.wednesday'),
+      this.translate.instant('days_abbrev.thursday'),
+      this.translate.instant('days_abbrev.friday'),
+      this.translate.instant('days_abbrev.saturday'),
+    ];
+  }
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async data => {

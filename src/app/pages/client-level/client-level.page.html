@@ -4,7 +4,7 @@
     <div class="padding-wrapper">
       <div class="header-content no-margin">
         <div class="montserrat level-back color-light cursor-pointer" (click)="goBackType()">
-          Cancel
+          {{ 'cancel' | translate }}
         </div>
       </div>
     </div>
@@ -21,12 +21,12 @@
 
 
         <div *ngIf="alreadyCompleted" class="completed-banner background-color-dark mt-12 pt-24 pb-24">
-          Niveau terminé
+          {{ 'level_completed' | translate }}
         </div>
         
         <div class="padding-wrapper mt-12 mb-12">
           <div class="circle-list-title mb-24">
-            <div>Objectifs</div>
+            <div>{{ 'goals' | translate }}</div>
             <span class="color-light">{{countGoalsCompleted()}}/{{filteredGoals.length}}</span>
           </div>
           <div class="circle-list">
@@ -38,21 +38,21 @@
               </div>
               <ion-range [disabled]="alreadyCompleted" [(ngModel)]="goal.score" [ticks]="true" [snaps]="true" step="5" [min]="0" [max]="10"></ion-range>
               <div class="range-labels mb-24">
-                <div class="montserrat color-light">Non accompli</div>
-                <div class="montserrat color-light">À améliorer</div>
-                <div class="montserrat color-light">Accompli</div>
+                <div class="montserrat color-light">{{ 'not_accomplished' | translate }}</div>
+                <div class="montserrat color-light">{{ 'to_improve' | translate }}</div>
+                <div class="montserrat color-light">{{ 'accomplished' | translate }}</div>
               </div>
             </ng-container>
           </div>
 
           <div class="input-label color-light montserrat mt-32">
-            Observations:
+            {{ 'observations' | translate }}:
           </div>
           <textarea [disabled]="alreadyCompleted" [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
 
           <ng-container *ngIf="allGoalsCompleted() && !alreadyCompleted">
-            <div class="input-label color-light montserrat mt-12">
-              CONFIRMATION DE NIVEAU
+            <div class="input-label color-light montserrat mt-12 uppercase">
+              {{ 'level_confirmation' | translate }}
             </div>
             <div class="circle-list-item">
               <div class="custom-radio">
@@ -62,7 +62,7 @@
                 </label>
               </div>
               <div class="montserrat color-light circle-list-item-text">
-                Confirmez-vous qu'il a terminé le niveau?
+                {{ 'confirm_completion' | translate }}
               </div>
             </div>
           </ng-container>
@@ -71,7 +71,7 @@
         <div class="padding-wrapper mt-12 pt-24 top-border-wrapper">
 
           <div class="flex-title-selector-text mb-12">
-            Multimedia
+            {{ 'multimedia' | translate }}
           </div>
 
           <div class="media-list">
@@ -93,11 +93,11 @@
           </div>
 
           <button *ngIf="!alreadyCompleted" (click)="saveEvaluation()" class="content-button btn-back-primary montserrat mt-32 mb-32">
-            Sauver progrès
+            {{ 'save_progress' | translate }}
           </button>
 
           <button *ngIf="alreadyCompleted" class="content-button btn-back-grey montserrat mt-32 mb-32">
-            Niveau terminé
+            {{ 'level_completed' | translate }}
           </button>
         </div>
 
@@ -105,7 +105,7 @@
 </ion-content>
 
 <app-file-upload *ngIf="showMultimedia"
-  title="Ajouter du multimédia"
+  title="{{ 'add_multimedia' | translate }}"
   [allowImage]="true" 
   [allowVideo]="true" 
   (fileSelected)="addMultimedia($event)"

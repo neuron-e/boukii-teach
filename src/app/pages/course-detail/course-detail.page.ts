@@ -6,8 +6,8 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import 'moment/locale/fr';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
 
@@ -49,7 +49,13 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   bookingId:any;
   dateBooking:any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+    this.translate.onLangChange.subscribe(lang => {
+      if (this.dateBooking) {
+        this.updateDate(this.dateBooking, lang.lang);
+      }
+    });
+  }
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -69,7 +75,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           this.dateBooking = params['date'];
           if (this.bookingId && this.dateBooking) {
             this.spinnerService.show();
-            this.currentDateFull = moment(this.dateBooking).locale('fr').format('D MMMM YYYY');
+            this.updateDate(this.dateBooking, this.translate.currentLang);
             this.loadBookings();
             //this.loadCourses();
           } else {
@@ -78,6 +84,11 @@ export class CourseDetailPage implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  updateDate(date: string, lang: string) {
+    moment.locale(lang);
+    this.currentDateFull = moment(date).format('D MMMM YYYY');
   }
 
   getLanguageById(languageId: number): string {

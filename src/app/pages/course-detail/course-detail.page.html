@@ -5,10 +5,10 @@
       <div class="header-content mb-12">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('calendar')" />
         <div class="header-top-title">
-          Aujourd d'hui
+          {{ 'today' | translate }}
         </div>
       </div>
-      <div class="montserrat color-light header-top-subtitle">
+      <div class="montserrat color-light header-top-subtitle capitalize">
         {{currentDateFull}}
       </div>
 
@@ -35,10 +35,10 @@
           <div class="content-flex-top-text">
             <span class="color-light uppercase">
               <ng-container *ngIf="selectedBooking.course.course_type == 1">
-                Collectif
+                {{ 'collective' | translate }}
               </ng-container>
               <ng-container *ngIf="selectedBooking.course.course_type == 2">
-                Private
+                {{ 'private' | translate }}
               </ng-container>
               <ng-container *ngIf="selectedBooking.course_sport && sports.length">
                 {{selectedBooking.course_sport.name}}
@@ -55,9 +55,9 @@
         </div>
 
         <div *ngIf="selectedBooking.course.course_type == 1" class="cursor-pointer menu-section-content" (click)="goTo('course-group',bookingId,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)">
-          <div class="menu-section-title">Groupe</div>
+          <div class="menu-section-title">{{ 'group' | translate }}</div>
           <div class="menu-section-text">
-            <span class="montserrat color-light">Groupes</span>
+            <span class="montserrat color-light">{{ 'groups' | translate }}</span>
             <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
           </div>
         </div>
@@ -71,23 +71,23 @@
           </div>
           <div *ngIf="selectedBooking.course.course_type == 1" class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-calendar-tick.png" />
-            <div class="montserrat color-light">Jour</div>
+            <div class="montserrat color-light">{{ 'day' | translate }}</div>
             <span class="color-light">{{getPositionDate(selectedBooking.course.course_dates, selectedBooking.course_date_id)}}/{{selectedBooking.course.course_dates.length}}</span>
           </div>
           <div class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-user-tick.png" />
-            <div class="montserrat color-light">Élèves</div>
+            <div class="montserrat color-light">{{ 'students' | translate }}</div>
             <span class="color-light">{{selectedBooking.all_clients.length}}/{{selectedBooking.course.max_participants}}</span>
           </div>
           <div class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-timer.png" />
-            <div class="montserrat color-light">Heures</div>
+            <div class="montserrat color-light">{{ 'hours' | translate }}</div>
             <span class="color-light">{{getHoursMinutes(selectedBooking.hour_start,selectedBooking.hour_end)}}</span>
           </div>
         </div>
 
         <div class="menu-section-content mt-24 mb-24">
-          <div class="menu-section-title">Élèves</div>
+          <div class="menu-section-title">{{ 'students' | translate }}</div>
           <div class="menu-section-icons">
             <img *ngIf="selectedBooking.course.confirm_attendance" src="assets/icon/icon-user-tick-w.png" class="cursor-pointer" (click)="goTo('course-participation',bookingId,dateBooking,selectedBooking.course_id)" />
             <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer',bookingId,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)" />
@@ -115,10 +115,10 @@
                     <ng-container *ngIf="client.language1_id">
                       {{getLanguageById(client.language1_id)}} ·
                     </ng-container>
-                    {{getCountryById(client.country)}} · {{getBirthYears(client.birth_date)}} ans
+                    {{getCountryById(client.country)}} · {{getBirthYears(client.birth_date)}} {{ 'years' | translate }}
                   </span>
-                  <div *ngIf="!client.booking_client.paid" class="montserrat">
-                    <div class="member-item-bullet"></div>NON PAYÉ
+                  <div *ngIf="!client.booking_client.paid" class="montserrat uppercase">
+                    <div class="member-item-bullet"></div>{{ 'not_paid' | translate }}
                   </div>
                 </div>
               </div>
@@ -128,134 +128,6 @@
         </div>
 
       </div>
-
-      <!-- PRIVATE TYPE COURSE -->
-      <!--
-      <div class="background-color-dark padding-wrapper box-radius">
-
-        <div class="mb-24 content-flex-top-wrapper">
-          <div class="content-flex-top">
-            <img src="assets/icon/course-private-box.png" class="content-flex-top-img" />
-            <div class="content-flex-top-text">
-              <span class="color-light">PRIVÉ SKI</span>
-              <div>Privé basic</div>
-            </div>
-          </div>
-          <img src="assets/icon/icon-user-tick.png" class="content-flex-top-wrapper-icon cursor-pointer" (click)="goTo('course-participation')" />
-        </div>
-
-        <div class="header-user-data">
-          <div class="header-user-data-img">
-            <img src="assets/images/test-photo.jpg" />
-          </div>
-          <div class="header-user-data-text">
-            <div class="header-user-data-text-top">
-              <div class="color-light">
-                FR · SUISSE · 31 ANS
-              </div>
-            </div>
-            <div class="header-user-data-text-title">
-              <div>Marco Raymond</div>
-              <img src="assets/icon/icon-crown.png" />
-            </div>
-            <div class="header-user-data-text-icons">
-              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
-
-            </div>
-          </div>
-        </div>
-
-        <div class="border-separator mt-24 mb-24"></div>
-
-        <div class="header-user-data">
-          <div class="header-user-data-img">
-            <img src="assets/images/test-photo.jpg" />
-          </div>
-          <div class="header-user-data-text">
-            <div class="header-user-data-text-top">
-              <div class="color-light">
-                FR · SUISSE · 31 ANS
-              </div>
-            </div>
-            <div class="header-user-data-text-title">
-              <div>Marco Raymond</div>
-            </div>
-            <div class="header-user-data-text-icons">
-              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
-
-            </div>
-          </div>
-        </div>
-
-        <div class="box-top-center">
-          <div class="box-top-left">
-
-            <div class="box-top-icon cursor-pointer">
-              <img src="assets/icon/icons-outline-disciplinas-1.svg" />
-              <div class="montserrat">Ski</div>
-            </div>
-            
-          </div>
-
-        </div>
-
-        <div class="pt-24">
-          <app-level-full (click)="goTo('course-detail-level-update')" [allLevels]="allLevels" [dataLevels]="dataLevels" [selectLevel]="5" [size]="280" class="cursor-pointer"></app-level-full>
-
-          <div class="padding-wrapper mt-8">
-            <button class="content-button btn-back-primary montserrat" (click)="goTo('course-detail-level-update')">
-              Évaluer les progrès
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
-        <div class="flex-title-selector-interior">
-          <div class="background-color-dark flex-title-selector-icon">
-            <img src="assets/icon/icon-observations.png" />
-          </div>
-          <div class="flex-title-selector-text">
-            Observations
-          </div>
-        </div>
-      </div>
-
-      <div class="background-color-dark box-radius box-observations">
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
-        </div>
-        <div class="montserrat mt-12 pt-8 pb-8 title-observations">Notes de l'école</div>
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet.
-          <br>Lorem ipsum dolor sit amet.
-        </div>
-      </div>
-
-      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
-        <div class="flex-title-selector-interior">
-          <div class="background-color-dark flex-title-selector-icon">
-            <img src="assets/icon/icon-historic.png" />
-          </div>
-          <div class="flex-title-selector-text">
-            Historique
-          </div>
-        </div>
-      </div>
-
-      <div class="background-color-dark box-radius box-observations mb-24">
-        <div class="montserrat color-light text-observations">
-          Lorem ipsum dolor sit amet. Maecenas varius tortoi nibh, sit amet. Lorem ipsum dolor.
-        </div>
-      </div>
-      -->
-      <!-- /PRIVATE -->
 
     </div>
 

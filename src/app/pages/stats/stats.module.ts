@@ -8,6 +8,7 @@ import { StatsPageRoutingModule } from './stats-routing.module';
 
 import { StatsPage } from './stats.page';
 import { NgChartsModule } from 'ng2-charts';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { NgChartsModule } from 'ng2-charts';
     FormsModule,
     IonicModule,
     StatsPageRoutingModule,
-    NgChartsModule
+    NgChartsModule,
+    TranslateModule
   ],
   declarations: [StatsPage]
 })

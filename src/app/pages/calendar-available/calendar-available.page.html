@@ -6,18 +6,18 @@
       <div class="header-section-content" [ngClass]="idEditBlock ? 'mb-32' : 'mb-12'">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('calendar')" />
         <div class="header-section-title">
-          <div *ngIf="!idEditBlock">Disponibilité</div>
-          <div *ngIf="idEditBlock">Editer Disponibilité</div>
+          <div *ngIf="!idEditBlock">{{ 'availability' | translate }}</div>
+          <div *ngIf="idEditBlock">{{ 'edit_availability' | translate }}</div>
         </div>
         <img src="assets/icon/icon-clock.png" class="header-section-menu" />
       </div>
 
       <div *ngIf="!idEditBlock" class="mt-24 mb-32 flex-buttons">
         <div [ngClass]="{'btn-back-primary': showMonthAvailable, 'btn-back-grey': !showMonthAvailable}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonthAvailable=true;showDayAvailable=false;">
-          Mois
+          {{ 'month' | translate }}
         </div>
         <div [ngClass]="{'btn-back-primary': showDayAvailable, 'btn-back-grey': !showDayAvailable}" class="montserrat flex-buttons-button cursor-pointer" (click)="showMonthAvailable=false;showDayAvailable=true;">
-          Jour
+          {{ 'day' | translate }}
         </div>
       </div>
 
@@ -69,8 +69,8 @@
         <!--open/close calendar-->
         <div class="mt-12 flex-select-date cursor-pointer" (click)="showDayCalendar = !showDayCalendar">
           <img src="assets/icon/icons-outline-calendar-1-white.svg" />
-          <div class="montserrat" *ngIf="!showDayCalendar">Calendrier ouvert</div>
-          <div class="montserrat" *ngIf="showDayCalendar">Fermer le calendrier</div>
+          <div class="montserrat" *ngIf="!showDayCalendar">{{ 'open_calendar' | translate }}</div>
+          <div class="montserrat" *ngIf="showDayCalendar">{{ 'close_calendar' | translate }}</div>
         </div>
       </ng-container>
 
@@ -80,12 +80,12 @@
     <div class="padding-wrapper" *ngIf="showMonthAvailable">
 
       <div class="mb-24 montserrat align-center">
-        Choisissez une plage de dates
+        {{ 'choose_date_range' | translate }}
       </div>
 
       <div class="calendar mb-24 background-color-dark">
         <div class="weekdays">
-            <span *ngFor="let day of weekdays" class="montserrat">{{ day }}</span>
+            <span *ngFor="let day of weekdays" class="montserrat uppercase">{{ day }}</span>
         </div>
         <div class="days">
             <ng-container *ngFor="let day of days">
@@ -108,7 +108,7 @@
       <div class="inputs-flex">
         <div class="flex-1">
           <div class="input-label color-light montserrat">
-            Date de début
+            {{ 'start_date' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <img src="assets/icon/icons-outline-calendar-1-white.svg" />
@@ -117,7 +117,7 @@
         </div>
         <div class="flex-1">
           <div class="input-label color-light montserrat">
-            Date de fin
+            {{ 'end_date' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <img src="assets/icon/icons-outline-calendar-1-white.svg" />
@@ -134,13 +134,13 @@
           </label>
         </div>
         <div class="montserrat color-light circle-list-item-text">
-          Toute la journée
+          {{ 'all_day' | translate }}
         </div>
       </div>
 
       <ng-container *ngIf="!allHoursMonth">
         <div class="input-label color-light montserrat">
-          Heure de début
+          {{ 'start_time' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <select class="montserrat" [(ngModel)]="startTimeMonth" (change)="onStartTimeMonthChange()">
@@ -149,7 +149,7 @@
         </div>
         
         <div class="input-label color-light montserrat">
-          Heure de fin
+          {{ 'end_time' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <select class="montserrat" [(ngModel)]="endTimeMonth">
@@ -159,14 +159,14 @@
       </ng-container>
 
       <div class="input-label color-light montserrat mt-24">
-        Titre
+        {{ 'title' | translate }}
       </div>
       <div class="input-form-icon background-color-dark">
         <input class="montserrat" type="text" [(ngModel)]="nameBlockMonth" />
       </div>
 
       <button (click)="saveBlockMonth()" [disabled]="!isButtonMonthEnabled()" class="content-button btn-back-primary montserrat mb-32 mt-32">
-        Sauvegarder
+        {{ 'save' | translate }}
       </button>
 
     </div>
@@ -176,12 +176,12 @@
 
       <ng-container *ngIf="showDayCalendar">
         <div class="mb-24 montserrat align-center">
-          Choisissez un jour
+          {{ 'choose_day' | translate }}
         </div>
 
         <div class="calendar mb-24 background-color-dark">
           <div class="weekdays">
-              <span *ngFor="let day of weekdays" class="montserrat">{{ day }}</span>
+              <span *ngFor="let day of weekdays" class="montserrat uppercase">{{ day }}</span>
           </div>
           <div class="days">
               <ng-container *ngFor="let day of days">
@@ -209,13 +209,13 @@
             </label>
           </div>
           <div class="montserrat color-light circle-list-item-text">
-            Toute la journée
+            {{ 'all_day' | translate }}
           </div>
         </div>
 
         <ng-container *ngIf="!allHoursDay">
           <div class="input-label color-light montserrat">
-            Heure de début
+            {{ 'start_time' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <select class="montserrat" [(ngModel)]="startTimeDay"(change)="onStartTimeDayChange()">
@@ -224,7 +224,7 @@
           </div>
           
           <div class="input-label color-light montserrat">
-            Heure de fin
+            {{ 'end_time' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <select class="montserrat" [(ngModel)]="endTimeDay">
@@ -234,7 +234,7 @@
         </ng-container>
 
         <div class="input-label color-light montserrat mt-24">
-          Titre
+          {{ 'title' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <input class="montserrat" type="text" [(ngModel)]="nameBlockDay" />
@@ -249,7 +249,7 @@
               </label>
             </div>
             <div class="montserrat color-light circle-list-item-text">
-              Diviser
+              {{ 'divide' | translate }}
             </div>
           </div>
 
@@ -257,7 +257,7 @@
             <div class="inputs-flex">
               <div class="flex-1">
                 <div class="input-label color-light montserrat">
-                  Début de division
+                  {{ 'start_division' | translate }}
                 </div>
                 <div class="input-form-icon background-color-dark">
                   <select class="montserrat" [(ngModel)]="startTimeDivision"(change)="onStartTimeDivisionChange()">
@@ -267,7 +267,7 @@
               </div>
               <div class="flex-1">
                 <div class="input-label color-light montserrat">
-                  Fin de division
+                  {{ 'end_division' | translate }}
                 </div>
                 <div class="input-form-icon background-color-dark">
                   <select class="montserrat" [(ngModel)]="endTimeDivision">
@@ -280,11 +280,11 @@
         </ng-container>
 
         <button (click)="saveBlockDay()" [disabled]="!isButtonDayEnabled()" class="content-button btn-back-primary montserrat mb-32 mt-32">
-          Sauvegarder
+          {{ 'save' | translate }}
         </button>
 
         <button *ngIf="idEditBlock" (click)="deleteBlockDay()" class="content-button reduce-top btn-back-grey montserrat mb-32">
-          Éliminer
+          {{ 'delete' | translate }}
         </button>
       </ng-container>
 

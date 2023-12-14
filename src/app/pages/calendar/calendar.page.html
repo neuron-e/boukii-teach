@@ -6,20 +6,20 @@
       <div class="header-section-content mb-12">
         <div class="header-section-title">
           <img src="assets/icon/icons-outline-calendar-1-blue.svg" />
-          <div>Agenda</div>
+          <div>{{ 'diary' | translate }}</div>
         </div>
         <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
       </div>
 
       <div class="mt-24 mb-32 flex-buttons">
         <div [ngClass]="{'btn-back-primary': showMonth, 'btn-back-grey': !showMonth}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateMonthRange();showMonth=true;showWeek=false;showDay=false;">
-          Mois
+          {{ 'month' | translate }}
         </div>
         <div [ngClass]="{'btn-back-primary': showWeek, 'btn-back-grey': !showWeek}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateWeekRange();showMonth=false;showWeek=true;showDay=false;">
-          Semaine
+          {{ 'week' | translate }}
         </div>
         <div [ngClass]="{'btn-back-primary': showDay, 'btn-back-grey': !showDay}" class="montserrat flex-buttons-button cursor-pointer" (click)="calculateDayRange();showMonth=false;showWeek=false;showDay=true;">
-          Jour
+          {{ 'day' | translate }}
         </div>
       </div>
 
@@ -75,7 +75,7 @@
 
       <div class="calendar mb-24 background-color-dark">
         <div class="weekdays">
-            <span *ngFor="let day of weekdays" class="montserrat">{{ day }}</span>
+            <span *ngFor="let day of weekdays" class="montserrat uppercase">{{ day }}</span>
         </div>
         <div class="days">
             <ng-container *ngFor="let day of days">
@@ -184,7 +184,7 @@
               <div class="task-content-text">
                 <div class="montserrat">{{task.name}}</div>
                 <span class="montserrat color-light">
-                  Collectif
+                  {{ 'collective' | translate }}
                   <ng-container *ngIf="task.sport_name && sports.length">
                     {{task.sport_name}}
                   </ng-container>
@@ -207,7 +207,7 @@
               <div class="task-content-text">
                 <div class="montserrat">{{task.name}}</div>
                 <span class="montserrat color-light">
-                  Privé
+                  {{ 'private' | translate }}
                   <ng-container *ngIf="task.sport_name && sports.length">
                     {{task.sport_name}}
                   </ng-container></span>
@@ -217,7 +217,7 @@
             <div class="task-content" *ngIf="task.type === 'other'">
               <img src="assets/icon/course-other-icon.png" class="task-content-img" />
               <div class="task-content-text">
-                <div class="montserrat">Nom activité</div>
+                <div class="montserrat">Activité</div>
               </div>
             </div>
             <!--Block-->
@@ -238,8 +238,8 @@
   </div>
 
   <!--SHOW IN MONTH/WEEK/DAY-->
-  <div class="montserrat button-floating btn-back-primary" (click)="openAvailables()">
-    DISPONIBILITÉ
+  <div class="montserrat button-floating btn-back-primary uppercase" (click)="openAvailables()">
+    {{ 'availability' | translate }}
   </div>
   
 </ion-content>

@@ -20,15 +20,15 @@
         </div>
         <div class="mt-8 flex-buttons">
           <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;">
-            Données
+            {{ 'data' | translate }}
           </div>
           <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;showWork=false;">
-            Sports
+            {{ 'sports' | translate }}
           </div>
         </div>
         <div class="mt-8 mb-32 flex-buttons">
           <div [ngClass]="{'btn-back-primary': showWork, 'btn-back-grey': !showWork}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=false;showWork=true;">
-            Informations de travail
+            {{ 'work_info' | translate }}
           </div>
         </div>
       </div>
@@ -37,21 +37,21 @@
       <div *ngIf="showGeneral" class="mb-24 pt-8">
 
         <div class="input-label color-light montserrat">
-          Email
+          {{ 'email' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
           <input class="montserrat" type="text" [(ngModel)]="email" [disabled]="true" />
         </div>
         <div class="input-label color-light montserrat">
-          Mobile
+          {{ 'mobile' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-phone.png" />
           <input class="montserrat" type="text" [(ngModel)]="phone" />
         </div>
         <div class="input-label color-light montserrat">
-          Teléphone
+          {{ 'telephone' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-phone.png" />
@@ -61,7 +61,7 @@
         <div class="inputs-flex">
           <div>
             <div class="input-label color-light montserrat">
-              Nom
+              {{ 'first_name' | translate }}
             </div>
             <div class="input-form-icon background-color-dark">
               <input class="montserrat" type="text" [(ngModel)]="firstName" />
@@ -69,7 +69,7 @@
           </div>
           <div>
             <div class="input-label color-light montserrat">
-              Prenom
+              {{ 'last_name' | translate }}
             </div>
             <div class="input-form-icon background-color-dark">
               <input class="montserrat" type="text" [(ngModel)]="lastName" />
@@ -78,7 +78,7 @@
         </div>
 
         <div class="input-label color-light montserrat">
-          Date de naissance
+          {{ 'birth_date' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-birth.png" />
@@ -86,20 +86,20 @@
         </div>
 
         <div class="input-label color-light montserrat mb-12">
-          Adresse
+          {{ 'address' | translate }}
         </div>
         <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" placeholder="Rue, nº" [(ngModel)]="address" />
+          <input class="montserrat" type="text" placeholder="{{ 'street_number' | translate }}" [(ngModel)]="address" />
         </div>
         <div class="input-form-icon background-color-dark">
-          <input class="montserrat" type="text" placeholder="Ville" [(ngModel)]="city" />
+          <input class="montserrat" type="text" placeholder="{{ 'city' | translate }}" [(ngModel)]="city" />
         </div>
         <div class="inputs-flex">
           <div class="input-form-icon background-color-dark width-40">
-            <input class="montserrat" type="text" placeholder="NPA" [(ngModel)]="cp" />
+            <input class="montserrat" type="text" placeholder="{{ 'postal_code' | translate }}" [(ngModel)]="cp" />
           </div>
           <div class="input-form-icon background-color-dark width-60">
-            <select class="montserrat" placeholder="Pays" [(ngModel)]="country">
+            <select class="montserrat" [(ngModel)]="country">
               <option *ngFor="let pays of countries" [value]="pays.id">{{pays.name}}</option>
             </select>
           </div>
@@ -108,30 +108,30 @@
         <div class="inputs-flex">
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 1
+              {{ 'language_abbrev' | translate }} 1
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 1" [(ngModel)]="language1Id">
+              <select class="montserrat" [(ngModel)]="language1Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
           </div>
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 2
+              {{ 'language_abbrev' | translate }} 2
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 2" [(ngModel)]="language2Id">
+              <select class="montserrat" [(ngModel)]="language2Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
           </div>
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 3
+              {{ 'language_abbrev' | translate }} 3
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 3" [(ngModel)]="language3Id">
+              <select class="montserrat" [(ngModel)]="language3Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
@@ -141,30 +141,30 @@
         <div class="inputs-flex">
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 4
+              {{ 'language_abbrev' | translate }} 4
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 4" [(ngModel)]="language4Id">
+              <select class="montserrat" [(ngModel)]="language4Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
           </div>
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 5
+              {{ 'language_abbrev' | translate }} 5
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 5" [(ngModel)]="language5Id">
+              <select class="montserrat" [(ngModel)]="language5Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
           </div>
           <div class="flex-1">
             <div class="input-label color-light montserrat">
-              Lang 6
+              {{ 'language_abbrev' | translate }} 6
             </div>
             <div class="input-form-icon background-color-dark">
-              <select class="montserrat" placeholder="Lang 6" [(ngModel)]="language6Id">
+              <select class="montserrat" [(ngModel)]="language6Id">
                 <option *ngFor="let lang of languages" [value]="lang.id">{{lang.name}}</option>
               </select>
             </div>
@@ -172,7 +172,7 @@
         </div>
 
         <button (click)="saveChanges()" class="content-button btn-back-primary montserrat mt-24 mb-24">
-          Sauvegarder
+          {{ 'save' | translate }}
         </button>
 
       </div>
@@ -182,15 +182,15 @@
 
         <div class="flex-sections mb-24">
           <div [ngClass]="typeSport == 1 ? 'section-selected' : 'section-title'" (click)="filterSports(1)">
-            Hiver
+            {{ 'winter' | translate }}
             <div *ngIf="typeSport == 1" class="section-bullet"></div>
           </div>
           <div [ngClass]="typeSport == 2 ? 'section-selected' : 'section-title'" (click)="filterSports(2)">
-            Été
+            {{ 'summer' | translate }}
             <div *ngIf="typeSport == 2" class="section-bullet"></div>
           </div>
           <div [ngClass]="typeSport == 3 ? 'section-selected' : 'section-title'" (click)="filterSports(3)">
-            Autres
+            {{ 'others' | translate }}
             <div *ngIf="typeSport == 3" class="section-bullet"></div>
           </div>
         </div>
@@ -202,8 +202,8 @@
               <img [src]="sport.icon_selected" />
               <span class="montserrat">{{sport.name}}</span>
               <!--(click)="doShowLevel(sport)"-->
-              <div class="extra-check montserrat color-primary">
-                FORMATION
+              <div class="extra-check montserrat color-primary uppercase">
+                {{ 'training' | translate }}
               </div>
             </div>
             <div class="custom-check"></div>
@@ -212,7 +212,7 @@
         </div>
 
         <button (click)="saveSports()" class="content-button btn-back-primary montserrat mt-24 mb-24">
-          Sauvegarder
+          {{ 'save' | translate }}
         </button>
 
       </div>
@@ -222,30 +222,30 @@
       <div *ngIf="showWork" class="mb-24 pt-8">
 
         <div class="content-title-b mb-24">
-          Information de travail
+          {{ 'work_info' | translate }}
         </div>
 
         <div class="pb-24">
           <div class="input-label color-light montserrat">
-            Nº AVS
+            {{ 'avs_number' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="avs" />
           </div>
           <div class="input-label color-light montserrat">
-            Permis de travail
+            {{ 'working_license' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <input class="montserrat" placeholder="XXXX XXXX XX" type="text" [(ngModel)]="workLicense" />
           </div>
           <div class="input-label color-light montserrat">
-            Coordonnées bancaires
+            {{ 'bank_details' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="bankDetails" />
           </div>
           <div class="input-label color-light montserrat">
-            Nationalité
+            {{ 'nationality' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <select class="montserrat" placeholder="Nationalité" [(ngModel)]="worldCountry">
@@ -253,7 +253,7 @@
             </select>
           </div>
           <div class="input-label color-light montserrat">
-            Nº enfants
+            {{ 'number_children' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
             <input class="montserrat" placeholder="0" min="0" step="1" type="number" [(ngModel)]="children" />
@@ -262,49 +262,49 @@
         </div>
 
         <div class="content-title-b mb-24">
-          Etat civil
+          {{ 'marital_status' | translate }}
         </div>
 
         <div class="pb-24">
           <div class="input-label color-light montserrat">
-            Quel est votre etat civil?
+            {{ 'what_marital_status' | translate }}
           </div>
           <div class="list-chip mt-12">
             <div class="background-color-dark cursor-pointer chip-box" (click)="civilStatus='1'">
               <img *ngIf="civilStatus=='1'" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-              <div class="montserrat chip-box-text">Mariée</div>
+              <div class="montserrat chip-box-text">{{ 'maried' | translate }}</div>
             </div>
             <div class="background-color-dark cursor-pointer chip-box" (click)="civilStatus='2'">
               <img *ngIf="civilStatus=='2'" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-              <div class="montserrat chip-box-text">Single</div>
+              <div class="montserrat chip-box-text">{{ 'single' | translate }}</div>
             </div>
           </div>
 
           <ng-container *ngIf="civilStatus=='1'">
             <div class="input-label color-light montserrat mt-24">
-              Permis travail du conjoint
+              {{ 'spouse_work_permit' | translate }}
             </div>
             <div class="input-form-icon background-color-dark">
               <input class="montserrat" placeholder="XXX XXXX XXXX XX" type="text" [(ngModel)]="partnerWorkLicense" />
             </div>
 
             <div class="input-label color-light montserrat">
-              Conjoint travaille?
+              {{ 'spouse_works' | translate }}
             </div>
             <div class="list-chip mt-12">
               <div class="background-color-dark cursor-pointer chip-box" (click)="partnerWorks=true">
                 <img *ngIf="partnerWorks" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-                <div class="montserrat chip-box-text">Oui</div>
+                <div class="montserrat chip-box-text">{{ 'yes' | translate }}</div>
               </div>
               <div class="background-color-dark cursor-pointer chip-box" (click)="partnerWorks=false">
                 <img *ngIf="!partnerWorks" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-                <div class="montserrat chip-box-text">Non</div>
+                <div class="montserrat chip-box-text">{{ 'no' | translate }}</div>
               </div>
             </div>
 
             <ng-container *ngIf="partnerWorks">
               <div class="input-label color-light montserrat mt-24">
-                Pourcentage du conjoint (%)
+                {{ 'spouse_percentage' | translate }} (%)
               </div>
               <div class="input-form-icon background-color-dark">
                 <input class="montserrat" placeholder="XX" min="0" type="number" [(ngModel)]="partnerPercentage" />
@@ -316,16 +316,16 @@
           <div class="border-separator mt-24 mb-24"></div>
 
           <div class="input-label color-light montserrat">
-            Demande d'allocation familiales?
+            {{ 'family_allowance' | translate }}
           </div>
           <div class="list-chip mt-12">
             <div class="background-color-dark cursor-pointer chip-box" (click)="familyAllowance=true">
               <img *ngIf="familyAllowance" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-              <div class="montserrat chip-box-text">Oui</div>
+              <div class="montserrat chip-box-text">{{ 'yes' | translate }}</div>
             </div>
             <div class="background-color-dark cursor-pointer chip-box" (click)="familyAllowance=false">
               <img *ngIf="!familyAllowance" src="assets/icon/icon-check-radius.png" class="chip-box-check" />
-              <div class="montserrat chip-box-text">Non</div>
+              <div class="montserrat chip-box-text">{{ 'no' | translate }}</div>
             </div>
           </div>
 
@@ -360,7 +360,7 @@
         </div>
 
         <button (click)="saveChanges()" class="content-button btn-back-primary montserrat mt-24 mb-24">
-          Sauvegarder
+          {{ 'save' | translate }}
         </button>
 
       </div>
@@ -375,10 +375,10 @@
       <div class="padding-wrapper">
         <div class="header-content no-margin">
           <div class="montserrat level-back color-light cursor-pointer" (click)="showLevel=false;">
-            Cancel
+            {{ 'cancel' | translate }}
           </div>
           <div class="level-title">
-            Formation
+            {{ 'training' | translate }}
           </div>
         </div>
       </div>
@@ -402,18 +402,18 @@
               -->
 
               <div class="input-label color-light montserrat mt-24">
-                Formation
+                {{ 'training' | translate }}
               </div>
               <div class="input-form-icon background-color-dark">
                 <input class="montserrat" type="text" />
               </div>
 
               <div class="input-label color-light montserrat mt-24">
-                Preuve de formation
+                {{ 'training_proof' | translate }}
               </div>
               <div class="position-relative">
                 <label for="file-upload" class="custom-file-upload montserrat">
-                  Upload PDF
+                  {{ 'upload_pdf' | translate }}
                 </label>
                 <input id="file-upload" type="file" accept=".pdf" class="file-display-none" />
               </div>
@@ -421,7 +421,7 @@
 
       <div class="padding-wrapper mt-32">
         <button (click)="updateLevel()" class="content-button btn-back-primary montserrat">
-          Confirmer formation
+          {{ 'confirm_training' | translate }}
         </button>
       </div>
     </div>
@@ -430,7 +430,7 @@
 </ion-content>
 
 <app-file-upload *ngIf="showPhotoMonitor"
-  title="Photo du moniteur"
+  title="{{ 'monitor_photo' | translate }}"
   [allowImage]="true" 
   [allowVideo]="false" 
   (fileSelected)="changeMonitorPhoto($event)"
