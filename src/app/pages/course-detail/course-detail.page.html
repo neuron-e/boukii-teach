@@ -33,17 +33,20 @@
           <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/course-collective-box.png" class="content-flex-top-img" />
           <img *ngIf="selectedBooking.course.course_type == 2" src="assets/icon/course-private-box.png" class="content-flex-top-img" />
           <div class="content-flex-top-text">
-            <span class="color-light uppercase">
-              <ng-container *ngIf="selectedBooking.course.course_type == 1">
-                {{ 'collective' | translate }}
-              </ng-container>
-              <ng-container *ngIf="selectedBooking.course.course_type == 2">
-                {{ 'private' | translate }}
-              </ng-container>
-              <ng-container *ngIf="selectedBooking.course_sport && sports.length">
-                {{selectedBooking.course_sport.name}}
-              </ng-container>
-            </span>
+            <div class="content-flex-top-text-flex-b">
+              <img  *ngIf="selectedBooking.course_sport && sports.length" [src]="selectedBooking.course_sport.icon_selected" />
+              <span class="color-light uppercase">
+                <ng-container *ngIf="selectedBooking.course.course_type == 1">
+                  {{ 'collective' | translate }}
+                </ng-container>
+                <ng-container *ngIf="selectedBooking.course.course_type == 2">
+                  {{ 'private' | translate }}
+                </ng-container>
+                <ng-container *ngIf="selectedBooking.course_sport && sports.length">
+                  {{selectedBooking.course_sport.name}}
+                </ng-container>
+              </span>
+            </div>
             <div>{{selectedBooking.course.name}}</div>
           </div>
         </div>

@@ -158,7 +158,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   getEditBlock() {
     this.teachService.getData('monitor-nwds', this.idEditBlock).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.editBlock = data.data;
         this.allHoursDay = this.editBlock.full_day;
         if(this.editBlock.start_time){
@@ -346,7 +346,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
     if (!this.firstDateSelected || (this.secondDateSelected && this.firstDateSelected)) {
       this.resetSelection();
       this.firstDateSelected = date;
-      console.log(date);
+      //console.log(date);
       this.firstDateSelectedFormat = this.formatDate(date);
       day.activeSelected = true;
     } else {
@@ -454,15 +454,15 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
       const updateFirstBlock = () => {
           this.teachService.updateData('monitor-nwds', this.idEditBlock, firstBlockData).subscribe(
               response => {
-                  console.log('First block updated:', response);
+                  //console.log('First block updated:', response);
                   this.spinnerService.hide();
-                  this.toastr.success('Enregistré correctement');
+                  this.toastr.success(this.translate.instant('toast.registered_correctly'));
                   this.goTo('calendar');
               },
               error => {
                   console.error('Error updating first block:', error);
                   this.spinnerService.hide();
-                  this.toastr.error('Erreur');
+                  this.toastr.error(this.translate.instant('toast.error'));
               }
           );
       };
@@ -471,7 +471,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
       this.checkOverlap(firstBlockStartMoment, firstBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
           if (overlap) {
               this.spinnerService.hide();
-              this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+              this.toastr.error(this.translate.instant('toast.overlap_detected'));
               return;
           }
   
@@ -484,25 +484,25 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
               this.checkOverlap(secondBlockStartMoment, secondBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
                   if (overlap) {
                       this.spinnerService.hide();
-                      this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+                      this.toastr.error(this.translate.instant('toast.overlap_detected'));
                       return;
                   }
   
                   this.teachService.postData('monitor-nwds', secondBlockData).subscribe(
                       secondResponse => {
-                          console.log('Second block created:', secondResponse);
+                          //console.log('Second block created:', secondResponse);
                           updateFirstBlock();
                       },
                       error => {
                           console.error('Error creating second block:', error);
                           this.spinnerService.hide();
-                          this.toastr.error('Erreur');
+                          this.toastr.error(this.translate.instant('toast.error'));
                       }
                   );
               }).catch(error => {
                   console.error('Error checking overlap for second block:', error);
                   this.spinnerService.hide();
-                  this.toastr.error('Erreur');
+                  this.toastr.error(this.translate.instant('toast.error'));
               });
           } else {
               // Update FIRST
@@ -511,7 +511,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
       }).catch(error => {
           console.error('Error checking overlap for first block:', error);
           this.spinnerService.hide();
-          this.toastr.error('Erreur');
+          this.toastr.error(this.translate.instant('toast.error'));
       });
 
     }
@@ -539,25 +539,25 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         if (!overlap) {
           this.teachService.postData('monitor-nwds', dataDay).subscribe(
             response => {
-                console.log('Response:', response);
+                //console.log('Response:', response);
                 this.spinnerService.hide();
-                this.toastr.success('Enregistré correctement');
+                this.toastr.success(this.translate.instant('toast.registered_correctly'));
                 this.goTo('calendar');
             },
             error => {
                 console.error('Error:', error);
                 this.spinnerService.hide();
-                this.toastr.error('Erreur');
+                this.toastr.error(this.translate.instant('toast.error'));
             }
           );
         } else {
           this.spinnerService.hide();
-          this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+          this.toastr.error(this.translate.instant('toast.overlap_detected'));
         }
       }).catch(error => {
         console.error('Overlap check error:', error);
         this.spinnerService.hide();
-        this.toastr.error('Erreur lors de la vérification des chevauchements');
+        this.toastr.error(this.translate.instant('toast.error_checking_overlap'));
       });
 
     }
@@ -601,7 +601,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
                 return new Promise((resolve, reject) => {
                   this.teachService.postData('monitor-nwds', dataDay).subscribe(
                       response => {
-                          console.log('Data posted successfully:', response);
+                          //console.log('Data posted successfully:', response);
                           resolve(response);
                       },
                       error => {
@@ -626,24 +626,24 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         const successfulResponses = responses.filter(response => response != null);
         if (successfulResponses.length > 0) {
           if (overlapDates.length > 0) {
-            this.toastr.success('Certains blocages ont été enregistrés correctement');
+            this.toastr.success(this.translate.instant('toast.some_registered_correctly'));
           }
           else{
-            this.toastr.success('Enregistré correctement');
+            this.toastr.success(this.translate.instant('toast.registered_correctly'));
           }
         }
 
         if (overlapDates.length > 0) {
-            this.toastr.error(`Un chevauchement a été détecté. Les dates suivantes n'ont pas été créées : ${overlapDates.join(', ')}`);
+            this.toastr.error(`${this.translate.instant('toast.registered_correctly')} : ${overlapDates.join(', ')}`);
         } else if (successfulResponses.length === 0) {
-            this.toastr.error("Un chevauchement a été détecté. Le blocage n'a pas été créé.");
+            this.toastr.error(this.translate.instant('toast.overlap_detected'));
         }
 
       this.goTo('calendar');
     }).catch(error => {
         console.error('An error occurred:', error);
         this.spinnerService.hide();
-        this.toastr.error('Erreur');
+        this.toastr.error(this.translate.instant('toast.error'));
     });
   }
 
@@ -655,7 +655,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
             const bookingStart = moment(`${formattedDayDate} ${booking.hour_start}`, 'YYYY-MM-DD HH:mm:ss');
             const bookingEnd = moment(`${formattedDayDate} ${booking.hour_end}`, 'YYYY-MM-DD HH:mm:ss');
             if (bookingStart.isBefore(blockEndMoment) && bookingEnd.isAfter(blockStartMoment)) {
-              console.log(booking);
+              //console.log(booking);
               resolve(true); // Overlap found
               return;
             }
@@ -676,7 +676,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
                 const nwdStart = moment(`${formattedDayDate} ${nwd.start_time}`, 'YYYY-MM-DD HH:mm:ss');
                 const nwdEnd = moment(`${formattedDayDate} ${nwd.end_time}`, 'YYYY-MM-DD HH:mm:ss');
                 if (nwdStart.isBefore(blockEndMoment) && nwdEnd.isAfter(blockStartMoment)) {
-                  console.log(nwd);
+                  //console.log(nwd);
                   resolve(true); // Overlap found
                   return;
                 }
@@ -702,15 +702,15 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
           this.spinnerService.show();
             this.teachService.deleteData('monitor-nwds', this.idEditBlock).subscribe(
                 response => {
-                    console.log('Response:', response);
+                    //console.log('Response:', response);
                     this.spinnerService.hide();
-                    this.toastr.success('Supprimé correctement');
+                    this.toastr.success(this.translate.instant('toast.deleted_correctly'));
                     this.goTo('calendar');
                 },
                 error => {
                     console.error('Error:', error);
                     this.spinnerService.hide();
-                    this.toastr.error('Erreur');
+                    this.toastr.error(this.translate.instant('toast.error'));
                 }
             );
         }

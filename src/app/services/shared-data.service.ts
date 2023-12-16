@@ -23,7 +23,7 @@ export class SharedDataService {
           data.data.forEach((degree: any) => {
             degree.inactive_color = this.lightenColor(degree.color, 30);
           });
-          console.log('degrees fetched');
+          //console.log('degrees fetched');
           this.degreesSubject.next(data.data);
           return of(data.data);
         }),
@@ -34,7 +34,7 @@ export class SharedDataService {
         })
       );
     } else {
-      console.log('already degrees');
+      //console.log('already degrees');
       return this.degreesSubject.asObservable();
     }
   }
@@ -43,7 +43,7 @@ export class SharedDataService {
     if (this.sportsSubject.getValue().length === 0) {
       return this.teachService.getData('sports', null, { school_id: school_id }).pipe(
         switchMap((data: any) => {
-          console.log('sports fetched');
+          //console.log('sports fetched');
           this.sportsSubject.next(data.data);
           return of(data.data);
         }),
@@ -54,7 +54,7 @@ export class SharedDataService {
         })
       );
     } else {
-      console.log('already sports');
+      //console.log('already sports');
       return this.sportsSubject.asObservable();
     }
   }
@@ -63,7 +63,7 @@ export class SharedDataService {
     if (this.languagesSubject.getValue().length === 0) {
       return this.teachService.getData('languages').pipe(
         switchMap((data: any) => {
-          console.log('languages fetched');
+          //console.log('languages fetched');
           this.languagesSubject.next(data.data);
           return of(data.data);
         }),
@@ -74,7 +74,7 @@ export class SharedDataService {
         })
       );
     } else {
-      console.log('already languages');
+      //console.log('already languages');
       return this.languagesSubject.asObservable();
     }
   }
@@ -83,7 +83,7 @@ export class SharedDataService {
     if (this.stationsSubject.getValue().length === 0) {
       return this.teachService.getData('stations').pipe(
         switchMap((data: any) => {
-          console.log('stations fetched');
+          //console.log('stations fetched');
           this.stationsSubject.next(data.data);
           return of(data.data);
         }),
@@ -94,7 +94,7 @@ export class SharedDataService {
         })
       );
     } else {
-      console.log('already stations');
+      //console.log('already stations');
       return this.stationsSubject.asObservable();
     }
   }
@@ -103,7 +103,7 @@ export class SharedDataService {
     if (this.schoolsSubject.getValue().length === 0) {
       return this.teachService.getData('schools').pipe(
         switchMap((data: any) => {
-          console.log('schools fetched');
+          //console.log('schools fetched');
           this.schoolsSubject.next(data.data);
           return of(data.data);
         }),
@@ -114,7 +114,7 @@ export class SharedDataService {
         })
       );
     } else {
-      console.log('already schools');
+      //console.log('already schools');
       return this.schoolsSubject.asObservable();
     }
   }

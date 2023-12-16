@@ -30,11 +30,10 @@
             <img src="assets/icon/icon-crown.png" />
           </div>
           <div class="header-user-data-text-icons">
-            <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
-
+            <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+            <a [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
         </div>
       </div>
@@ -58,10 +57,10 @@
             <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
           </div>
           <div class="header-user-data-text-icons">
-            <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
-            <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+            <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+            <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
           </div>
         </div>
@@ -92,10 +91,10 @@
               <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
             </div>
             <div class="header-user-data-text-icons">
-              <img class="cursor-pointer" src="assets/icon/icon-message-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-mail-box.png" />
-              <img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />
+              <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+              <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+              <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+              <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
             </div>
           </div>

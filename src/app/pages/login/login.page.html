@@ -52,10 +52,10 @@
         </div>
         <div class="input-form-icon background-color-dark">
           <img src="assets/icon/icon-mail.png" />
-          <input class="montserrat" type="text" />
+          <input class="montserrat" [(ngModel)]="emailRecover" type="text" />
         </div>
       </div>
-      <button (click)="showLogin=true" class="content-button btn-back-primary montserrat">
+      <button (click)="onRecover()" [disabled]="!emailRecover" class="content-button btn-back-primary montserrat">
         {{ 'reset_password' | translate }}
       </button>
     </div>

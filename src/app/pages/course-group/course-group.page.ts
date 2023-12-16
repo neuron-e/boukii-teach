@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -34,7 +35,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
   groupId:any;
   subgroupId:any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -45,7 +46,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -69,7 +70,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
   loadBookings() {
     this.teachService.getData('teach/courses', this.courseId).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.courseBookings = data.data;
         this.courseBookings.course_dates.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -96,7 +97,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
         });
 
         if (matchingCourseDate) {
-          console.log('Matching course date:', matchingCourseDate);
+          //console.log('Matching course date:', matchingCourseDate);
           // Do something with the matching course date
 
           const allSubgroups:any[] = [];
@@ -122,10 +123,10 @@ export class CourseGroupPage implements OnInit, OnDestroy {
           this.restSubgroups = allSubgroups.filter(subgroup => subgroup.id !== this.subgroupId);
 
           // Outputs
-          console.log('Specified Subgroup:', this.monitorSubgroup);
-          console.log('Remaining Subgroups:', this.restSubgroups);
+          //console.log('Specified Subgroup:', this.monitorSubgroup);
+          //console.log('Remaining Subgroups:', this.restSubgroups);
         } else {
-          console.log('No matching course date found');
+          //console.log('No matching course date found');
         }
 
         this.spinnerService.hide();

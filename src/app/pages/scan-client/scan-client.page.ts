@@ -76,12 +76,12 @@ export class ScanClientPage implements OnInit, OnDestroy {
           this.schools = await firstValueFrom(this.sharedDataService.fetchSchools());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
           this.clientId = +params['client'];
-          console.log(this.clientId);
+          //console.log(this.clientId);
           if(this.clientId){
             this.spinnerService.show();
             await this.getMonitors();
@@ -89,7 +89,7 @@ export class ScanClientPage implements OnInit, OnDestroy {
             this.loadBookings(this.clientId);
           }
           else{
-            this.toastr.error('Aucun client trouvé');
+            this.toastr.error(this.translate.instant('toast.no_client_found'));
             this.goTo('home');
           }
         });
@@ -115,7 +115,7 @@ export class ScanClientPage implements OnInit, OnDestroy {
   async getMonitors() {
     try {
       const data: any = await this.teachService.getData('monitors').toPromise();
-      console.log(data);
+      //console.log(data);
       this.monitors = data.data;
     } catch (error) {
       console.error('There was an error!', error);
@@ -124,7 +124,7 @@ export class ScanClientPage implements OnInit, OnDestroy {
 
   getClient(client_id:any) {
     this.spinnerService.show();
-    this.teachService.getData(`clients/${client_id}`).subscribe(
+    this.teachService.getData(`clients/${client_id}`, null, {'with[]': 'main'}).subscribe(
       (data:any) => {
         const client = data.data;
         this.spinnerService.hide();
@@ -132,9 +132,9 @@ export class ScanClientPage implements OnInit, OnDestroy {
           client.birth_years = this.getBirthYears(client.birth_date);
           this.clientMonitor = client;
           this.changeDetectorRef.detectChanges();
-          console.log(this.clientMonitor);
+          //console.log(this.clientMonitor);
         } else {
-          this.toastr.error('Aucun client trouvé');
+          this.toastr.error(this.translate.instant('toast.no_client_found'));
           this.goTo('home');
         }
       },
@@ -149,7 +149,7 @@ export class ScanClientPage implements OnInit, OnDestroy {
     this.spinnerService.show();
     this.teachService.getData('teach/clients/' + client_id + '/bookings', null, { date_start: this.todayDateFormatted, date_end: this.tomorrowDateFormatted }).subscribe(
       (data: any) => {
-        console.log(data);
+        //console.log(data);
         const today = new Date();
         const tomorrow = new Date();
         tomorrow.setDate(today.getDate() + 1);
@@ -164,8 +164,8 @@ export class ScanClientPage implements OnInit, OnDestroy {
 
         this.spinnerService.hide();
 
-        console.log('Bookings for Today:', this.bookingsToday);
-        console.log('Bookings for Tomorrow:', this.bookingsTomorrow);
+        //console.log('Bookings for Today:', this.bookingsToday);
+        //console.log('Bookings for Tomorrow:', this.bookingsTomorrow);
       },
       error => {
         console.error('There was an error!', error);
@@ -189,7 +189,7 @@ export class ScanClientPage implements OnInit, OnDestroy {
               station_data: this.stations.find(station => station.id === booking.course.station_id),
               degree_data: this.degrees.find(degree => degree.id === booking.degree_id),
               sport_data: this.sports.find(sport => sport.id === booking.course.sport_id)
-          };
+          }; 
       });
   }
 
@@ -200,8 +200,10 @@ export class ScanClientPage implements OnInit, OnDestroy {
   }  
 
   formatTimeRange(hour_start:string, hour_end:string) {
+    let hour = hour_end;
+    if(!hour){hour='18:00';}
     const formatTime = (time:string) => time.substring(0, 5);
-    return `${formatTime(hour_start)}-${formatTime(hour_end)}`;
+    return `${formatTime(hour_start)}-${formatTime(hour)}`;
   }
 
   toggleMenu() {

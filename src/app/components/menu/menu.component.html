@@ -50,13 +50,13 @@
 
       <div class="background-color-dark menu-list-box">
 
-        <div class="menu-list-item cursor-pointer">
+        <!--<div class="menu-list-item cursor-pointer">
           <div class="menu-list-text">
             <img src="assets/icon/sounds.png" />
             <div class="montserrat">{{ 'sounds' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
-        </div>
+        </div>-->
         <div class="menu-list-item cursor-pointer" (click)="showLang = !showLang">
           <div class="menu-list-text">
             <img src="assets/icon/langue.png" />
@@ -73,7 +73,7 @@
             <div class="montserrat" (click)="changeLang('es')" [ngClass]="{'selected-option': translate.currentLang === 'es'}">ES</div>
           </div>
         </div>
-        <div class="menu-list-item cursor-pointer no-border">
+        <div class="menu-list-item cursor-pointer no-border" (click)="deleteAccount()">
           <div class="menu-list-text">
             <img src="assets/icon/supprimer_le_compte.png" />
             <div class="montserrat">{{ 'delete_account' | translate }}</div>

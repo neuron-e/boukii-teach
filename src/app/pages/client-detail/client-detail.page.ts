@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
@@ -44,7 +45,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   sportSelected:any;
   languages: any[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -56,7 +57,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe(async params => {
@@ -119,7 +120,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
         }
         this.sportSelected = useSport;
         this.sportDegrees = this.degrees.filter(degree => degree.sport_id === useSport);
-        console.log(this.clientMonitor);
+        //console.log(this.clientMonitor);
       } else {
         // Not a client of monitor
         this.goTo('clients');
@@ -144,7 +145,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
       }
     this.clientMonitor.degree_sport = newDegree;
     this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.clientMonitor.sports[index].id);
-    console.log('Sport Degrees:', this.sportDegrees);
+    //console.log('Sport Degrees:', this.sportDegrees);
   }
 
   getBirthYears(date:string) {

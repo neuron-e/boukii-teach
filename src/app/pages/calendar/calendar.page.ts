@@ -86,7 +86,7 @@ export class CalendarPage implements OnInit, OnDestroy {
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
 
         this.selectedDate = new Date();
@@ -188,7 +188,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.spinnerService.show();
     this.teachService.getData('teach/getAgenda', null, { date_start: firstDay, date_end: lastDay, school_id: this.monitorData.active_school }).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.processBookings(data.data.bookings, data.data.nwd);
       },
       error => {
@@ -221,7 +221,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       }
     });
   
-    console.log('Processed Bookings:', this.bookingsCurrent);
+   //console.log('Processed Bookings:', this.bookingsCurrent);
 
     this.tasksCalendar = [
       //BOOKINGS
@@ -284,7 +284,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       })
     ];
     
-    console.log('Combined Tasks Calendar:', this.tasksCalendar);
+    //console.log('Combined Tasks Calendar:', this.tasksCalendar);
     this.updateTasksWithStyles();
     this.spinnerService.hide();
   }  

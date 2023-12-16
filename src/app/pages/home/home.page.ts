@@ -59,7 +59,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.schools = await firstValueFrom(this.sharedDataService.fetchSchools());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
         await this.getStation();
         await this.getSchool();
@@ -71,10 +71,10 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async getStation() {
-    console.log(this.stations);
-    console.log(this.monitorData.active_station);
+    //console.log(this.stations);
+    //console.log(this.monitorData.active_station);
     this.monitorStation = this.stations.find(station => station.id === this.monitorData.active_station);
-    console.log(this.monitorStation);
+    //console.log(this.monitorStation);
   }
 
   async getSchool() {
@@ -84,7 +84,7 @@ export class HomePage implements OnInit, OnDestroy {
   async getMeteo() {
     try {
       const data: any = await this.teachService.getData('teach/weather', null, { station_id: this.monitorData.active_station }).toPromise();
-      console.log(data);
+      //console.log(data);
       this.meteo = data.data;
     } catch (error) {
       console.error('There was an error!', error);
@@ -94,7 +94,7 @@ export class HomePage implements OnInit, OnDestroy {
   async getMeteoWeek() {
     try {
       const data: any = await this.teachService.getData('teach/weather/week', null, { station_id: this.monitorData.active_station }).toPromise();
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       console.error('There was an error!', error);
     }
@@ -103,7 +103,7 @@ export class HomePage implements OnInit, OnDestroy {
   loadBookings() {
     this.teachService.getData('teach/getAgenda', null, { school_id: this.monitorData.active_school }).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.processBookings(data.data.bookings);
       },
       error => {
@@ -154,9 +154,9 @@ export class HomePage implements OnInit, OnDestroy {
   
     this.spinnerService.hide();
 
-    console.log('Processed Bookings:', this.bookingsToday);
-    console.log('Collective Courses Today:', this.courseCollectiveToday);
-    console.log('Private Courses Today:', this.coursePrivateToday);
+    //console.log('Processed Bookings:', this.bookingsToday);
+    //console.log('Collective Courses Today:', this.courseCollectiveToday);
+    //console.log('Private Courses Today:', this.coursePrivateToday);
   }  
 
   formatTimeRange(hour_start:string, hour_end:string) {

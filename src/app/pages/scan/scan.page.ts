@@ -4,6 +4,7 @@ import { MenuService } from '../../services/menu.service';
 import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-scan',
@@ -12,7 +13,7 @@ import { SpinnerService } from '../../services/spinner.service';
 })
 export class ScanPage {
 
-  constructor(private router: Router, private menuService: MenuService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private menuService: MenuService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   ionViewDidEnter() {
     this.initializeScanner();
@@ -36,7 +37,7 @@ export class ScanPage {
         ionContent.classList.add('ion-content-transparent');
         body.style.background = 'transparent';
         wrapperFrame.classList.remove('display-none');
-        console.log("Class 'barcode-scanner-active' added to the element");
+        //console.log("Class 'barcode-scanner-active' added to the element");
       } else {
         console.error("qr-scanner-wrapper element not found");
       }
@@ -45,13 +46,13 @@ export class ScanPage {
 
       BarcodeScanner.addListener('barcodeScanned', async (event) => {
         if (event.barcode) {
-          console.log(event.barcode);
-          console.log(event.barcode.rawValue);
+          //console.log(event.barcode);
+          //console.log(event.barcode.rawValue);
 
           this.spinnerService.show();
           setTimeout(() => {
               this.spinnerService.hide();
-              this.toastr.success('QR scanné avec succès');
+              this.toastr.success(this.translate.instant('toast.scanned_successfully'));
               this.router.navigate(['/scan-client', event.barcode.rawValue]);
           }, 1000);
         }
@@ -59,7 +60,7 @@ export class ScanPage {
       });
     } catch (error) {
       console.error('Error starting QR Code scanner:', error);
-      this.toastr.success('Erreur de numérisation QR');
+      this.toastr.error(this.translate.instant('toast.scan_error'));
       await this.stopScanner();
     }
   }
@@ -75,7 +76,7 @@ export class ScanPage {
       ionContent.classList.remove('ion-content-transparent');
       body.style.removeProperty('background');
       wrapperFrame.classList.add('display-none');
-      console.log("Scanner stopped and styles reset");
+      //console.log("Scanner stopped and styles reset");
     } else {
       console.error("qr-scanner-wrapper element not found");
     }

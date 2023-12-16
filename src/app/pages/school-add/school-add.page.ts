@@ -71,7 +71,7 @@ export class SchoolAddPage implements OnInit, OnDestroy {
         this.monitorSchools = results.monitorSchools.data.filter((ms:any) => ms.monitor_id === this.monitorData.id);
         this.associateStationsWithSchools();
 
-        console.log(this.stationsWithSchools);
+        //console.log(this.stationsWithSchools);
       },
       error: (error) => {
         console.error('Error fetching data:', error);

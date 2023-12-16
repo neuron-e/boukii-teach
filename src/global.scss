@@ -71,6 +71,10 @@ body, html {
     font-family: 'Dinamit', sans-serif;
     color:#fff;
 }
+a {
+    text-decoration:inherit;
+    color:inherit;
+}
 .montserrat {
     font-family: 'Montserrat', sans-serif;
 }
@@ -205,4 +209,7 @@ ion-spinner {
 }
 .uppercase {
     text-transform:uppercase;
+}
+.toast-top-right {
+    top:calc(12px + env(safe-area-inset-top)) !important;
 }

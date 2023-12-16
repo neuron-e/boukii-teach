@@ -45,14 +45,27 @@ export class MenuComponent  implements OnInit {
     this.showLang = false;
   }
 
+  deleteAccount() {
+    const confirmation = window.confirm(this.translate.instant('close_account_confirm_a'));
+    if (confirmation) {
+      const confirmationB = window.confirm(this.translate.instant('close_account_confirm_b'));
+      if (confirmationB) {
+        //DELETE MONITOR AND LOGOUT
+        //console.log('MONITOR DELETED');
+        this.logout();
+      }
+    }
+  }
+
   logout() {
     this.spinnerService.show();
     localStorage.removeItem('token');
     localStorage.removeItem('monitorId');
     this.monitorDataService.clearMonitorData();
     this.sharedDataService.clearAllData();
+    this.monitorDataService.clearSubscriptions();
     this.spinnerService.hide();
-    this.toastr.success('Déconnecté');
+    this.toastr.success(this.translate.instant('toast.disconnected'));
     this.goTo('start');
   }
 

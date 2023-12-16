@@ -8,6 +8,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -89,7 +90,7 @@ export class StatsPage implements OnInit, OnDestroy {
   hourStartDay: string = '08:00';
   hourEndDay: string = '18:00';
 
-  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
   monitorData: any;
   private subscription: Subscription;
 
@@ -113,10 +114,10 @@ export class StatsPage implements OnInit, OnDestroy {
     const date_start = moment(`${oldestMonth.year}-${oldestMonth.name}-01`, 'YYYY-MMM-DD').startOf('month').format('YYYY-MM-DD');
     const date_end = moment().format('YYYY-MM-DD');
 
-    console.log(date_start);console.log(date_end);
+    //console.log(date_start);//console.log(date_end);
     this.teachService.getData('teach/getAgenda', null, { date_start: date_start, date_end: date_end, school_id: this.monitorData.active_school }).subscribe(
       (data: any) => {
-        console.log(data.data);
+        //console.log(data.data);
         const bookingsByDate:any = {};
         this.monthsData = this.initializeMonthsData();
         let collectiveCourses:any = { totalDuration: 0 };
@@ -179,12 +180,12 @@ export class StatsPage implements OnInit, OnDestroy {
           this.monthsData[month].blockNotPayed = this.formatDuration(this.monthsData[month].blockNotPayed);
         });
   
-        console.log('Collective Courses:', collectiveCourses);
-        console.log('Private Courses:', privateCourses);
-        console.log('Nwd blocks:', blockNwd);
-        console.log('Payed blocks:', blockPayed);
-        console.log('Not Payed blocks:', blockNotPayed);
-        console.log('Monthly Data:', this.monthsData);
+        //console.log('Collective Courses:', collectiveCourses);
+        //console.log('Private Courses:', privateCourses);
+        //console.log('Nwd blocks:', blockNwd);
+        //console.log('Payed blocks:', blockPayed);
+        //console.log('Not Payed blocks:', blockNotPayed);
+        //console.log('Monthly Data:', this.monthsData);
 
         // Prepare chart data
         const collectiveCourseData = this.monthsData.map((m:any) => this.durationInHours(m.collectiveCourses));
@@ -214,9 +215,9 @@ export class StatsPage implements OnInit, OnDestroy {
         this.totalNwdDurationFormatted = this.formatDuration(totalNwdDuration);
         this.totalPayedDurationFormatted = this.formatDuration(totalPayedDuration);
         this.totalNotPayedDurationFormatted = this.formatDuration(totalNotPayedDuration);
-        console.log(this.totalCollectiveDurationFormatted);console.log(this.totalPrivateDurationFormatted);
-        console.log(this.totalNwdDurationFormatted);console.log(this.totalPayedDurationFormatted);
-        console.log(this.totalNotPayedDurationFormatted);
+        //console.log(this.totalCollectiveDurationFormatted);//console.log(this.totalPrivateDurationFormatted);
+        //console.log(this.totalNwdDurationFormatted);//console.log(this.totalPayedDurationFormatted);
+        //console.log(this.totalNotPayedDurationFormatted);
 
         this.reversedMonthsData = this.monthsData.slice().reverse();
 
@@ -270,25 +271,25 @@ export class StatsPage implements OnInit, OnDestroy {
     this.lineChartData.datasets = [
       {
         data: collectiveCourseData,
-        label: 'Cours collectifs',
+        label: this.translate.instant('collective_courses'),
         yAxisID: 'y',
         borderColor: 'rgba(252,196,47,1)'
       },
       {
         data: privateCourseData,
-        label: 'Cours privés',
+        label: this.translate.instant('private_courses'),
         yAxisID: 'y',
         borderColor: 'rgba(56,199,77,1)'
       },
       {
         data: blockPayedData,
-        label: 'Blocs payé',
+        label: this.translate.instant('paid_blocks'),
         yAxisID: 'y',
         borderColor: 'rgba(100,100,100,1)'
       },
       {
         data: combinedCourseData,
-        label: 'Toute',
+        label: this.translate.instant('total'),
         yAxisID: 'y',
         borderColor: 'rgba(51,153,255,1)'
       }

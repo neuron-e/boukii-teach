@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
@@ -42,7 +43,7 @@ export class CourseParticipationPage implements OnInit {
   courseId:any;
   courseBookings:any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -54,7 +55,7 @@ export class CourseParticipationPage implements OnInit {
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -90,9 +91,9 @@ export class CourseParticipationPage implements OnInit {
   loadBookings() {
     this.teachService.getData('teach/courses', this.courseId).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.courseBookings = this.processBookings(data.data);
-        console.log(this.courseBookings);
+        //console.log(this.courseBookings);
         this.spinnerService.hide();
       },
       error => {
@@ -159,20 +160,20 @@ export class CourseParticipationPage implements OnInit {
     if (updateObservables.length > 0) {
         forkJoin(updateObservables).subscribe(
             responses => {
-                console.log('All updates completed', responses);
+                //console.log('All updates completed', responses);
                 this.spinnerService.hide();
-                this.toastr.success('Enregistré correctement');
+                this.toastr.success(this.translate.instant('toast.registered_correctly'));
                 this.goTo('course-detail',this.bookingId,this.dateBooking);
             },
             error => {
                 console.error('Error occurred during updates:', error);
                 this.spinnerService.hide();
-                this.toastr.error('Erreur');
+                this.toastr.error(this.translate.instant('toast.error'));
             }
         );
     } else {
         this.spinnerService.hide();
-        this.toastr.success('Enregistré correctement');
+        this.toastr.success(this.translate.instant('toast.registered_correctly'));
         this.goTo('course-detail',this.bookingId,this.dateBooking);
     }
   }

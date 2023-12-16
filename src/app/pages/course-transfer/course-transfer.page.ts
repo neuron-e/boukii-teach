@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
@@ -42,8 +43,9 @@ export class CourseTransferPage implements OnInit, OnDestroy {
 
   checkedBookings: any[] = [];
   selectedSubgroup: any;
+  selectedClients: any[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -55,7 +57,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -94,7 +96,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
   loadBookings() {
     this.teachService.getData('teach/courses', this.courseId).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.courseBookings = data.data;
         this.courseBookings.course_dates.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -109,7 +111,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
           return acc;
         }, {});
 
-        console.log(this.subgroupBookings);
+        //console.log(this.subgroupBookings);
 
         const matchingCourseDate = this.courseBookings.course_dates.find((courseDate: any, index: number) => {
           const courseDateOnly = courseDate.date.split('T')[0];
@@ -124,7 +126,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
         });
 
         if (matchingCourseDate) {
-          console.log('Matching course date:', matchingCourseDate);
+          //console.log('Matching course date:', matchingCourseDate);
           // Do something with the matching course date
 
           const allSubgroups:any[] = [];
@@ -151,10 +153,10 @@ export class CourseTransferPage implements OnInit, OnDestroy {
           this.restSubgroups = allSubgroups.filter(subgroup => subgroup.id !== this.subgroupId);
 
           // Outputs
-          console.log('Specified Subgroup:', this.monitorSubgroup);
-          console.log('Remaining Subgroups:', this.restSubgroups);
+          //console.log('Specified Subgroup:', this.monitorSubgroup);
+          //console.log('Remaining Subgroups:', this.restSubgroups);
         } else {
-          console.log('No matching course date found');
+          //console.log('No matching course date found');
         }
 
         this.spinnerService.hide();
@@ -213,44 +215,40 @@ export class CourseTransferPage implements OnInit, OnDestroy {
   continueTransfer() {
     if(!this.isDisabledContinue()){
       this.confirmTransfer = true;
-      console.log('Checked Bookings:', this.checkedBookings);
+      //console.log('Checked Bookings:', this.checkedBookings);
     }
   }
 
   saveTransfer() {
     if (!this.isDisabledSave() && !this.isDisabledContinue()) {
-      console.log('Selected Subgroup:', this.selectedSubgroup);
+      this.checkedBookings.forEach(booking => {
+        this.selectedClients.push(booking.client_id);
+      });
+      //console.log('Old Subgroup:', this.monitorSubgroup);
+      //console.log('New Subgroup:', this.selectedSubgroup);
+      //console.log('Clients to transfer:', this.selectedClients);
       const isConfirmed = confirm('Êtes-vous sûr de vouloir transférer ces étudiants?');
       if (isConfirmed) {
         this.spinnerService.show();
-        const updatePromises = this.checkedBookings.map(booking => {
-          const updateData = {
-            course_group_id: this.selectedSubgroup.group_id,
-            course_subgroup_id: this.selectedSubgroup.id,
-            monitor_id: this.selectedSubgroup.monitor_id,
-            //Additional required
-            attended: booking.attended,
-            booking_id: booking.booking_id,
-            client_id: booking.client_id,
-            course_date_id: booking.course_date_id,
-            currency: booking.currency,
-            price: booking.price,
-            school_id: booking.school_id,
-          };
-          return firstValueFrom(this.teachService.updateData('booking-users', booking.id, updateData));
-        });
-  
-        Promise.all(updatePromises)
-          .then(responses => {
-            console.log('All updates successful:', responses);
+      
+        const data = {
+          initialSubgroupId: this.monitorSubgroup.id,
+          targetSubgroupId: this.selectedSubgroup.id,
+          clientIds: this.selectedClients,
+          moveAllDays: true
+        };
+      
+        firstValueFrom(this.teachService.postData('clients/transfer', data))
+          .then(response => {
+            //console.log('Transfer successful:', response);
             this.spinnerService.hide();
-            this.toastr.success('Enregistré correctement');
-            this.goTo('course-detail',this.bookingId,this.dateBooking);
+            this.toastr.success(this.translate.instant('toast.registered_correctly'));
+            this.goTo('course-detail', this.bookingId, this.dateBooking);
           })
           .catch(error => {
-            console.error('Error during updates:', error);
+            console.error('Error during transfer:', error);
             this.spinnerService.hide();
-            this.toastr.error('Erreur');
+            this.toastr.error(this.translate.instant('toast.error'));
           });
       }
     }

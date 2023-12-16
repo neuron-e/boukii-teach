@@ -53,7 +53,7 @@ export class MeteoPage implements OnInit, OnDestroy {
           this.stations = await firstValueFrom(this.sharedDataService.fetchStations());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
         await this.getStation();
         await this.getMeteo();
@@ -65,13 +65,13 @@ export class MeteoPage implements OnInit, OnDestroy {
 
   async getStation() {
     this.monitorStation = this.stations.find(station => station.id === this.monitorData.active_station);
-    console.log(this.monitorStation);
+    //console.log(this.monitorStation);
   }
 
   async getMeteo() {
     try {
       const data: any = await this.teachService.getData('teach/weather', null, { station_id: this.monitorData.active_station }).toPromise();
-      console.log(data);
+      //console.log(data);
       this.meteo = data.data;
     } catch (error) {
       console.error('There was an error!', error);
@@ -81,7 +81,7 @@ export class MeteoPage implements OnInit, OnDestroy {
   async getMeteoWeek() {
     try {
       const data: any = await this.teachService.getData('teach/weather/week', null, { station_id: this.monitorData.active_station }).toPromise();
-      console.log(data);
+      //console.log(data);
       this.meteoWeek = data.data;
     } catch (error) {
       console.error('There was an error!', error);

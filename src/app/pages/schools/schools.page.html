@@ -99,9 +99,9 @@
       </div>
     </div>
 
-    <div class="member-list background-color-dark padding-wrapper">
+    <div *ngIf="selectedSchool" class="member-list background-color-dark padding-wrapper">
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMoreHide()">
+      <!--<div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMoreHide()">
         
         <div class="member-item-flex">
           <div class="member-item-content">
@@ -111,9 +111,24 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
-      <div class="pb-8 mb-8 member-list-item cursor-pointer" (click)="toggleMoreHide()">
+      <a [href]="'tel:' + selectedSchool.contact_phone">
+      <div class="pb-8 mb-8 member-list-item cursor-pointer">
+        
+        <div class="member-item-flex">
+          <div class="member-item-content">
+            <div class="member-item-title">
+              <img src="assets/icon/icon-phone-blue.png" />
+              <div class="montserrat">{{ 'mobile' | translate }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </a>
+
+      <a [href]="'tel:' + selectedSchool.contact_telephone">
+      <div class="pb-8 mb-8 member-list-item cursor-pointer">
         
         <div class="member-item-flex">
           <div class="member-item-content">
@@ -124,8 +139,10 @@
           </div>
         </div>
       </div>
+      </a>
 
-      <div class="member-list-item cursor-pointer no-border" (click)="toggleMoreHide()">
+      <a [href]="'mailto:' + selectedSchool.contact_email">
+      <div class="member-list-item cursor-pointer no-border">
         
         <div class="member-item-flex">
           <div class="member-item-content">
@@ -136,6 +153,7 @@
           </div>
         </div>
       </div>
+      </a>
       
 
     </div>

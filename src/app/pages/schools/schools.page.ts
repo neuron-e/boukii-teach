@@ -7,6 +7,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -44,7 +45,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
 
   selectedSchool:any;
 
-  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async data => {
@@ -56,7 +57,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
           this.schools = await firstValueFrom(this.sharedDataService.fetchSchools());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
         
         this.fetchAllData();
@@ -77,7 +78,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
         this.monitorSchools = results.monitorSchools.data.filter((ms:any) => ms.monitor_id === this.monitorData.id);
         this.onlyMonitorStationsWithSchools();
 
-        console.log(this.monitorStationsWithSchools);
+        //console.log(this.monitorStationsWithSchools);
       },
       error: (error) => {
         this.spinnerService.hide();
@@ -104,6 +105,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
         return { ...station, schools: relatedSchools };
       });
 
+      console.log(this.monitorStationsWithSchools);
     this.spinnerService.hide();
   }
   
@@ -112,7 +114,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
       const isConfirmed = confirm("Etes-vous sûr de vouloir changer d'école active?");
       if (isConfirmed && this.monitorData) {
         this.spinnerService.show();
-        console.log('changing active school');
+        //console.log('changing active school');
 
         const updateData = {
           active_school: school_id,
@@ -134,17 +136,17 @@ export class SchoolsPage implements OnInit, OnDestroy {
         this.teachService.updateData('monitors', this.monitorData.id, updateData).subscribe(
           response => {
             // Handle response
-            console.log('Update successful', response);
+            //console.log('Update successful', response);
             //Update monitor subscription
             this.monitorDataService.fetchMonitorData(this.monitorData.id);
             this.spinnerService.hide();
-            this.toastr.success('Mis à jour correctement');
+            this.toastr.success(this.translate.instant('toast.updated_correctly'));
             this.goTo('home');
           },
           error => {
             // Handle error
             this.spinnerService.hide();
-            this.toastr.error('Mise à jour a échoué');
+            this.toastr.error(this.translate.instant('toast.update_failed'));
             console.error('Update failed', error);
           }
         );

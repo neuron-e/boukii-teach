@@ -29,6 +29,12 @@
             <div>{{clientMonitor.main.first_name}} {{clientMonitor.main.last_name}}</div>
             <img src="assets/icon/icon-crown.png" />
           </div>
+          <div class="header-user-data-text-icons">
+            <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+            <a [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
+          </div>
         </div>
       </div>
       <!--/Only if group-->
@@ -49,6 +55,12 @@
           </div>
           <div class="header-user-data-text-title">
             <div>{{clientMonitor.first_name}} {{clientMonitor.last_name}}</div>
+          </div>
+          <div class="header-user-data-text-icons">
+            <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+            <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
         </div>
       </div>
@@ -150,9 +162,6 @@
                 <img [src]="booking.monitor_data.image ? booking.monitor_data.image : 'assets/icon/icons-outline-default-avatar.svg'" />
               </div>
               <div class="user-booking-content">
-                <div class="user-booking-header">
-                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
-                </div>
                 <div class="color-light user-booking-subheader">
                   <ng-container *ngIf="booking.monitor_data.language1_id">
                     {{getLanguageById(booking.monitor_data.language1_id)}}
@@ -164,7 +173,22 @@
                     · {{getLanguageById(booking.monitor_data.language3_id)}}
                   </ng-container>
                 </div>
+                <div class="user-booking-header">
+                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
+                </div>
+                <div class="header-user-data-text-icons">
+                  <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+                  <a [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+                  <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
+                </div>
               </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!booking.monitor_data">
+            <div class="mt-24 mb-12 content-title-c">
+              {{ 'no_monitor_assigned' | translate }}
             </div>
           </ng-container>
 
@@ -239,9 +263,6 @@
                 <img [src]="booking.monitor_data.image ? booking.monitor_data.image : 'assets/icon/icons-outline-default-avatar.svg'" />
               </div>
               <div class="user-booking-content">
-                <div class="user-booking-header">
-                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
-                </div>
                 <div class="color-light user-booking-subheader">
                   <ng-container *ngIf="booking.monitor_data.language1_id">
                     {{getLanguageById(booking.monitor_data.language1_id)}}
@@ -253,7 +274,22 @@
                     · {{getLanguageById(booking.monitor_data.language3_id)}}
                   </ng-container>
                 </div>
+                <div class="user-booking-header">
+                  <div class="user-booking-title">{{booking.monitor_data.first_name}} {{booking.monitor_data.last_name}}</div>
+                </div>
+                <div class="header-user-data-text-icons">
+                  <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
+                  <a [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+                  <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
+                </div>
               </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!booking.monitor_data">
+            <div class="mt-24 mb-12 content-title-c">
+              {{ 'no_monitor_assigned' | translate }}
             </div>
           </ng-container>
 

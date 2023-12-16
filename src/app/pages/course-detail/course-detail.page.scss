@@ -49,7 +49,7 @@
     width:24px;
 }
 .content-flex-top {
-    display:flex;align-items:center;gap:12px;
+    display:flex;align-items:flex-start;gap:12px;
 }
 .content-flex-top-img {
     width:44px;
@@ -57,11 +57,17 @@
 .content-flex-top-text {
     display:flex;flex-direction:column;gap:2px;
 }
+.content-flex-top-text-flex-b {
+    display:flex;flex-direction:row;gap:8px;align-items:center;
+}
+.content-flex-top-text-flex-b img {
+    width:22px;position:relative;top:-1px;
+}
 .content-flex-top-text div {
     color:#fff;font-size:22px;font-weight:600;
 }
 .content-flex-top-text span {
-    font-size:11px;
+    font-size:11px;font-weight:400;
 }
 
 .menu-section-content {

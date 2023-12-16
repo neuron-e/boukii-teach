@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TeachService } from './teach.service';
 
 @Injectable({
@@ -7,6 +7,7 @@ import { TeachService } from './teach.service';
 })
 export class MonitorDataService {
   private monitorDataSubject = new BehaviorSubject<any>(null);
+  private subscriptions = new Subscription();
 
   constructor(private teachService: TeachService) {}
 
@@ -19,8 +20,8 @@ export class MonitorDataService {
   }
 
   fetchMonitorData(id: number) {
-    return this.teachService.getData('monitors', id, {'with[]':'sports'}).subscribe(
-      (data:any) => {
+    const sub = this.teachService.getData('monitors', id, {'with[]':'sports'}).subscribe(
+      (data: any) => {
         this.setMonitorData(data.data);
         console.log(data.data);
       },
@@ -28,9 +29,23 @@ export class MonitorDataService {
         console.error('Error fetching monitor data:', error);
       }
     );
+    this.subscriptions.add(sub);
+    return sub;
   }
 
   clearMonitorData() {
     this.monitorDataSubject.next(null);
+  }
+
+  //If more subscriptions created in future
+  /*
+  addSubscription(subscription: Subscription) {
+    this.subscriptions.add(subscription);
+  }
+  */
+
+  clearSubscriptions() {
+    this.subscriptions.unsubscribe();
+    this.subscriptions = new Subscription();
   }
 }

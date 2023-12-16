@@ -67,7 +67,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -109,9 +109,9 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   loadCourses() {
     this.teachService.getData('teach/courses', '15').subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.courseBookings = data.data;
-        console.log(this.courseBookings);
+        //console.log(this.courseBookings);
         this.spinnerService.hide();
       },
       error => {
@@ -124,7 +124,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   loadBookings() {
     this.teachService.getData('teach/getAgenda', null, { date_start: this.dateBooking, date_end: this.dateBooking, school_id: this.monitorData.active_school }).subscribe(
       (data:any) => {
-        console.log(data);
+        //console.log(data);
         this.processBookings(data.data.bookings);
       },
       error => {
@@ -186,8 +186,8 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     this.selectedBooking = this.bookingsCurrent.find(booking => booking.selected_detail === true);
 
     this.spinnerService.hide();
-    console.log('Processed Bookings:', this.bookingsCurrent);
-    console.log('Selected Booking:', this.selectedBooking);
+    //console.log('Processed Bookings:', this.bookingsCurrent);
+    //console.log('Selected Booking:', this.selectedBooking);
   }  
 
   getClientLevel(sports: any[], sport_id: number): number {

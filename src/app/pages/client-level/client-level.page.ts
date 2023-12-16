@@ -6,6 +6,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 @Component({
@@ -50,7 +51,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   viewTypeSelected:string;
   viewFileSelected:string;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -61,7 +62,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
         } catch (error) {
           console.error('Error fetching data:', error);
-          this.toastr.error("Erreur lors du chargement des données");
+          this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -124,7 +125,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           }
           this.getCurrentGoals();
           this.filterEvaluationDegree();
-          console.log(this.clientMonitor);
+          //console.log(this.clientMonitor);
         } else {
           //Not a client of monitor
           this.goTo('clients');
@@ -139,7 +140,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   async getGoals() {
     try {
       const data: any = await this.teachService.getData('degrees-school-sport-goals').toPromise();
-      console.log(data);
+      //console.log(data);
       this.goals = data.data;
       //Insert from saved values
       this.goals.forEach(goal => {
@@ -161,7 +162,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   async getClientSports() {
     this.teachService.getData('client-sports', null, { client_id: this.clientIdBooking }).subscribe(
       (data: any) => {
-        console.log(data);
+        //console.log(data);
   
         const filteredSports = data.data.filter((sport:any) => 
           sport.client_id === this.clientIdBooking && sport.sport_id === this.sportIdBooking);
@@ -174,7 +175,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           this.currentClientSport = filteredSports.sort((a:any, b:any) => b.id - a.id)[0];
         }
   
-        console.log('Current Client Sport:', this.currentClientSport);
+        //console.log('Current Client Sport:', this.currentClientSport);
       },
       error => {
         console.error('There was an error!', error);
@@ -189,7 +190,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
       this.sportEvaluation = this.sports.find(sport => sport.id === this.sportIdBooking);
       
       const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientIdBooking }).toPromise();
-      console.log(data);
+      //console.log(data);
       this.clientEvaluations = data.data;
   
       const requests = this.clientEvaluations.map((evaluation:any) => 
@@ -209,7 +210,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
         }
       });
       this.allGoalScores = Object.values(uniqueGoalScoresMap);
-      console.log(this.allGoalScores);
+      //console.log(this.allGoalScores);
   
       await this.getGoals();
     } catch (error) {
@@ -354,28 +355,28 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     if (this.currentClientSport) {
         return this.teachService.updateData('client-sports', this.currentClientSport.id, dataClient).subscribe(
             response => {
-                console.log('Response:', response);
+                //console.log('Response:', response);
                 this.spinnerService.hide();
                 this.goBackType();
-                this.toastr.success('Évaluation enregistrée');
+                this.toastr.success(this.translate.instant('toast.evaluation_registered'));
             },
             error => {
                 console.error('Error:', error);
-                this.toastr.error('Erreur');
+                this.toastr.error(this.translate.instant('toast.error'));
                 this.spinnerService.hide();
             }
         );
     } else {
         return this.teachService.postData('client-sports', dataClient).subscribe(
             response => {
-                console.log('Response:', response);
+                //console.log('Response:', response);
                 this.spinnerService.hide();
                 this.goBackType();
-                this.toastr.success('Évaluation enregistrée');
+                this.toastr.success(this.translate.instant('toast.evaluation_registered'));
             },
             error => {
                 console.error('Error:', error);
-                this.toastr.error('Erreur');
+                this.toastr.error(this.translate.instant('toast.error'));
                 this.spinnerService.hide();
             }
         );
