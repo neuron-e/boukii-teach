@@ -101,7 +101,11 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   loadBookings() {
-    this.teachService.getData('teach/getAgenda', null, { school_id: this.monitorData.active_school }).subscribe(
+    const searchData:any = {};
+    if(this.monitorData.active_school){
+      searchData.school_id = this.monitorData.active_school;
+    }
+    this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
         this.processBookings(data.data.bookings);

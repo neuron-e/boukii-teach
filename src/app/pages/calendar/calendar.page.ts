@@ -186,7 +186,13 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   loadBookings(firstDay:string,lastDay:string) {
     this.spinnerService.show();
-    this.teachService.getData('teach/getAgenda', null, { date_start: firstDay, date_end: lastDay, school_id: this.monitorData.active_school }).subscribe(
+    const searchData:any = {
+      date_start: firstDay, date_end: lastDay
+    };
+    if(this.monitorData.active_school){
+      searchData.school_id = this.monitorData.active_school;
+    }
+    this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
         this.processBookings(data.data.bookings, data.data.nwd);
@@ -222,6 +228,14 @@ export class CalendarPage implements OnInit, OnDestroy {
     });
   
    //console.log('Processed Bookings:', this.bookingsCurrent);
+
+
+   let filteredNwds;
+   if (this.monitorData.active_school) {
+       filteredNwds = this.nwdsCurrent.filter(nwd => nwd.school_id === this.monitorData.active_school);
+   } else {
+       filteredNwds = this.nwdsCurrent;
+   }
 
     this.tasksCalendar = [
       //BOOKINGS
@@ -260,8 +274,8 @@ export class CalendarPage implements OnInit, OnDestroy {
         };
       }),
       //NWDS -> for active_school
-      ...this.nwdsCurrent.filter(nwd => nwd.school_id === this.monitorData.active_school)
-      .map(nwd => {
+
+      ...filteredNwds.map(nwd => {
 
         const hourTimesNwd = nwd.full_day ? {
             hour_start: this.hourStartDay,
@@ -277,7 +291,7 @@ export class CalendarPage implements OnInit, OnDestroy {
           date: moment(nwd.start_date).format('YYYY-MM-DD'),
           full_day: nwd.full_day,
           type: nwd.user_nwd_subtype_id == 1 ? 'block' : 'block_payed',
-          color: nwd.color,
+          color: nwd.user_nwd_subtype_id == 2 ? nwd.color : "#89add1",
           name: nwd.description,
           ...hourTimesNwd
         };

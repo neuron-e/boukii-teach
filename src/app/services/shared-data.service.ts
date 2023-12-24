@@ -17,8 +17,13 @@ export class SharedDataService {
 
   fetchDegrees(school_id: any): Observable<any[]> {
     if (this.degreesSubject.getValue().length === 0) {
-      return this.teachService.getData('degrees', null, { school_id: school_id }).pipe(
+      const searchData:any = {};
+      if(school_id){
+        searchData.school_id = school_id;
+      }
+      return this.teachService.getData('degrees', null, searchData).pipe(
         switchMap((data: any) => {
+          //console.log(data);
           data.data.sort((a: any, b: any) => a.degree_order - b.degree_order);
           data.data.forEach((degree: any) => {
             degree.inactive_color = this.lightenColor(degree.color, 30);
@@ -41,8 +46,13 @@ export class SharedDataService {
   
   fetchSports(school_id: any): Observable<any[]> {
     if (this.sportsSubject.getValue().length === 0) {
-      return this.teachService.getData('sports', null, { school_id: school_id }).pipe(
+      const searchData:any = {};
+      if(school_id){
+        searchData.school_id = school_id;
+      }
+      return this.teachService.getData('sports', null, searchData).pipe(
         switchMap((data: any) => {
+          //console.log(data);
           //console.log('sports fetched');
           this.sportsSubject.next(data.data);
           return of(data.data);

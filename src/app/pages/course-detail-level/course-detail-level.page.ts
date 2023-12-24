@@ -95,7 +95,13 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
 
   loadBookings() {
     this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
-    this.teachService.getData('teach/getAgenda', null, { date_start: this.dateBooking, date_end: this.dateBooking, school_id: this.monitorData.active_school }).subscribe(
+    const searchData:any = {
+      date_start: this.dateBooking, date_end: this.dateBooking
+    };
+    if(this.monitorData.active_school){
+      searchData.school_id = this.monitorData.active_school;
+    }
+    this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
         this.processBookings(data.data.bookings);

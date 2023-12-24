@@ -23,7 +23,7 @@ export class MonitorDataService {
     const sub = this.teachService.getData('monitors', id, {'with[]':'sports'}).subscribe(
       (data: any) => {
         this.setMonitorData(data.data);
-        console.log(data.data);
+        //console.log(data.data);
       },
       error => {
         console.error('Error fetching monitor data:', error);

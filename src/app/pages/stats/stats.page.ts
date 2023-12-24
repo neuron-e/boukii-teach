@@ -115,7 +115,13 @@ export class StatsPage implements OnInit, OnDestroy {
     const date_end = moment().format('YYYY-MM-DD');
 
     //console.log(date_start);//console.log(date_end);
-    this.teachService.getData('teach/getAgenda', null, { date_start: date_start, date_end: date_end, school_id: this.monitorData.active_school }).subscribe(
+    const searchData:any = {
+      date_start: date_start, date_end: date_end
+    };
+    if(this.monitorData.active_school){
+      searchData.school_id = this.monitorData.active_school;
+    }
+    this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data: any) => {
         //console.log(data.data);
         const bookingsByDate:any = {};

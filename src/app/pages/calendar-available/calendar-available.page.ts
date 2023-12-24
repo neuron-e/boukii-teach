@@ -447,72 +447,60 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
       firstBlockData.end_time = this.divideDay ? `${this.startTimeDivision}:00` : (this.allHoursDay ? `${this.hourEndDay}:00` : `${this.endTimeDay}:00`);
       firstBlockData.full_day = this.allHoursDay && !this.divideDay;
   
-      let firstBlockStartMoment = moment(`${formattedDayDate} ${firstBlockData.start_time}`, 'YYYY-MM-DD HH:mm:ss');
-      let firstBlockEndMoment = moment(`${formattedDayDate} ${firstBlockData.end_time}`, 'YYYY-MM-DD HH:mm:ss');
-  
       // Function update first block -> CALL LATER
       const updateFirstBlock = () => {
-          this.teachService.updateData('monitor-nwds', this.idEditBlock, firstBlockData).subscribe(
-              response => {
-                  //console.log('First block updated:', response);
-                  this.spinnerService.hide();
-                  this.toastr.success(this.translate.instant('toast.registered_correctly'));
-                  this.goTo('calendar');
+        this.teachService.updateData('monitor-nwds', this.idEditBlock, firstBlockData).subscribe(
+            response => {
+                if (this.divideDay) {
+                    createSecondBlock();
+                } else {
+                    finalizeUpdate();
+                }
+            },
+            error => {
+                handleErrorUpdatingBlock(error);
+            }
+        );
+      };
+
+      const createSecondBlock = () => {
+          secondBlockData = { ...commonData, start_date: formattedDayDate, end_date: formattedDayDate, start_time: `${this.endTimeDivision}:00`, end_time: `${this.endTimeDay}:00`, full_day: false };
+          this.teachService.postData('monitor-nwds', secondBlockData).subscribe(
+              secondResponse => {
+                  finalizeUpdate();
               },
               error => {
-                  console.error('Error updating first block:', error);
-                  this.spinnerService.hide();
-                  this.toastr.error(this.translate.instant('toast.error'));
+                  handleErrorCreatingBlock(error);
               }
           );
       };
-  
-      // Overlap FIRST
-      this.checkOverlap(firstBlockStartMoment, firstBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
-          if (overlap) {
-              this.spinnerService.hide();
-              this.toastr.error(this.translate.instant('toast.overlap_detected'));
-              return;
-          }
-  
-          if (this.divideDay) {
-              secondBlockData = { ...commonData, start_date: formattedDayDate, end_date: formattedDayDate, start_time: `${this.endTimeDivision}:00`, end_time: `${this.endTimeDay}:00`, full_day: false };
-              let secondBlockStartMoment = moment(`${formattedDayDate} ${secondBlockData.start_time}`, 'YYYY-MM-DD HH:mm:ss');
-              let secondBlockEndMoment = moment(`${formattedDayDate} ${secondBlockData.end_time}`, 'YYYY-MM-DD HH:mm:ss');
-  
-              // Overlap SECOND
-              this.checkOverlap(secondBlockStartMoment, secondBlockEndMoment, formattedDayDate, this.idEditBlock).then(overlap => {
-                  if (overlap) {
-                      this.spinnerService.hide();
-                      this.toastr.error(this.translate.instant('toast.overlap_detected'));
-                      return;
-                  }
-  
-                  this.teachService.postData('monitor-nwds', secondBlockData).subscribe(
-                      secondResponse => {
-                          //console.log('Second block created:', secondResponse);
-                          updateFirstBlock();
-                      },
-                      error => {
-                          console.error('Error creating second block:', error);
-                          this.spinnerService.hide();
-                          this.toastr.error(this.translate.instant('toast.error'));
-                      }
-                  );
-              }).catch(error => {
-                  console.error('Error checking overlap for second block:', error);
-                  this.spinnerService.hide();
-                  this.toastr.error(this.translate.instant('toast.error'));
-              });
-          } else {
-              // Update FIRST
-              updateFirstBlock();
-          }
-      }).catch(error => {
-          console.error('Error checking overlap for first block:', error);
+
+      const finalizeUpdate = () => {
           this.spinnerService.hide();
-          this.toastr.error(this.translate.instant('toast.error'));
-      });
+          this.toastr.success(this.translate.instant('toast.registered_correctly'));
+          this.goTo('calendar');
+      };
+
+      const handleErrorUpdatingBlock = (error:any) => {
+          this.spinnerService.hide();
+          showErrorToast(error);
+      };
+
+      const handleErrorCreatingBlock = (error:any) => {
+          this.spinnerService.hide();
+          showErrorToast(error);
+      };
+
+      const showErrorToast = (error:any) => {
+          if(error.error.message == "El monitor está ocupado durante ese tiempo y no se puede crear el MonitorNwd"){
+              this.toastr.error(this.translate.instant('toast.overlap_detected'));
+          } else {
+              this.toastr.error(this.translate.instant('toast.error')); 
+          }
+      };
+
+      // Start Update Process
+      updateFirstBlock();
 
     }
     else{
@@ -529,14 +517,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         color: '#89add1',
         user_nwd_subtype_id: 1,
       };
-
-      const blockStartTime = this.allHoursDay ? this.hourStartDay : this.startTimeDay;
-      const blockEndTime = this.allHoursDay ? this.hourEndDay : this.endTimeDay;
-      const blockStartMoment = moment(`${formattedDayDate} ${blockStartTime}:00`, 'YYYY-MM-DD HH:mm:ss');
-      const blockEndMoment = moment(`${formattedDayDate} ${blockEndTime}:00`, 'YYYY-MM-DD HH:mm:ss');
-
-      this.checkOverlap(blockStartMoment, blockEndMoment, formattedDayDate).then(overlap => {
-        if (!overlap) {
+      
           this.teachService.postData('monitor-nwds', dataDay).subscribe(
             response => {
                 //console.log('Response:', response);
@@ -545,20 +526,16 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
                 this.goTo('calendar');
             },
             error => {
-                console.error('Error:', error);
+                console.error('Error:', error.error);
                 this.spinnerService.hide();
-                this.toastr.error(this.translate.instant('toast.error'));
+                if(error.error.message == "El monitor está ocupado durante ese tiempo y no se puede crear el MonitorNwd"){
+                  this.toastr.error(this.translate.instant('toast.overlap_detected'));
+                }
+                else{
+                  this.toastr.error(this.translate.instant('toast.error')); 
+                }
             }
           );
-        } else {
-          this.spinnerService.hide();
-          this.toastr.error(this.translate.instant('toast.overlap_detected'));
-        }
-      }).catch(error => {
-        console.error('Overlap check error:', error);
-        this.spinnerService.hide();
-        this.toastr.error(this.translate.instant('toast.error_checking_overlap'));
-      });
 
     }
   }
@@ -580,11 +557,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
     // Check for overlaps and create blocks
     Promise.all(datesToCheck.map(async date => {
         const formattedDate = date.format('YYYY-MM-DD');
-        const blockStartMoment = moment(`${formattedDate} ${this.allHoursMonth ? this.hourStartDay : this.startTimeMonth}:00`, 'YYYY-MM-DD HH:mm:ss');
-        const blockEndMoment = moment(`${formattedDate} ${this.allHoursMonth ? this.hourEndDay : this.endTimeMonth}:00`, 'YYYY-MM-DD HH:mm:ss');
 
-        return this.checkOverlap(blockStartMoment, blockEndMoment, formattedDate).then(overlap => {
-            if (!overlap) {
                 const dataDay = {
                     monitor_id: this.monitorData.id,
                     school_id: this.monitorData.active_school,
@@ -598,102 +571,45 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
                     color: '#89add1',
                     user_nwd_subtype_id: 1,
                 };
-                return new Promise((resolve, reject) => {
+                return new Promise(resolve => {
                   this.teachService.postData('monitor-nwds', dataDay).subscribe(
                       response => {
                           //console.log('Data posted successfully:', response);
-                          resolve(response);
+                          resolve({ success: true, data: response });
                       },
                       error => {
                           console.error('Error posting data:', error);
-                          reject(error);
+                          const formattedDateNice = moment(formattedDate).format('DD-MM-YYYY');
+                          overlapDates.push(formattedDateNice);
+                          resolve({ success: false, error: error });
                       }
                   );
                 });
-            } else {
-                const formattedDateNice = moment(formattedDate).format('DD-MM-YYYY');
-                overlapDates.push(formattedDateNice);
-                return null;
-            }
-        }).catch(error => {
-            console.error('Error checking overlap:', error);
-            overlapDates.push(formattedDate);
-            return null;
-        });
+
     })).then(responses => {
         this.spinnerService.hide();
 
-        const successfulResponses = responses.filter(response => response != null);
+        const successfulResponses = responses.filter((response:any) => response.success);
         if (successfulResponses.length > 0) {
           if (overlapDates.length > 0) {
             this.toastr.success(this.translate.instant('toast.some_registered_correctly'));
+            this.toastr.error(`${this.translate.instant('toast.overlap_dates')} : ${overlapDates.join(', ')}`);
           }
           else{
             this.toastr.success(this.translate.instant('toast.registered_correctly'));
           }
         }
-
-        if (overlapDates.length > 0) {
-            this.toastr.error(`${this.translate.instant('toast.registered_correctly')} : ${overlapDates.join(', ')}`);
-        } else if (successfulResponses.length === 0) {
-            this.toastr.error(this.translate.instant('toast.overlap_detected'));
+        else{
+          this.toastr.error(this.translate.instant('toast.overlap_detected'));
         }
 
-      this.goTo('calendar');
+        this.goTo('calendar');
     }).catch(error => {
         console.error('An error occurred:', error);
         this.spinnerService.hide();
         this.toastr.error(this.translate.instant('toast.error'));
     });
   }
-
-  private checkOverlap(blockStartMoment: moment.Moment, blockEndMoment: moment.Moment, formattedDayDate: string, id?: any): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.teachService.getData('teach/getAgenda', null, { date_start: formattedDayDate, date_end: formattedDayDate, school_id: this.monitorData.active_school }).subscribe(
-        (data: any) => {
-          for (const booking of data.data.bookings) {
-            const bookingStart = moment(`${formattedDayDate} ${booking.hour_start}`, 'YYYY-MM-DD HH:mm:ss');
-            const bookingEnd = moment(`${formattedDayDate} ${booking.hour_end}`, 'YYYY-MM-DD HH:mm:ss');
-            if (bookingStart.isBefore(blockEndMoment) && bookingEnd.isAfter(blockStartMoment)) {
-              //console.log(booking);
-              resolve(true); // Overlap found
-              return;
-            }
-          }
-  
-          for (const nwd of data.data.nwd) {
-            //If editing and chcking same
-            let same:boolean = false;
-            if(id && (nwd.id == id)){
-              same=true;
-            }
-
-            if(!id || !same){
-              if (nwd.full_day) {
-                resolve(true); // Overlap found
-                return;
-              } else {
-                const nwdStart = moment(`${formattedDayDate} ${nwd.start_time}`, 'YYYY-MM-DD HH:mm:ss');
-                const nwdEnd = moment(`${formattedDayDate} ${nwd.end_time}`, 'YYYY-MM-DD HH:mm:ss');
-                if (nwdStart.isBefore(blockEndMoment) && nwdEnd.isAfter(blockStartMoment)) {
-                  //console.log(nwd);
-                  resolve(true); // Overlap found
-                  return;
-                }
-              }
-            }
-          }
-  
-          resolve(false); // No overlap found
-        },
-        error => {
-          console.error('Error in checkOverlap:', error);
-          reject(error);
-        }
-      );
-    });
-  }
-  
 
   deleteBlockDay() {
     if (this.idEditBlock) {

@@ -119,6 +119,8 @@ export class ClientDetailPage implements OnInit, OnDestroy {
           }
         }
         this.sportSelected = useSport;
+        //console.log(this.degrees);
+        //console.log(useSport);
         this.sportDegrees = this.degrees.filter(degree => degree.sport_id === useSport);
         //console.log(this.clientMonitor);
       } else {

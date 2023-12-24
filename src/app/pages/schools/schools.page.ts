@@ -74,6 +74,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
     }).subscribe({
       next: (results:any) => {
         this.stationsSchools = results.stationsSchools.data;
+        //console.log(this.stationsSchools);
         //Get only monitor data
         this.monitorSchools = results.monitorSchools.data.filter((ms:any) => ms.monitor_id === this.monitorData.id);
         this.onlyMonitorStationsWithSchools();
@@ -89,23 +90,20 @@ export class SchoolsPage implements OnInit, OnDestroy {
 
   onlyMonitorStationsWithSchools() {
     //Get only monitors data
-    const validStationIds = this.monitorSchools.map((ms:any) => ms.station_id);
     const validSchoolIds = this.monitorSchools.map((ms:any) => ms.school_id);
   
     this.stations.sort((a, b) => a.id - b.id);
-  
-    this.monitorStationsWithSchools = this.stations
-      .filter(station => validStationIds.includes(station.id))
-      .map(station => {
-        let relatedSchools = this.stationsSchools
-          .filter(ss => ss.station_id === station.id)
-          .map(ss => this.schools.find(school => school.id === ss.school_id && validSchoolIds.includes(school.id)))
-          .filter(school => school != null);
-  
-        return { ...station, schools: relatedSchools };
-      });
 
-      console.log(this.monitorStationsWithSchools);
+    this.monitorStationsWithSchools = this.stations.map(station => {
+        let relatedSchools = this.stationsSchools
+          .filter(ss => ss.station_id === station.id && validSchoolIds.includes(ss.school_id))
+          .map(ss => this.schools.find(school => school.id === ss.school_id))
+          .filter(school => school != null);
+
+        return { ...station, schools: relatedSchools };
+    }).filter(station => station.schools.length > 0);
+
+    //console.log(this.monitorStationsWithSchools);
     this.spinnerService.hide();
   }
   
