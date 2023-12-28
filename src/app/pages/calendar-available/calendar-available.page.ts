@@ -29,9 +29,10 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   weekdaysShort: string[] = [];
   weekdayNames: string[] = [];
   days: any[] = [];
-  hourStartDay: string = '08:00';
-  hourEndDay: string = '18:00';
+  hourStartDay: string;
+  hourEndDay: string;
   hoursRange: string[] = [];
+  vacationDays:any[];
   
   firstDateSelected: any = null;
   secondDateSelected: any = null;
@@ -98,6 +99,7 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
           if(this.idEditBlock){
             this.getEditBlock();
           }
+          await this.loadSeason();
 
             await this.generateHoursRange();
             this.initializeMonthNames();
@@ -111,24 +113,59 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
     });
   }
 
+  async loadSeason() {
+    this.spinnerService.show();
+
+    const searchData = {
+      numPage: 1,
+      perPage: 1000,
+      order: 'asc',
+      orderColumn: 'id',
+      school_id: this.monitorData.active_school,
+      is_active: 1,
+      exclude: '',
+      user: null,
+      filter: ''
+    };
+
+    try {
+      const data:any = await this.teachService.getData('seasons', null, searchData).toPromise();
+
+      let hour_start = '08:00';
+      let hour_end = '18:00';
+      if (data.data.length > 0) {
+        this.vacationDays = JSON.parse(data.data[0].vacation_days);
+        hour_start = data.data[0].hour_start ? data.data[0].hour_start.substring(0, 5) : '08:00';
+        hour_end = data.data[0].hour_end ? data.data[0].hour_end.substring(0, 5) : '18:00';
+      }
+      this.hourStartDay = hour_start;
+      this.hourEndDay = hour_end;
+
+    } catch (error) {
+        console.error('There was an error!', error);
+    } finally {
+        this.spinnerService.hide();
+    }
+  }
+
   loadWeekdays() {
     this.weekdays = [
-      this.translate.instant('days_abbrev.sunday'),
       this.translate.instant('days_abbrev.monday'),
       this.translate.instant('days_abbrev.tuesday'),
       this.translate.instant('days_abbrev.wednesday'),
       this.translate.instant('days_abbrev.thursday'),
       this.translate.instant('days_abbrev.friday'),
       this.translate.instant('days_abbrev.saturday'),
+      this.translate.instant('days_abbrev.sunday'),
     ];
     this.weekdaysShort = [
-      this.translate.instant('days_abbrev_short.sunday'),
       this.translate.instant('days_abbrev_short.monday'),
       this.translate.instant('days_abbrev_short.tuesday'),
       this.translate.instant('days_abbrev_short.wednesday'),
       this.translate.instant('days_abbrev_short.thursday'),
       this.translate.instant('days_abbrev_short.friday'),
       this.translate.instant('days_abbrev_short.saturday'),
+      this.translate.instant('days_abbrev_short.sunday'),
     ];
     this.weekdayNames = [
       this.translate.instant('days.sunday'),
