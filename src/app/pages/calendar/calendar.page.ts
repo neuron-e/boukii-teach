@@ -65,6 +65,7 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   bookingsCurrent: any[] = [];
   nwdsCurrent: any[] = [];
+  subgroupsCurrent: any[] = [];
   degrees: any[] = [];
   sports: any[] = [];
   monthBoundaries:any;
@@ -233,7 +234,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
-        this.processBookings(data.data.bookings, data.data.nwd);
+        this.processBookings(data.data.bookings, data.data.nwd, data.data.subgroups);
       },
       error => {
         console.error('There was an error!', error);
@@ -242,10 +243,11 @@ export class CalendarPage implements OnInit, OnDestroy {
     );
   }
 
-  processBookings(bookings: any[], nwds: any[]) {
+  processBookings(bookings: any[], nwds: any[], subgroups: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsCurrent = [];
     this.nwdsCurrent = nwds;
+    this.subgroupsCurrent = subgroups;
   
     bookings.forEach(booking => {
       if (booking.course) {
@@ -273,6 +275,13 @@ export class CalendarPage implements OnInit, OnDestroy {
        filteredNwds = this.nwdsCurrent.filter(nwd => nwd.school_id === this.monitorData.active_school);
    } else {
        filteredNwds = this.nwdsCurrent;
+   }
+
+   let filteredSubgroups;
+   if (this.monitorData.active_school) {
+      filteredSubgroups = this.subgroupsCurrent.filter(subgroup => subgroup.course.school_id === this.monitorData.active_school);
+   } else {
+      filteredSubgroups = this.subgroupsCurrent;
    }
 
     this.tasksCalendar = [
@@ -312,7 +321,6 @@ export class CalendarPage implements OnInit, OnDestroy {
         };
       }),
       //NWDS -> for active_school
-
       ...filteredNwds.map(nwd => {
 
         const hourTimesNwd = nwd.full_day ? {
@@ -333,7 +341,47 @@ export class CalendarPage implements OnInit, OnDestroy {
           name: nwd.description,
           ...hourTimesNwd
         };
-      })
+      }),
+      //SUBGROUPS -> for active_school
+      ...filteredSubgroups.map(subgroup => {
+        let type;
+        switch(subgroup.course.course_type) {
+          case 1:
+            type = 'collective';
+            break;
+          case 2:
+            type = 'private';
+            break;
+          default:
+            type = 'unknown';
+        }
+    
+        const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
+          date_total: subgroup.course.course_dates.length,
+          date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
+        };
+        
+        const sport = this.sports.find(s => s.id === subgroup.course.sport_id);
+    
+        if(dateTotalAndIndex.date_index > 0){
+          return {
+            booking_id: 's-'+subgroup.id,
+            date: moment(subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].date).format('YYYY-MM-DD'),
+            hour_start: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_start.substring(0, 5),
+            hour_end: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_end.substring(0, 5),
+            type: type,
+            name: subgroup.course.name,
+            sport_id: subgroup.course.sport_id,
+            sport_name: sport ? sport.name : '',
+            clients: 0,
+            max_participants: subgroup.course.max_participants,
+            ...dateTotalAndIndex
+          };
+        }
+        else {
+          return null;
+        }
+      }).filter(Boolean)
     ];
     
     //console.log('Combined Tasks Calendar:', this.tasksCalendar);
@@ -352,11 +400,22 @@ export class CalendarPage implements OnInit, OnDestroy {
     if (task.type === 'block' || task.type === 'block_payed') {
       return {
         ...baseStyle,
-        'background': task.color
+        'background': this.hexToRgbA(task.color,0.6)
       };
     } else {
       return baseStyle;
     }
+  }
+
+  hexToRgbA(hex:string, transparency = 1) {
+    const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!rgb) {
+        return null;
+    }
+    const r = parseInt(rgb[1], 16);
+    const g = parseInt(rgb[2], 16);
+    const b = parseInt(rgb[3], 16);
+    return `rgba(${r},${g},${b},${transparency})`;
   }
 
   toggleMenu() {

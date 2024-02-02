@@ -20,24 +20,6 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   monitorData: any;
   private subscription: Subscription;
 
-  starterLevel:any = {id:0,name:'Débutante',level:'STARTER LEAGUE',percentage:0,color:'#c8c8c8',objectives:["Je n'ai jamais fait de ski."]};
-  dataLevels:any[] = [
-    {id:1,name:'Prince Bleu',level:'BLUE LEAGUE',percentage:30,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:2,name:'Roi Bleu',level:'BLUE LEAGUE',percentage:60,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:3,name:'Star Bleu',level:'BLUE LEAGUE',percentage:100,color:'#0057ff',inactive_color:'#80adff',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:4,name:'Prince Red',level:'RED LEAGUE',percentage:30,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:5,name:'Roi Red',level:'RED LEAGUE',percentage:60,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:6,name:'Star Red',level:'RED LEAGUE',percentage:100,color:'#e9484a',inactive_color:'#fba0a1',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:7,name:'Prince Noir',level:'BLACK LEAGUE',percentage:30,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:8,name:'Roi Noir',level:'BLACK LEAGUE',percentage:60,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-    {id:9,name:'Star Noir',level:'BLACK LEAGUE',percentage:100,color:'#373737',inactive_color:'#806f6f',objectives:["Virage chasse-neige sur piste bleue facile","Dérapage latéral","Skier des bosses et des sauts faciles avec les skis parallèles","Virage chasse-neige sur piste bleue facile"]},
-  ];
-  allLevels: any[] = [this.starterLevel, ...this.dataLevels];
-
-  showA:boolean=true;
-  showB:boolean=false;
-  showC:boolean=false;
-
   currentDateFull:string;
   bookingsCurrent: any[] = [];
   courseBookings:any;
@@ -47,6 +29,8 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
   selectedBooking:any;
   bookingId:any;
+  bookingIdFull:any;
+  isSubgroup:boolean;
   dateBooking:any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
@@ -71,9 +55,17 @@ export class CourseDetailPage implements OnInit, OnDestroy {
         }
   
         this.activatedRoute.params.subscribe( async params => {
-          this.bookingId = +params['id'];
+          if (params['id'].startsWith('s-')) {
+            this.bookingIdFull = params['id'];
+            this.bookingId = +params['id'].substring(2);
+            this.isSubgroup = true;
+          } else {
+            this.bookingIdFull = params['id'];
+            this.bookingId = +params['id'];
+            this.isSubgroup = false;
+          }
           this.dateBooking = params['date'];
-          if (this.bookingId && this.dateBooking) {
+          if (this.bookingIdFull && this.bookingId && this.dateBooking) {
             this.spinnerService.show();
             this.updateDate(this.dateBooking, this.translate.currentLang);
             this.loadBookings();
@@ -131,7 +123,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
-        this.processBookings(data.data.bookings);
+        this.processBookings(data.data.bookings,data.data.subgroups);
       },
       error => {
         console.error('There was an error!', error);
@@ -140,7 +132,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     );
   }
 
-  processBookings(bookings: any[]) {
+  processBookings(bookings: any[], subgroups: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsCurrent = [];
   
@@ -166,10 +158,11 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           uniqueCourseGroups.set(key, {
             ...booking,
             all_clients: [clientWithBooking],
-            selected_detail: booking.id === this.bookingId,
+            selected_detail: !this.isSubgroup ? booking.id === this.bookingId : false,
             course_sport: course_sport,
             sport_degrees: sport_degrees,
-            degree_sport: degree_sport
+            degree_sport: degree_sport,
+            is_subgroup:false
           });
           this.bookingsCurrent.push(uniqueCourseGroups.get(key));
         } else {
@@ -182,12 +175,55 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
           uniqueCourseGroups.get(key).all_clients.push(clientWithBooking);
           
-          if (booking.id === this.bookingId) {
+          if (!this.isSubgroup && booking.id === this.bookingId) {
             uniqueCourseGroups.get(key).selected_detail = true;
           }
         }
       }
     });
+
+    subgroups.forEach(subgroup => {
+      if (subgroup.course) {
+
+        const course_sport = this.sports.find(s => s.id === subgroup.course.sport_id);
+        const sport_degrees = this.degrees.filter(degree => degree.sport_id === subgroup.course.sport_id);
+        let degree_sport = this.degrees.find(degree => degree.id === subgroup.degree_id);
+        degree_sport = degree_sport ? degree_sport : this.degrees[0];
+
+
+        const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
+          date_total: subgroup.course.course_dates.length,
+          date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
+        };
+
+        if(dateTotalAndIndex.date_index > 0){
+          const subgroupObject = {
+            ...subgroup,
+            course_subgroup_id: subgroup.id,
+            hour_start: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_start,
+            hour_end: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_end,
+            client: null,
+            client_id: null,
+            all_clients: [],
+            selected_detail: this.isSubgroup ? subgroup.id === this.bookingId : false,
+            course_sport: course_sport,
+            sport_degrees: sport_degrees,
+            degree_sport: degree_sport,
+            is_subgroup:true
+          };
+          this.bookingsCurrent.push(subgroupObject);
+        }
+      }
+    });
+
+    this.bookingsCurrent.sort((a, b) => {
+      const hourStartA = a.hour_start;
+      const hourStartB = b.hour_start;
+      if (hourStartA < hourStartB) return -1;
+      if (hourStartA > hourStartB) return 1;
+      return 0;
+    });
+    
   
     this.selectedBooking = this.bookingsCurrent.find(booking => booking.selected_detail === true);
 
@@ -195,6 +231,18 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     //console.log('Processed Bookings:', this.bookingsCurrent);
     //console.log('Selected Booking:', this.selectedBooking);
   }  
+
+  selectBooking(booking:any) {
+    if(booking.is_subgroup){
+      this.bookingId = booking.id;
+      this.bookingIdFull = 's-'+booking.id;
+    }
+    else{
+      this.bookingId = booking.id;
+      this.bookingIdFull = booking.id;
+    }
+    this.selectedBooking = booking;
+  }
 
   getClientLevel(sports: any[], sport_id: number): number {
     const foundObject = sports.find(obj => obj.id === sport_id);

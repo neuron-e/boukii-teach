@@ -59,7 +59,7 @@ export class CourseParticipationPage implements OnInit {
         }
   
         this.activatedRoute.params.subscribe( async params => {
-          this.bookingId = +params['id'];
+          this.bookingId = params['id'];
           this.dateBooking = params['date'];
           this.courseId = +params['course'];
           if (this.bookingId && this.dateBooking && this.courseId) {

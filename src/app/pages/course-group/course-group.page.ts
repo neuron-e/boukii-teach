@@ -50,7 +50,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
         }
   
         this.activatedRoute.params.subscribe( async params => {
-          this.bookingId = +params['id'];
+          this.bookingId = params['id'];
           this.dateBooking = params['date'];
           this.courseId = +params['course'];
           this.hourStart = params['hour'];

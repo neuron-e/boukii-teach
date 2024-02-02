@@ -19,7 +19,7 @@
       <div class="flex-sections mb-24">
         <div *ngFor="let booking of bookingsCurrent" 
              [ngClass]="selectedBooking === booking ? 'section-selected' : 'section-title'" 
-             (click)="selectedBooking = booking;bookingId = booking.id">
+             (click)="selectBooking(booking)">
           {{formatTimeStart(booking.hour_start)}}
           <br>
           {{formatTimeEnd(booking.hour_end)}}
@@ -52,12 +52,21 @@
         </div>
 
         <div class="list-dates-chips mt-24 mb-24">
-          <div *ngFor="let date of selectedBooking.course.course_dates" class="background-grey-translucent montserrat chip-date" [ngClass]="{'chip-selected': selectedBooking.course_date_id == date.id}">
-            {{formatDate(date.date)}}
-          </div>
+          <ng-container *ngIf="selectedBooking.course.course_type === 1">
+            <div *ngFor="let date of selectedBooking.course.course_dates" class="background-grey-translucent montserrat chip-date" [ngClass]="{'chip-selected': selectedBooking.course_date_id == date.id}">
+              {{formatDate(date.date)}}
+            </div>
+          </ng-container>
+          <ng-container *ngIf="selectedBooking.course.course_type === 2">
+            <ng-container *ngFor="let date of selectedBooking.course.course_dates">
+              <div *ngIf="selectedBooking.course_date_id == date.id" class="background-grey-translucent montserrat chip-date chip-selected">
+                {{formatDate(date.date)}}
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
 
-        <div *ngIf="selectedBooking.course.course_type == 1" class="cursor-pointer menu-section-content" (click)="goTo('course-group',bookingId,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)">
+        <div *ngIf="selectedBooking.course.course_type == 1" class="cursor-pointer menu-section-content" (click)="goTo('course-group',bookingIdFull,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)">
           <div class="menu-section-title">{{ 'group' | translate }}</div>
           <div class="menu-section-text">
             <span class="montserrat color-light">{{ 'groups' | translate }}</span>
@@ -92,14 +101,14 @@
         <div class="menu-section-content mt-24 mb-24">
           <div class="menu-section-title">{{ 'students' | translate }}</div>
           <div class="menu-section-icons">
-            <img *ngIf="selectedBooking.course.confirm_attendance" src="assets/icon/icon-user-tick-w.png" class="cursor-pointer" (click)="goTo('course-participation',bookingId,dateBooking,selectedBooking.course_id)" />
-            <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer',bookingId,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)" />
+            <img *ngIf="selectedBooking.course.confirm_attendance" src="assets/icon/icon-user-tick-w.png" class="cursor-pointer" (click)="goTo('course-participation',bookingIdFull,dateBooking,selectedBooking.course_id)" />
+            <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer',bookingIdFull,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)" />
           </div>
         </div>
         
         <div class="member-list">
 
-          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level',bookingId,dateBooking,client.id,selectedBooking.course.sport_id)">
+          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level',bookingIdFull,dateBooking,client.id,selectedBooking.course.sport_id)">
             <app-level-user *ngIf="selectedBooking && selectedBooking.sport_degrees && selectedBooking.sport_degrees.length" [allLevels]="selectedBooking.sport_degrees" [selectLevel]="client.degree_sport" [size]="60" [userImage]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
             <div class="member-item-flex">
               <div class="member-item-content">

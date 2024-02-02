@@ -108,7 +108,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
       (data:any) => {
         //console.log(data);
-        this.processBookings(data.data.bookings);
+        this.processBookings(data.data.bookings, data.data.subgroups);
       },
       error => {
         this.spinnerService.hide();
@@ -117,7 +117,7 @@ export class HomePage implements OnInit, OnDestroy {
     );
   }
 
-  processBookings(bookings: any[]) {
+  processBookings(bookings: any[], subgroups: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsToday = [];
     this.courseCollectiveToday = 0;
@@ -154,6 +154,55 @@ export class HomePage implements OnInit, OnDestroy {
           uniqueCourseGroups.get(key).all_clients.push(booking.client);
         }
       }
+    });
+
+    subgroups.forEach(subgroup => {
+      if (subgroup.course) {
+
+        const course_sport = this.sports.find(s => s.id === subgroup.course.sport_id);
+        const sport_degrees = this.degrees.filter(degree => degree.sport_id === subgroup.course.sport_id);
+        let degree_sport = this.degrees.find(degree => degree.id === subgroup.degree_id);
+        degree_sport = degree_sport ? degree_sport : this.degrees[0];
+
+
+        const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
+          date_total: subgroup.course.course_dates.length,
+          date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
+        };
+
+        if(dateTotalAndIndex.date_index > 0){
+          const subgroupObject = {
+            ...subgroup,
+            course_subgroup_id: subgroup.id,
+            hour_start: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_start,
+            hour_end: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_end,
+            client: null,
+            client_id: null,
+            all_clients: [],
+            course_sport: course_sport,
+            sport_degrees: sport_degrees,
+            degree_sport: degree_sport
+          };
+          // course_sport
+          const sport = this.sports.find(s => s.id === subgroup.course.sport_id);
+          subgroupObject.course_sport = sport || null;
+          // course_degree -> course_type=1
+          const degree = this.degrees.find(d => d.id === subgroup.degree_id);
+          subgroupObject.course_degree = degree || this.degrees[0];
+          subgroupObject.id = 's-'+subgroup.id;
+
+          this.courseCollectiveToday++;
+          this.bookingsToday.push(subgroupObject);
+        }
+      }
+    });
+
+    this.bookingsToday.sort((a, b) => {
+      const hourStartA = a.hour_start;
+      const hourStartB = b.hour_start;
+      if (hourStartA < hourStartB) return -1;
+      if (hourStartA > hourStartB) return 1;
+      return 0;
     });
   
     this.spinnerService.hide();
