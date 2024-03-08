@@ -348,7 +348,8 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     let dataClient = {
         client_id: this.clientIdBooking,
         sport_id: this.sportIdBooking,
-        degree_id: nextLevel
+        degree_id: nextLevel,
+        school_id: this.monitorData.active_school
     };
 
     // Check if a client-sport already exists
