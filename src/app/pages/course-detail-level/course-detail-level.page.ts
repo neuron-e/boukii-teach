@@ -123,6 +123,9 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
         if(booking.course.course_type == 1){
           key = `${booking.course_id}-${booking.course_subgroup_id}`;
         }
+        else if(booking.course.course_type == 2){
+          key = `${booking.course_id}-${booking.hour_start}-${booking.hour_end}`;
+        }
         if (!uniqueCourseGroups.has(key)) {
           //insert booking in client
           const clientWithBooking = {
