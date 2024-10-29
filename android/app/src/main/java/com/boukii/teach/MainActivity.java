@@ -1,4 +1,4 @@
-package com.boukii.teach;
+package com.quental.boukii.boukii;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.boukii.teach',
+  appId: 'com.quental.boukii.boukii',
   appName: 'Boukii Teach',
   webDir: 'www',
   server: {

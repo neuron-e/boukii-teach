@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Boukii Teach</string>
     <string name="title_activity_main">Boukii Teach</string>
-    <string name="package_name">com.boukii.teach</string>
-    <string name="custom_url_scheme">com.boukii.teach</string>
+    <string name="package_name">com.quental.boukii.boukii</string>
+    <string name="custom_url_scheme">com.quental.boukii.boukii</string>
 </resources>
