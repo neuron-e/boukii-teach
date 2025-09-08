@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
-import { BarcodeScanner, BarcodeFormat, BarcodesScannedEvent } from '@capacitor-mlkit/barcode-scanning';
+import { BarcodeScanner, BarcodeFormat, BarcodeScannedEvent } from '@capacitor-mlkit/barcode-scanning';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,8 +44,8 @@ export class ScanPage {
       // Start scanner
       BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
 
-      BarcodeScanner.addListener('barcodesScanned', async (event: BarcodesScannedEvent) => {
-        const barcode = event.barcodes[0];
+      BarcodeScanner.addListener('barcodeScanned', async (event: BarcodeScannedEvent) => {
+        const barcode = event.barcode;
         if (barcode) {
           this.spinnerService.show();
           setTimeout(() => {
