@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
-import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
+import { BarcodeScanner, BarcodeFormat, BarcodesScannedEvent } from '@capacitor-mlkit/barcode-scanning';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,16 +44,14 @@ export class ScanPage {
       // Start scanner
       BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
 
-      BarcodeScanner.addListener('barcodeScanned', async (event) => {
-        if (event.barcode) {
-          //console.log(event.barcode);
-          //console.log(event.barcode.rawValue);
-
+      BarcodeScanner.addListener('barcodesScanned', async (event: BarcodesScannedEvent) => {
+        const barcode = event.barcodes[0];
+        if (barcode) {
           this.spinnerService.show();
           setTimeout(() => {
-              this.spinnerService.hide();
-              this.toastr.success(this.translate.instant('toast.scanned_successfully'));
-              this.router.navigate(['/scan-client', event.barcode.rawValue]);
+            this.spinnerService.hide();
+            this.toastr.success(this.translate.instant('toast.scanned_successfully'));
+            this.router.navigate(['/scan-client', barcode.rawValue]);
           }, 1000);
         }
         await this.stopScanner();
