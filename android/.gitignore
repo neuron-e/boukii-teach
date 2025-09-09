@@ -38,6 +38,9 @@ proguard/
 # Android Studio captures folder
 captures/
 
+keystore/
+key.properties
+
 # IntelliJ
 *.iml
 .idea/workspace.xml
