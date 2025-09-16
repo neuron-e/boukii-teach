@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://dev.api.boukii.com/api'
+  apiUrl: 'https://api.boukii.com/api'
 };
 
 /*

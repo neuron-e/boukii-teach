@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
-import { BarcodeScanner, BarcodeFormat, BarcodeScannedEvent } from '@capacitor-mlkit/barcode-scanning';
+import {
+  BarcodeScanner,
+  BarcodeFormat,
+  BarcodesScannedEvent,
+  ScanErrorEvent,
+} from '@capacitor-mlkit/barcode-scanning';
+import type { PluginListenerHandle } from '@capacitor/core';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,9 +17,17 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './scan.page.html',
   styleUrls: ['./scan.page.scss'],
 })
-export class ScanPage {
+export class ScanPage implements OnDestroy {
+  private scanSub?: PluginListenerHandle;
+  private handling = false;
 
-  constructor(private router: Router, private menuService: MenuService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
+  constructor(
+    private router: Router,
+    private menuService: MenuService,
+    private toastr: ToastrService,
+    private spinnerService: SpinnerService,
+    private translate: TranslateService
+  ) {}
 
   ionViewDidEnter() {
     this.initializeScanner();
@@ -21,40 +35,60 @@ export class ScanPage {
 
   async initializeScanner() {
     try {
-      //Permissions
-      const permissions = await BarcodeScanner.checkPermissions();
-      if (permissions.camera !== 'granted') {
-        await BarcodeScanner.requestPermissions();
+      // Permisos
+      const perm = await BarcodeScanner.checkPermissions();
+      if (perm.camera !== 'granted') {
+        const req = await BarcodeScanner.requestPermissions();
+        if (req.camera !== 'granted') {
+          this.toastr.error(this.translate.instant('toast.scan_error'));
+          return;
+        }
       }
 
-      //Prepare scanner
+      // Preparar UI
       const wrapper = document.querySelector('.qr-scanner-wrapper');
       const wrapperFrame = document.querySelector('.qr-scanner-frame');
       const ionContent = document.querySelector('.ion-content-scan');
       const body = document.body;
+
       if (wrapper && ionContent && wrapperFrame) {
         wrapper.classList.add('barcode-scanner-active');
         ionContent.classList.add('ion-content-transparent');
         body.style.background = 'transparent';
         wrapperFrame.classList.remove('display-none');
-        //console.log("Class 'barcode-scanner-active' added to the element");
       } else {
-        console.error("qr-scanner-wrapper element not found");
+        console.error('qr-scanner-wrapper element not found');
       }
-      // Start scanner
-      BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
 
-      BarcodeScanner.addListener('barcodeScanned', async (event: BarcodeScannedEvent) => {
-        const barcode = event.barcode;
-        if (barcode) {
+      // Iniciar escáner
+      await BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
+
+      // 👉 Listener correcto
+      this.scanSub = await BarcodeScanner.addListener(
+        'barcodesScanned',
+        async (event: BarcodesScannedEvent) => {
+          if (this.handling) return;
+          const value = event.barcodes?.[0]?.rawValue;
+          if (!value) return;
+
+          this.handling = true;
           this.spinnerService.show();
-          setTimeout(() => {
-            this.spinnerService.hide();
+
+          try {
+            await this.stopScanner();          // cerrar cámara y UI
+            await this.scanSub?.remove();      // evitar llamadas duplicadas
             this.toastr.success(this.translate.instant('toast.scanned_successfully'));
-            this.router.navigate(['/scan-client', barcode.rawValue]);
-          }, 1000);
+            this.router.navigate(['/scan-client', value]);
+          } finally {
+            this.spinnerService.hide();
+            this.handling = false;
+          }
         }
-        await this.stopScanner();
+      );
+
+      // (opcional) errores del escaneo
+      await BarcodeScanner.addListener('scanError', (e: ScanErrorEvent) => {
+        this.toastr.error(e?.message ?? this.translate.instant('toast.scan_error'));
       });
     } catch (error) {
       console.error('Error starting QR Code scanner:', error);
@@ -64,6 +98,7 @@ export class ScanPage {
   }
 
   async stopScanner() {
+    // Reset UI
     const wrapper = document.querySelector('.qr-scanner-wrapper');
     const wrapperFrame = document.querySelector('.qr-scanner-frame');
     const ionContent = document.querySelector('.ion-content-scan');
@@ -74,17 +109,18 @@ export class ScanPage {
       ionContent.classList.remove('ion-content-transparent');
       body.style.removeProperty('background');
       wrapperFrame.classList.add('display-none');
-      //console.log("Scanner stopped and styles reset");
-    } else {
-      console.error("qr-scanner-wrapper element not found");
     }
 
     await BarcodeScanner.stopScan();
-    await BarcodeScanner.removeAllListeners();
   }
 
   ionViewWillLeave() {
     this.stopScanner();
+    this.scanSub?.remove();
+  }
+
+  ngOnDestroy() {
+    this.scanSub?.remove();
   }
 
   toggleMenu() {
