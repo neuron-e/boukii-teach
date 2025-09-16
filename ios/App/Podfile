@@ -1,6 +1,6 @@
 require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
-platform :ios, '15.0'
+platform :ios, '16.0'          # ⬅️ súbelo a 16.0
 use_frameworks! :linkage => :static
 install! 'cocoapods', :disable_input_output_paths => true
 
@@ -18,17 +18,13 @@ end
 
 target 'App' do
   capacitor_pods
-  # Add your Pods here
 end
 
 post_install do |installer|
-  # ❌ No uses assertDeploymentTarget(installer) – baja a 14.0
-  # assertDeploymentTarget(installer)
-
-  # ✅ Fuerza iOS 15.0 en TODOS los targets (pods incluidos)
+  # ⚠️ NO llames a assertDeploymentTarget(installer)
   installer.pods_project.targets.each do |t|
     t.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
     end
   end
 end
