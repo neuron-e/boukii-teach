@@ -81,5 +81,8 @@
     "ts-node": "^8.3.0",
     "typescript": "~5.0.2"
   },
+  "overrides": {
+    "simple-swizzle": "0.2.2"
+  },
   "description": "An Ionic project"
 }
