@@ -2,10 +2,6 @@ require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
 platform :ios, '15.0'
 use_frameworks! :linkage => :static
-
-# workaround to avoid Xcode caching of Pods that requires
-# Product -> Clean Build Folder after new Cordova plugins installed
-# Requires CocoaPods 1.6 or newer
 install! 'cocoapods', :disable_input_output_paths => true
 
 def capacitor_pods
@@ -26,5 +22,13 @@ target 'App' do
 end
 
 post_install do |installer|
-  assertDeploymentTarget(installer)
+  # ❌ No uses assertDeploymentTarget(installer) – baja a 14.0
+  # assertDeploymentTarget(installer)
+
+  # ✅ Fuerza iOS 15.0 en TODOS los targets (pods incluidos)
+  installer.pods_project.targets.each do |t|
+    t.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+    end
+  end
 end
