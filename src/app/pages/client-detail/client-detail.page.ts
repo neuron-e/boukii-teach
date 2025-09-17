@@ -55,9 +55,15 @@ export class ClientDetailPage implements OnInit, OnDestroy {
           this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
+          console.log('Client-detail loaded degrees:', this.degrees.length);
+          console.log('Client-detail loaded sports:', this.sports.length);
         } catch (error) {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
+          // Initialize with empty arrays to prevent undefined errors
+          this.degrees = [];
+          this.sports = [];
+          this.languages = [];
         }
   
         this.activatedRoute.params.subscribe(async params => {
@@ -119,10 +125,10 @@ export class ClientDetailPage implements OnInit, OnDestroy {
           }
         }
         this.sportSelected = useSport;
-        //console.log(this.degrees);
-        //console.log(useSport);
-        this.sportDegrees = this.degrees.filter(degree => degree.sport_id === useSport);
-        //console.log(this.clientMonitor);
+        console.log('Available degrees:', this.degrees);
+        console.log('Selected sport:', useSport);
+        this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === useSport) : [];
+        console.log('Filtered sport degrees:', this.sportDegrees);
       } else {
         // Not a client of monitor
         this.goTo('clients');
@@ -146,8 +152,8 @@ export class ClientDetailPage implements OnInit, OnDestroy {
         this.sportSelected = this.clientMonitor.sports[index].id;
       }
     this.clientMonitor.degree_sport = newDegree;
-    this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.clientMonitor.sports[index].id);
-    //console.log('Sport Degrees:', this.sportDegrees);
+    this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === this.clientMonitor.sports[index].id) : [];
+    console.log('Sport Degrees after change:', this.sportDegrees);
   }
 
   getBirthYears(date:string) {

@@ -23,14 +23,18 @@ export class SharedDataService {
       }
       return this.teachService.getData('degrees', null, searchData).pipe(
         switchMap((data: any) => {
-          //console.log(data);
-          data.data.sort((a: any, b: any) => a.degree_order - b.degree_order);
-          data.data.forEach((degree: any) => {
-            degree.inactive_color = this.lightenColor(degree.color, 30);
-          });
-          //console.log('degrees fetched');
-          this.degreesSubject.next(data.data);
-          return of(data.data);
+          if (data && data.data && Array.isArray(data.data)) {
+            data.data.sort((a: any, b: any) => a.degree_order - b.degree_order);
+            data.data.forEach((degree: any) => {
+              degree.inactive_color = this.lightenColor(degree.color, 30);
+            });
+            this.degreesSubject.next(data.data);
+            return of(data.data);
+          } else {
+            console.error('Invalid degrees data structure:', data);
+            this.degreesSubject.next([]);
+            return of([]);
+          }
         }),
         catchError(error => {
           console.error('Error fetching degrees:', error);
@@ -39,7 +43,6 @@ export class SharedDataService {
         })
       );
     } else {
-      //console.log('already degrees');
       return this.degreesSubject.asObservable();
     }
   }

@@ -60,9 +60,13 @@ export class ClientLevelPage implements OnInit, OnDestroy {
         try {
           this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+          console.log('Client-level loaded degrees:', this.degrees.length);
         } catch (error) {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
+          // Initialize with empty arrays to prevent undefined errors
+          this.degrees = [];
+          this.sports = [];
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -186,7 +190,8 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   async getClientEvaluations() {
     try {
       // Filter by sport
-      this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
+      this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === this.sportIdBooking) : [];
+      console.log('Client-level sportDegrees:', this.sportDegrees);
       this.sportEvaluation = this.sports.find(sport => sport.id === this.sportIdBooking);
       
       const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientIdBooking }).toPromise();

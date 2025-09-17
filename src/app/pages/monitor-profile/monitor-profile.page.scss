@@ -119,6 +119,12 @@
 }
 .extra-check {
     display:none;margin-top: -12px;font-size: 12px;
+    transition: background-color 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.extra-check:hover {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.1);
 }
 .radio-option input[type="radio"]:checked + .radio-wrapper + .custom-check, .radio-option input[type="checkbox"]:checked + .radio-wrapper + .custom-check {
     display: block;

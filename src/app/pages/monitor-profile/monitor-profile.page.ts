@@ -221,24 +221,38 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
 
   saveSports() {
     const checkedSports = this.sports.filter(sport => sport.checked);
-    const addObjects = checkedSports.filter(checkedSport => 
+    const addObjects = checkedSports.filter(checkedSport =>
       !this.monitorData.sports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
-    const deleteObjects = this.monitorData.sports.filter((monitorSport:any) => 
+    const deleteObjects = this.monitorData.sports.filter((monitorSport:any) =>
       !checkedSports.some(checkedSport => checkedSport.id === monitorSport.id));
 
     const addRequests = addObjects.map(obj => {
       let filteredDegrees = this.degrees.filter(degree => degree.sport_id === obj.id);
+      let degreeId;
+
+      if (filteredDegrees && filteredDegrees.length > 0) {
+        // Use the highest degree for the sport
+        degreeId = filteredDegrees[filteredDegrees.length - 1].id;
+      } else if (this.degrees && this.degrees.length > 0) {
+        // Use the first available degree if no sport-specific degrees found
+        degreeId = this.degrees[0].id;
+      } else {
+        // Skip creating this entry if no degrees are available
+        console.warn(`No degrees available for sport ${obj.id}, skipping`);
+        return null;
+      }
+
       const data = {
         sport_id: obj.id,
         school_id: this.monitorData.active_school,
-        degree_id: filteredDegrees && filteredDegrees.length ? filteredDegrees[filteredDegrees.length - 1].id : this.degrees[0].id,
+        degree_id: degreeId,
         monitor_id: this.monitorData.id,
         salary_level: 1,
         allow_adults: true,
         is_default: false
       };
       return this.teachService.postData('monitor-sports-degrees', data);
-    });
+    }).filter(request => request !== null); // Remove null requests
   
     const deleteRequests = deleteObjects.map((obj:any) => {
       const sportDegreeId = this.sportDegrees.find(sd => sd.sport_id === obj.id && sd.monitor_id === this.monitorData.id)?.id;

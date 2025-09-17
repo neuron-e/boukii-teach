@@ -4,7 +4,7 @@
     <div class="padding-wrapper">
       <div class="header-content mb-8">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail',bookingId,dateBooking)" />
-        <div *ngIf="courseBookings" class="header-top-title">
+        <div *ngIf="courseBookings" class="header-top-title text-center">
           {{courseBookings.name}}
         </div>
       </div>
@@ -51,8 +51,8 @@
                 </div>
                 <div class="member-item-subtitle">
                   <span class="montserrat color-light">{{ monitorSubgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
-                  <div *ngIf="monitorSubgroup.degree_data && degrees.length" class="box-selector-subgroup">
-                    {{monitorSubgroup.degree_data.annotation}}-{{monitorSubgroup.subgroup_order}}
+                  <div *ngIf="monitorSubgroup.degree_data && degrees.length && (monitorSubgroup.degree_data.annotation && monitorSubgroup.degree_data.annotation !== '-1') || (monitorSubgroup.degree_data.league && monitorSubgroup.degree_data.league !== '-1')" class="box-selector-subgroup">
+                    {{(monitorSubgroup.degree_data.annotation && monitorSubgroup.degree_data.annotation !== '-1') ? monitorSubgroup.degree_data.annotation : monitorSubgroup.degree_data.league}}
                   </div>
                 </div>
                 <div class="member-item-data">
@@ -62,7 +62,7 @@
                     </div>
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">{{courseDateIndex+1}}/{{courseBookings.course_dates.length}}</span>
+                      <span class="montserrat color-light">{{getCourseDateDisplay()}}</span>
                     </div>
                 </div>
               </div>
@@ -94,8 +94,8 @@
                 </div>
                 <div class="member-item-subtitle">
                   <span class="montserrat color-light">{{ subgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
-                  <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
-                    {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
+                  <div *ngIf="subgroup.degree_data && degrees.length && (subgroup.degree_data.annotation && subgroup.degree_data.annotation !== '-1') || (subgroup.degree_data.league && subgroup.degree_data.league !== '-1')" class="box-selector-subgroup">
+                    {{(subgroup.degree_data.annotation && subgroup.degree_data.annotation !== '-1') ? subgroup.degree_data.annotation : subgroup.degree_data.league}}
                   </div>
                 </div>
                 <div class="member-item-data">
@@ -105,7 +105,7 @@
                     </div>
                     <div class="task-content-icon">
                       <img src="assets/icon/icon-calendar-tick.png" />
-                      <span class="montserrat color-light">{{courseDateIndex+1}}/{{courseBookings.course_dates.length}}</span>
+                      <span class="montserrat color-light">{{getCourseDateDisplay()}}</span>
                     </div>
                 </div>
               </div>

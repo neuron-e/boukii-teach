@@ -57,9 +57,14 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
           this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
+          console.log('Course-detail-level loaded degrees:', this.degrees.length);
         } catch (error) {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
+          // Initialize with empty arrays to prevent undefined errors
+          this.degrees = [];
+          this.sports = [];
+          this.languages = [];
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -94,7 +99,8 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
   }
 
   loadBookings() {
-    this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.sportIdBooking);
+    this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === this.sportIdBooking) : [];
+    console.log('Course-detail-level sportDegrees:', this.sportDegrees);
     const searchData:any = {
       date_start: this.dateBooking, date_end: this.dateBooking
     };

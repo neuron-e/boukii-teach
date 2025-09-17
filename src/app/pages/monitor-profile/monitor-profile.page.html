@@ -201,8 +201,7 @@
             <div class="radio-wrapper">
               <img [src]="sport.icon_selected" />
               <span class="montserrat">{{sport.name}}</span>
-              <!--(click)="doShowLevel(sport)"-->
-              <div class="extra-check montserrat color-primary uppercase">
+              <div class="extra-check montserrat color-primary uppercase cursor-pointer" (click)="doShowLevel(sport); $event.stopPropagation();">
                 {{ 'training' | translate }}
               </div>
             </div>

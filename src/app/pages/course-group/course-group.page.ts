@@ -44,6 +44,8 @@ export class CourseGroupPage implements OnInit, OnDestroy {
         try {
           this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
+          console.log('DEGREES LOADED:', this.degrees);
+          console.log('DEGREES ANNOTATIONS:', this.degrees.map(d => ({ id: d.id, annotation: d.annotation })));
         } catch (error) {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
@@ -56,6 +58,7 @@ export class CourseGroupPage implements OnInit, OnDestroy {
           this.hourStart = params['hour'];
           this.groupId = +params['group'];
           this.subgroupId = +params['subgroup'];
+          console.log('Parsed subgroupId:', this.subgroupId, 'type:', typeof this.subgroupId);
           if (this.bookingId && this.dateBooking && this.courseId && this.hourStart && this.groupId && this.subgroupId) {
             this.spinnerService.show();
             this.loadBookings();
@@ -84,9 +87,20 @@ export class CourseGroupPage implements OnInit, OnDestroy {
           return acc;
         }, {});
 
+        // Initialize courseDateIndex to avoid undefined
+        this.courseDateIndex = -1;
+
         const matchingCourseDate = this.courseBookings.course_dates.find((courseDate: any, index: number) => {
           const courseDateOnly = courseDate.date.split('T')[0];
           const courseHourStart = courseDate.hour_start;
+
+          console.log('Comparing dates:', {
+            courseDateOnly,
+            dateBooking: this.dateBooking,
+            courseHourStart,
+            hourStart: this.hourStart,
+            matches: courseDateOnly === this.dateBooking && courseHourStart === this.hourStart
+          });
 
           if (courseDateOnly === this.dateBooking && courseHourStart === this.hourStart) {
             // Save the index where the match is found
@@ -96,8 +110,18 @@ export class CourseGroupPage implements OnInit, OnDestroy {
           return false;
         });
 
+        console.log('Final courseDateIndex:', this.courseDateIndex);
+        console.log('courseDateIndex type:', typeof this.courseDateIndex);
+        console.log('courseDateIndex >= 0:', this.courseDateIndex >= 0);
+        console.log('courseDateIndex + 1:', this.courseDateIndex + 1);
+        console.log('Available course dates:', this.courseBookings.course_dates.map((cd: any, idx: number) => ({
+          index: idx,
+          date: cd.date,
+          hour_start: cd.hour_start
+        })));
+
         if (matchingCourseDate) {
-          //console.log('Matching course date:', matchingCourseDate);
+          console.log('Matching course date found:', matchingCourseDate);
           // Do something with the matching course date
 
           const allSubgroups:any[] = [];
@@ -107,11 +131,17 @@ export class CourseGroupPage implements OnInit, OnDestroy {
             //delete groupInfo.course_subgroups;
 
             group.course_subgroups.forEach((subgroup:any, index:number) => {
-              const degree_data = this.degrees.find(degree => degree.id === subgroup.degree_id) || this.degrees[0];
+              const degree_data = this.degrees.find(degree => degree.id === subgroup.degree_id) || this.degrees[0] || {};
               const bookings_number = this.subgroupBookings[subgroup.id] || 0;
+              console.log(`SUBGROUP ${subgroup.id}:`, {
+                degree_id: subgroup.degree_id,
+                found_degree: degree_data,
+                annotation: degree_data?.annotation,
+                subgroup_order: index+1
+              });
               allSubgroups.push({
-                ...subgroup, 
-                /*group: groupInfo,*/ 
+                ...subgroup,
+                /*group: groupInfo,*/
                 subgroup_order: index+1,
                 degree_data: degree_data,
                 bookings_number: bookings_number
@@ -119,14 +149,36 @@ export class CourseGroupPage implements OnInit, OnDestroy {
             });
           });
 
+          console.log('All subgroups created:', allSubgroups);
+          console.log('Looking for subgroupId:', this.subgroupId);
+          console.log('Available subgroup IDs:', allSubgroups.map(sg => sg.id));
+
           this.monitorSubgroup = allSubgroups.find(subgroup => subgroup.id === this.subgroupId);
           this.restSubgroups = allSubgroups.filter(subgroup => subgroup.id !== this.subgroupId);
 
-          // Outputs
-          //console.log('Specified Subgroup:', this.monitorSubgroup);
-          //console.log('Remaining Subgroups:', this.restSubgroups);
+          console.log('Found monitorSubgroup:', this.monitorSubgroup);
+          console.log('monitorSubgroup.subgroup_order:', this.monitorSubgroup?.subgroup_order);
+          console.log('monitorSubgroup full properties:', {
+            id: this.monitorSubgroup?.id,
+            monitor_id: this.monitorSubgroup?.monitor_id,
+            max_participants: this.monitorSubgroup?.max_participants,
+            bookings_number: this.monitorSubgroup?.bookings_number,
+            subgroup_order: this.monitorSubgroup?.subgroup_order,
+            course_group_id: this.monitorSubgroup?.course_group_id,
+            degree_data: this.monitorSubgroup?.degree_data
+          });
+          console.log('DEGREE ANNOTATION CHECK:', this.monitorSubgroup?.degree_data?.annotation);
+          console.log('DEGREE LEAGUE CHECK:', this.monitorSubgroup?.degree_data?.league);
+          console.log('SUBGROUP ORDER CHECK:', this.monitorSubgroup?.subgroup_order);
+          console.log('FULL DISPLAY STRING:', `${(this.monitorSubgroup?.degree_data?.annotation || this.monitorSubgroup?.degree_data?.league)}-${this.monitorSubgroup?.subgroup_order || '?'}`);
+          console.log('Remaining Subgroups:', this.restSubgroups);
         } else {
-          //console.log('No matching course date found');
+          console.warn('No matching course date found for:', {
+            dateBooking: this.dateBooking,
+            hourStart: this.hourStart
+          });
+          // Set courseDateIndex to 0 as a fallback, or keep it as -1 to show '?'
+          // this.courseDateIndex = 0; // Uncomment if you want to default to first date
         }
 
         this.spinnerService.hide();
@@ -141,6 +193,14 @@ export class CourseGroupPage implements OnInit, OnDestroy {
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
+  }
+
+  getCourseDateDisplay() {
+    console.log('getCourseDateDisplay called with courseDateIndex:', this.courseDateIndex);
+    if (this.courseDateIndex >= 0) {
+      return `${this.courseDateIndex + 1}/${this.courseBookings?.course_dates?.length || 0}`;
+    }
+    return `?/${this.courseBookings?.course_dates?.length || 0}`;
   }
 
   getDateFormat(date:string) {

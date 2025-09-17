@@ -16,6 +16,12 @@
 .header-content-icon {
     position:absolute;left:0;top: 50%;transform: translateY(-50%);width:28px;
 }
+
+.header-top-title.text-center {
+    text-align: center;
+    width: calc(100% - 56px); /* Account for arrow width on left */
+    margin-left: 28px; /* Center relative to available space */
+}
 .header-top-title {
     font-size:15px;color:#fff;font-weight:600;
 }

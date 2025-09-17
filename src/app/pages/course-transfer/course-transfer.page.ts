@@ -55,9 +55,14 @@ export class CourseTransferPage implements OnInit, OnDestroy {
           this.degrees = await firstValueFrom(this.sharedDataService.fetchDegrees(this.monitorData.active_school));
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
           this.languages = await firstValueFrom(this.sharedDataService.fetchLanguages());
+          console.log('Course-transfer loaded degrees:', this.degrees.length);
         } catch (error) {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
+          // Initialize with empty arrays to prevent undefined errors
+          this.degrees = [];
+          this.sports = [];
+          this.languages = [];
         }
   
         this.activatedRoute.params.subscribe( async params => {
@@ -100,7 +105,8 @@ export class CourseTransferPage implements OnInit, OnDestroy {
         this.courseBookings = data.data;
         this.courseBookings.course_dates.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        this.sportDegrees = this.degrees.filter(degree => degree.sport_id === this.courseBookings.sport_id);
+        this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === this.courseBookings.sport_id) : [];
+        console.log('Course-transfer sportDegrees:', this.sportDegrees);
         this.courseSport = this.sports.find(sport => sport.id === this.courseBookings.sport_id) || this.sports[0];
         this.subgroupBookings = this.courseBookings.booking_users.reduce((acc: any, user: any) => {
           if (acc[user.course_subgroup_id]) {
