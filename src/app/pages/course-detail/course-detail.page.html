@@ -105,6 +105,12 @@
             <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer',bookingIdFull,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)" />
           </div>
         </div>
+
+        <!-- Texto explicativo para asistencia -->
+        <div *ngIf="canMarkAttendance()" class="montserrat color-light mb-12" style="font-size: 12px; padding: 0 24px; opacity: 0.8;">
+          <ion-icon name="checkmark-circle-outline" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></ion-icon>
+          {{ 'mark_attendance' | translate }}
+        </div>
         
         <div class="member-list">
 
@@ -115,6 +121,13 @@
                 <div class="member-item-title">
                   <div class="montserrat member-item-title-icon">
                     <div>{{client.first_name}} {{client.last_name}}</div>
+                    <!-- Asistencia inline para la fecha seleccionada -->
+                    <ion-checkbox *ngIf="canMarkAttendance()"
+                      [checked]="isAttended(client.id)"
+                      (ionChange)="onToggle(client.id, $event.detail.checked, $event)"
+                      (click)="$event.stopPropagation()"
+                      style="margin-left: 8px;">
+                    </ion-checkbox>
                     <!-- CHECK IF CONFIRMED IN ALL DATES -->
                     <!--
                     <img src="assets/icon/icon-double-check.png" />

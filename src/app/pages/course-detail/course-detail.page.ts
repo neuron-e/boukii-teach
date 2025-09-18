@@ -32,6 +32,8 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   bookingIdFull:any;
   isSubgroup:boolean;
   dateBooking:any;
+  // Asistencia inline
+  private bookingUserByClient: Map<number, any> = new Map();
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
     this.translate.onLangChange.subscribe(lang => {
@@ -229,11 +231,15 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     
   
     this.selectedBooking = this.bookingsCurrent.find(booking => booking.selected_detail === true);
+    // Cargar asistencia para el curso/fecha seleccionada
+    if (this.selectedBooking && this.selectedBooking.course_id) {
+      this.loadAttendance(this.selectedBooking.course_id);
+    }
 
     this.spinnerService.hide();
     //console.log('Processed Bookings:', this.bookingsCurrent);
     //console.log('Selected Booking:', this.selectedBooking);
-  }  
+  }
 
   selectBooking(booking:any) {
     if(booking.is_subgroup){
@@ -245,6 +251,9 @@ export class CourseDetailPage implements OnInit, OnDestroy {
       this.bookingIdFull = booking.id;
     }
     this.selectedBooking = booking;
+    if (this.selectedBooking && this.selectedBooking.course_id) {
+      this.loadAttendance(this.selectedBooking.course_id);
+    }
   }
 
   getClientLevel(sports: any[], sport_id: number): number {
@@ -299,6 +308,99 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
+  }
+
+  // ===== Asistencia inline =====
+  private isGroupSelected(): boolean {
+    return !!(this.selectedBooking && this.selectedBooking.course && this.selectedBooking.course.course_type === 1);
+  }
+
+  isDateBeforeOrEqualToToday(dateString: string): boolean {
+    // Los monitores pueden marcar asistencia durante el día del curso
+    // independientemente de la hora
+    const inputDate = moment(dateString).startOf('day');
+    const today = moment().startOf('day');
+    return inputDate.isSameOrBefore(today);
+  }
+
+  // Método mejorado para permitir asistencia durante el horario del curso
+  canMarkAttendance(): boolean {
+    if (!this.selectedBooking || !this.dateBooking) {
+      return false;
+    }
+
+    const courseDate = moment(this.dateBooking).startOf('day');
+    const today = moment().startOf('day');
+
+    // Permitir marcar asistencia el día del curso o después
+    return courseDate.isSameOrBefore(today);
+  }
+
+  private loadAttendance(courseId: number) {
+    // Resetea el mapa
+    this.bookingUserByClient.clear();
+
+    this.teachService.getData<any>('teach/courses', courseId).subscribe({
+      next: (resp) => {
+        const data = resp?.data;
+        const bookingUsers: any[] = Array.isArray(data?.booking_users) ? data.booking_users : [];
+        const monitorId = this.monitorData?.id;
+        const isGroup = this.isGroupSelected();
+        const courseDateId = this.selectedBooking?.course_date_id;
+        const hourStart = this.selectedBooking?.hour_start;
+        const hourEnd = this.selectedBooking?.hour_end;
+
+        bookingUsers.forEach((bu: any) => {
+          if (bu?.monitor_id !== monitorId) return;
+          let matches = false;
+          if (isGroup) {
+            matches = bu?.course_date_id === courseDateId;
+          } else {
+            // Privado: misma fecha y franja
+            const sameDay = bu?.date && moment(bu.date).isSame(this.dateBooking, 'day');
+            matches = sameDay && bu?.hour_start === hourStart && bu?.hour_end === hourEnd;
+          }
+          if (matches && bu?.client_id) {
+            this.bookingUserByClient.set(bu.client_id, bu);
+          }
+        });
+      },
+      error: () => {
+        // Silencioso; no bloquea la pantalla principal
+      },
+    });
+  }
+
+  isAttended(clientId: number): boolean {
+    const bu = this.bookingUserByClient.get(clientId);
+    if (!bu) return false;
+    const a = (bu.attended === true || bu.attended === 1);
+    const b = (bu.attendance === true || bu.attendance === 1);
+    return !!(a || b);
+  }
+
+  onToggle(clientId: number, checked: boolean, event?: Event) {
+    if (event) { event.stopPropagation(); }
+
+    const bu = this.bookingUserByClient.get(clientId);
+    if (!bu) return;
+
+    const payload: any = { ...bu, attended: checked, attendance: checked };
+    ['client','created_at','deleted_at','updated_at'].forEach((k) => { if (k in payload) delete (payload as any)[k]; });
+
+    this.spinnerService.show();
+    this.teachService.updateData('booking-users', bu.id, payload).subscribe({
+      next: () => {
+        // Actualiza cache local
+        this.bookingUserByClient.set(clientId, { ...bu, attended: checked });
+        this.spinnerService.hide();
+        this.toastr.success(this.translate.instant('toast.registered_correctly'));
+      },
+      error: () => {
+        this.spinnerService.hide();
+        this.toastr.error(this.translate.instant('toast.error'));
+      }
+    });
   }
 
   goTo(...urls: string[]) {
