@@ -11,8 +11,8 @@
     "month": "Monat",
     "week": "Woche",
     "day": "Tag",
-    "availability": "Verfügbarkeit",
-    "edit_availability": "Verfügbarkeit bearbeiten",
+    "availability": "Nichtverfügbarkeit",
+    "edit_availability": "Nichtverfügbarkeit bearbeiten",
     "open_calendar": "Kalender öffnen",
     "close_calendar": "Kalender schließen",
     "choose_date_range": "Wählen Sie einen Datumsbereich",
@@ -71,6 +71,10 @@
     "forgot_password": "Passwort vergessen?",
     "recover_password": "Passwort wiederherstellen",
     "reset_password": "Passwort zurücksetzen",
+    "change_password": "Passwort ändern",
+    "current_password": "Aktuelles Passwort",
+    "new_password": "Neues Passwort",
+    "confirm_password": "Passwort bestätigen",
     "messages": "Nachrichten",
     "schools": "Schulen",
     "search_messages": "Nachrichten suchen...",
@@ -199,7 +203,15 @@
         "no_client_found": "Kein Kunde gefunden",
         "scanned_successfully": "QR erfolgreich gescannt",
         "scan_error": "QR-Scan-Fehler",
-        "recover_correctly": "Sie erhalten eine E-Mail mit den nächsten Schritten zur Wiederherstellung Ihres Passworts"
+        "recover_correctly": "Sie erhalten eine E-Mail mit den nächsten Schritten zur Wiederherstellung Ihres Passworts",
+        "password_changed": "Passwort erfolgreich geändert",
+        "password_change_failed": "Passwortänderung fehlgeschlagen",
+        "fill_all_fields": "Bitte füllen Sie alle Felder aus",
+        "passwords_dont_match": "Passwörter stimmen nicht überein",
+        "password_min_length": "Passwort muss mindestens 6 Zeichen lang sein",
+        "unavailabilities_created_partial": "{created} Nichtverfügbarkeit(en) erstellt. {skipped} Datum(e) übersprungen aufgrund von Überschneidungen",
+        "unavailabilities_created_none": "Keine Nichtverfügbarkeit konnte erstellt werden. Alle Daten haben Überschneidungen",
+        "unavailabilities_created_all": "Nichtverfügbarkeit(en) erfolgreich gespeichert"
     },
     "close_account_confirm_a": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
     "close_account_confirm_b": "Wenn Sie fortfahren, werden alle Ihre zugehörigen Daten gelöscht und Sie können sie nicht wiederherstellen. Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
@@ -208,5 +220,6 @@
     "title_start_b": "Ihr Plan immer aktuell",
     "text_start_b": "Gruppenkurse, Privatunterricht oder Aktivitäten, ein vollständiger Plan auch offline.",
     "title_start_c": "Verfolgen Sie den Fortschritt Ihrer Schüler",
-    "text_start_c": "Anzeigen, bewerten und mit Ihren Kunden kommunizieren."
+    "text_start_c": "Anzeigen, bewerten und mit Ihren Kunden kommunizieren.",
+    "mark_attendance": "Anwesenheit markieren"
 }

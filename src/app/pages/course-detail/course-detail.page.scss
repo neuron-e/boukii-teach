@@ -312,3 +312,33 @@
 .simple-check-option-small input[type="checkbox"]:checked + .custom-check-small::before {
     display: block;
 }
+
+/* Fix para ion-checkbox en Android */
+ion-checkbox {
+    --size: 20px;
+    --border-radius: 4px;
+    --background-checked: var(--ion-color-primary);
+    --border-color: #c8c8c8;
+    --border-color-checked: var(--ion-color-primary);
+    --checkmark-color: white;
+    position: relative;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+}
+
+ion-checkbox::part(container) {
+    border-width: 2px;
+}
+
+/* Asegurar que el checkbox sea clickeable en Android */
+.member-item-title-icon {
+    position: relative;
+    z-index: 1;
+}
+
+.member-item-title-icon ion-checkbox {
+    z-index: 10;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+}

@@ -11,8 +11,8 @@
     "month": "Mois",
     "week": "Semaine",
     "day": "Jour",
-    "availability": "Disponibilité",
-    "edit_availability": "Editer Disponibilité",
+    "availability": "Indisponibilité",
+    "edit_availability": "Editer Indisponibilité",
     "open_calendar": "Calendrier ouvert",
     "close_calendar": "Fermer le calendrier",
     "choose_date_range": "Choisissez une plage de dates",
@@ -71,6 +71,10 @@
     "forgot_password": "Mot de passe oublié?",
     "recover_password": "Récupérez votre mot de passe",
     "reset_password": "Réinitialiser le mot de passe",
+    "change_password": "Changer le mot de passe",
+    "current_password": "Mot de passe actuel",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
     "messages": "Messages",
     "schools": "Écoles",
     "search_messages": "Chercher messages...",
@@ -199,7 +203,15 @@
         "no_client_found": "Aucun client trouvé",
         "scanned_successfully": "QR scanné avec succès",
         "scan_error": "Erreur de numérisation QR",
-        "recover_correctly": "Vous recevrez un e-mail avec les étapes suivantes pour récupérer votre mot de passe"
+        "recover_correctly": "Vous recevrez un e-mail avec les étapes suivantes pour récupérer votre mot de passe",
+        "password_changed": "Mot de passe changé avec succès",
+        "password_change_failed": "Échec du changement de mot de passe",
+        "fill_all_fields": "Veuillez remplir tous les champs",
+        "passwords_dont_match": "Les mots de passe ne correspondent pas",
+        "password_min_length": "Le mot de passe doit contenir au moins 6 caractères",
+        "unavailabilities_created_partial": "{created} indisponibilité(s) créée(s). {skipped} date(s) omise(s) en raison de chevauchements",
+        "unavailabilities_created_none": "Impossible de créer une indisponibilité. Toutes les dates ont des chevauchements",
+        "unavailabilities_created_all": "Indisponibilité(s) enregistrée(s) avec succès"
     },
     "close_account_confirm_a": "Êtes-vous sûr de vouloir supprimer votre compte ?",
     "close_account_confirm_b": "Si vous continuez, vous supprimerez toutes vos données associées et vous ne pourrez pas les récupérer. Êtes-vous sûr de vouloir supprimer votre compte ?",
@@ -208,5 +220,6 @@
     "title_start_b": "Votre planning toujours à jour",
     "text_start_b": "Cours collectifs, privés ou activités, un agenda complet même hors ligne.",
     "title_start_c": "Suivez les progrès de vos élèves",
-    "text_start_c": "Visualisez, évaluez et communiquez avec vos clients."
+    "text_start_c": "Visualisez, évaluez et communiquez avec vos clients.",
+    "mark_attendance": "Marquer présence"
 }

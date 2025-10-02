@@ -22,6 +22,8 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
+    // Ensure levels are sorted by degree_order asc (fallback to id)
+    this.allLevels = this.sortLevels(this.allLevels);
     if(this.currentLevel){
       let index = this.allLevels.findIndex(obj => obj.id === this.currentLevel);
       if (index === -1) {
@@ -41,6 +43,15 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes['allLevels']) {
+      this.allLevels = this.sortLevels(this.allLevels);
+      // If currentLevel is an id, map it again to index
+      if (changes['currentLevel'] && typeof this.currentLevel !== 'number') {
+        const idx = this.allLevels.findIndex(obj => obj.id === this.currentLevel);
+        this.currentLevel = idx === -1 ? 0 : idx;
+      }
+      this.initializeCircleRotation();
+    }
     if (changes['currentLevel'] && !changes['currentLevel'].firstChange) {
         this.initializeCircleRotation();
     }
@@ -148,6 +159,15 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
     const rotationAmount = 360 / this.allLevels.length;
     const rotation = (this.currentLevel) * rotationAmount;
     this.circleSVG.nativeElement.style.transform = `rotate(${-rotation}deg)`;
+  }
+
+  private sortLevels(levels: any[]): any[] {
+    if (!Array.isArray(levels)) return [];
+    return [...levels].sort((a: any, b: any) => {
+      const ao = (a?.degree_order ?? a?.order ?? a?.id ?? 0);
+      const bo = (b?.degree_order ?? b?.order ?? b?.id ?? 0);
+      return ao - bo;
+    });
   }
 
 }

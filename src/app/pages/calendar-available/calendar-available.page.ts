@@ -529,10 +529,17 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
       };
 
       const showErrorToast = (error:any) => {
+          console.error('[NWD] Error en update - completo:', error);
+          console.error('[NWD] Error.error:', error.error);
+          console.error('[NWD] Error.status:', error.status);
+          console.error('[NWD] Error.message:', error.error?.message);
+
           if(error.error.message == "El monitor está ocupado durante ese tiempo y no se puede crear el MonitorNwd"){
+              console.log('[NWD] Detectado solapamiento en update - mostrando toast específico');
               this.toastr.error(this.translate.instant('toast.overlap_detected'));
           } else {
-              this.toastr.error(this.translate.instant('toast.error')); 
+              console.log('[NWD] Error genérico en update - mostrando toast de error');
+              this.toastr.error(this.translate.instant('toast.error'));
           }
       };
 
@@ -554,7 +561,8 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
         color: '#89add1',
         user_nwd_subtype_id: 1,
       };
-      
+
+          console.log('[NWD] Creando nuevo NWD con datos:', dataDay);
           this.teachService.postData('monitor-nwds', dataDay).subscribe(
             response => {
                 //console.log('Response:', response);
@@ -563,13 +571,20 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
                 this.goTo('calendar');
             },
             error => {
-                console.error('Error:', error.error);
+                console.error('[NWD] Error completo:', error);
+                console.error('[NWD] Error.error:', error.error);
+                console.error('[NWD] Error.status:', error.status);
+                console.error('[NWD] Error.message:', error.error?.message);
+
                 this.spinnerService.hide();
+
                 if(error.error.message == "El monitor está ocupado durante ese tiempo y no se puede crear el MonitorNwd"){
+                  console.log('[NWD] Detectado solapamiento - mostrando toast específico');
                   this.toastr.error(this.translate.instant('toast.overlap_detected'));
                 }
                 else{
-                  this.toastr.error(this.translate.instant('toast.error')); 
+                  console.log('[NWD] Error genérico - mostrando toast de error');
+                  this.toastr.error(this.translate.instant('toast.error'));
                 }
             }
           );
@@ -578,74 +593,69 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
   }
 
   saveBlockMonth() {
-    const startDate = moment(this.firstDateSelected);
-    const endDate = moment(this.secondDateSelected);
-    const datesToCheck:any[] = [];
-    const overlapDates:any[] = [];
-    const createRequests:any[] = [];
+    const formattedStartDate = moment(this.firstDateSelected).format('YYYY-MM-DD');
+    const formattedEndDate = moment(this.secondDateSelected).format('YYYY-MM-DD');
 
     this.spinnerService.show();
 
-    // Prepare dates to check
-    for (let date = moment(startDate); date.diff(endDate, 'days') <= 0; date.add(1, 'days')) {
-        datesToCheck.push(moment(date));
-    }
+    const dataMonth = {
+      monitor_id: this.monitorData.id,
+      school_id: this.monitorData.active_school,
+      station_id: this.monitorData.active_station,
+      start_date: formattedStartDate,
+      end_date: formattedEndDate,
+      start_time: this.allHoursMonth ? `${this.hourStartDay}:00` : `${this.startTimeMonth}:00`,
+      end_time: this.allHoursMonth ? `${this.hourEndDay}:00` : `${this.endTimeMonth}:00`,
+      full_day: this.allHoursMonth,
+      title: this.nameBlockMonth,
+      description: this.nameBlockMonth,
+      color: '#89add1',
+      user_nwd_subtype_id: 1,
+    };
 
-    // Check for overlaps and create blocks
-    Promise.all(datesToCheck.map(async date => {
-        const formattedDate = date.format('YYYY-MM-DD');
+    console.log('[NWD] Creando NWDs para rango con datos:', dataMonth);
 
-                const dataDay = {
-                    monitor_id: this.monitorData.id,
-                    school_id: this.monitorData.active_school,
-                    station_id: this.monitorData.active_station,
-                    start_date: formattedDate,
-                    end_date: formattedDate,
-                    start_time: this.allHoursMonth ? `${this.hourStartDay}:00` : `${this.startTimeMonth}:00`,
-                    end_time: this.allHoursMonth ? `${this.hourEndDay}:00` : `${this.endTimeMonth}:00`,
-                    full_day: this.allHoursMonth,
-                    description: this.nameBlockMonth,
-                    color: '#89add1',
-                    user_nwd_subtype_id: 1,
-                };
-                return new Promise(resolve => {
-                  this.teachService.postData('monitor-nwds', dataDay).subscribe(
-                      response => {
-                          //console.log('Data posted successfully:', response);
-                          resolve({ success: true, data: response });
-                      },
-                      error => {
-                          console.error('Error posting data:', error);
-                          const formattedDateNice = moment(formattedDate).format('DD-MM-YYYY');
-                          overlapDates.push(formattedDateNice);
-                          resolve({ success: false, error: error });
-                      }
-                  );
-                });
-
-    })).then(responses => {
+    this.teachService.postData('monitor-nwds', dataMonth).subscribe(
+      (response: any) => {
+        console.log('[NWD] Response:', response);
         this.spinnerService.hide();
 
-        const successfulResponses = responses.filter((response:any) => response.success);
-        if (successfulResponses.length > 0) {
-          if (overlapDates.length > 0) {
-            this.toastr.success(this.translate.instant('toast.some_registered_correctly'));
-            this.toastr.error(`${this.translate.instant('toast.overlap_dates')} : ${overlapDates.join(', ')}`);
-          }
-          else{
-            this.toastr.success(this.translate.instant('toast.registered_correctly'));
-          }
-        }
-        else{
-          this.toastr.error(this.translate.instant('toast.overlap_detected'));
+        // Check if partial creation (HTTP 206) with skipped dates
+        if (response.data?.skipped_dates && response.data.skipped_dates.length > 0) {
+          const created = response.data.summary?.total_created || 0;
+          const skipped = response.data.summary?.total_skipped || 0;
+
+          const message = this.translate.instant('toast.unavailabilities_created_partial', {
+            created: created,
+            skipped: skipped
+          });
+
+          this.toastr.warning(message);
+          console.log('[NWD] Creación parcial - fechas omitidas:', response.data.skipped_dates);
+        } else {
+          // All created successfully
+          this.toastr.success(this.translate.instant('toast.unavailabilities_created_all'));
         }
 
         this.goTo('calendar');
-    }).catch(error => {
-        console.error('An error occurred:', error);
+      },
+      error => {
+        console.error('[NWD] Error completo:', error);
+        console.error('[NWD] Error.error:', error.error);
+        console.error('[NWD] Error.status:', error.status);
+
         this.spinnerService.hide();
-        this.toastr.error(this.translate.instant('toast.error'));
-    });
+
+        // Check for 409 - no dates could be created
+        if (error.status === 409) {
+          console.log('[NWD] Ninguna fecha pudo crearse - todas tienen solapamientos');
+          this.toastr.error(this.translate.instant('toast.unavailabilities_created_none'));
+        } else {
+          console.log('[NWD] Error genérico');
+          this.toastr.error(this.translate.instant('toast.error'));
+        }
+      }
+    );
   }
 
   deleteBlockDay() {

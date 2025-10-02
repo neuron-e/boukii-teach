@@ -16,6 +16,8 @@ export class LevelUserComponent  implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // Ensure levels are sorted by degree_order asc (fallback to id)
+    this.allLevels = this.sortLevels(this.allLevels);
     if(this.selectLevel){
       let index = this.allLevels.findIndex(obj => obj.id === this.selectLevel);
       if (index === -1) {
@@ -35,6 +37,15 @@ export class LevelUserComponent  implements OnInit {
     else{
       this.applyAngle = (360 / this.allLevels.length) * (150 - this.size) / 1000;
     }
+  }
+
+  private sortLevels(levels: any[]): any[] {
+    if (!Array.isArray(levels)) return [];
+    return [...levels].sort((a: any, b: any) => {
+      const ao = (a?.degree_order ?? a?.order ?? a?.id ?? 0);
+      const bo = (b?.degree_order ?? b?.order ?? b?.id ?? 0);
+      return ao - bo;
+    });
   }
 
   get viewBox(): string {

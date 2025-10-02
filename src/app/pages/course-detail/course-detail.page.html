@@ -114,28 +114,29 @@
         
         <div class="member-list">
 
-          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item cursor-pointer" (click)="goTo('course-detail-level',bookingIdFull,dateBooking,client.id,selectedBooking.course.sport_id)">
+          <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item">
             <app-level-user *ngIf="selectedBooking && selectedBooking.sport_degrees && selectedBooking.sport_degrees.length" [allLevels]="selectedBooking.sport_degrees" [selectLevel]="client.degree_sport" [size]="60" [userImage]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">
-                  <div class="montserrat member-item-title-icon">
+                  <div class="montserrat member-item-title-icon" (click)="goToClientDetail(client)" style="cursor: pointer; flex: 1;">
                     <div>{{client.first_name}} {{client.last_name}}</div>
-                    <!-- Asistencia inline para la fecha seleccionada -->
-                    <ion-checkbox *ngIf="canMarkAttendance()"
-                      [checked]="isAttended(client.id)"
-                      (ionChange)="onToggle(client.id, $event.detail.checked, $event)"
-                      (click)="$event.stopPropagation()"
-                      style="margin-left: 8px;">
-                    </ion-checkbox>
-                    <!-- CHECK IF CONFIRMED IN ALL DATES -->
-                    <!--
-                    <img src="assets/icon/icon-double-check.png" />
-                    -->
                   </div>
-                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" />
+                  <!-- Asistencia inline para la fecha seleccionada -->
+                  <ion-checkbox *ngIf="canMarkAttendance()"
+                    [checked]="isAttended(client.id)"
+                    (ionChange)="onToggle(client.id, $event.detail.checked)"
+                    (click)="$event.stopPropagation()"
+                    slot="start"
+                    style="margin-left: 8px;">
+                  </ion-checkbox>
+                  <!-- CHECK IF CONFIRMED IN ALL DATES -->
+                  <!--
+                  <img src="assets/icon/icon-double-check.png" />
+                  -->
+                  <img src="assets/icon/icons-outline-arrow-right-3-white.svg" (click)="goToClientDetail(client)" style="cursor: pointer;" />
                 </div>
-                <div class="member-item-subtitle">
+                <div class="member-item-subtitle" (click)="goToClientDetail(client)" style="cursor: pointer;">
                   <span class="montserrat">
                     <ng-container *ngIf="client.language1_id">
                       {{getLanguageById(client.language1_id)}} ·

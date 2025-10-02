@@ -43,6 +43,11 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   showSummer: boolean = false;
   showOther: boolean = false;
   showLevel:boolean = false;
+  showChangePassword:boolean = false;
+
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
 
   isMarried:boolean = false;
   isSingle:boolean = false;
@@ -379,6 +384,51 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
 
   togglePhotoMonitor(): void {
     this.showPhotoMonitor = !this.showPhotoMonitor;
+  }
+
+  changePassword(): void {
+    // Validation
+    if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+      this.toastr.error(this.translate.instant('toast.fill_all_fields'));
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.toastr.error(this.translate.instant('toast.passwords_dont_match'));
+      return;
+    }
+
+    if (this.newPassword.length < 6) {
+      this.toastr.error(this.translate.instant('toast.password_min_length'));
+      return;
+    }
+
+    this.spinnerService.show();
+
+    const changePasswordData = {
+      current_password: this.currentPassword,
+      new_password: this.newPassword,
+      new_password_confirmation: this.confirmPassword
+    };
+
+    this.teachService.postData('change-password', changePasswordData).subscribe(
+      response => {
+        this.spinnerService.hide();
+        this.toastr.success(this.translate.instant('toast.password_changed'));
+        // Reset form
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+        this.showChangePassword = false;
+        this.showGeneral = true;
+      },
+      error => {
+        this.spinnerService.hide();
+        const errorMessage = error.error?.message || this.translate.instant('toast.password_change_failed');
+        this.toastr.error(errorMessage);
+        console.error('Password change failed', error);
+      }
+    );
   }
 
   goTo(...urls: string[]) {

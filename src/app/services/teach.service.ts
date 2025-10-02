@@ -44,12 +44,24 @@ export class TeachService {
 
   //PUT
   updateData<T>(route: string, id: number, data: T): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/${route}/${id}`, data, { headers: this.getHeaders() });
+    // Agregar headers anti-caché para evitar problemas en Android WebView
+    const headers = this.getHeaders()
+      .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+      .set('Pragma', 'no-cache')
+      .set('Expires', '0');
+
+    return this.http.put(`${environment.apiUrl}/${route}/${id}`, data, { headers });
   }
 
   // POST
   postData<T>(route: string, data: T): Observable<any> {
-    return this.http.post<T>(`${environment.apiUrl}/${route}`, data, { headers: this.getHeaders() });
+    // Agregar headers anti-caché para evitar problemas en Android WebView
+    const headers = this.getHeaders()
+      .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+      .set('Pragma', 'no-cache')
+      .set('Expires', '0');
+
+    return this.http.post<T>(`${environment.apiUrl}/${route}`, data, { headers });
   }
   
   // DELETE

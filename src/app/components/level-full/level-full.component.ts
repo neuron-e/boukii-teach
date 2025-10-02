@@ -26,6 +26,9 @@ export class LevelFullComponent  implements OnInit, OnChanges {
   }
 
   processInputs() {
+    // Ensure levels are sorted by degree_order asc (fallback to id)
+    this.allLevels = this.sortLevels(this.allLevels);
+
     if(this.selectLevel){
       let index = this.allLevels.findIndex(obj => obj.id === this.selectLevel);
       if (index === -1) {
@@ -40,6 +43,15 @@ export class LevelFullComponent  implements OnInit, OnChanges {
       this.selectLevel = 0;
       this.indexSelectLevel = 0;
     }
+  }
+
+  private sortLevels(levels: any[]): any[] {
+    if (!Array.isArray(levels)) return [];
+    return [...levels].sort((a: any, b: any) => {
+      const ao = (a?.degree_order ?? a?.order ?? a?.id ?? 0);
+      const bo = (b?.degree_order ?? b?.order ?? b?.id ?? 0);
+      return ao - bo;
+    });
   }
 
   get viewBox(): string {

@@ -11,8 +11,8 @@
     "month": "Mes",
     "week": "Semana",
     "day": "Día",
-    "availability": "Disponibilidad",
-    "edit_availability": "Editar Disponibilidad",
+    "availability": "Indisponibilidad",
+    "edit_availability": "Editar Indisponibilidad",
     "open_calendar": "Calendario Abierto",
     "close_calendar": "Cerrar Calendario",
     "choose_date_range": "Elegir Rango de Fechas",
@@ -71,6 +71,10 @@
     "forgot_password": "¿Olvidó la Contraseña?",
     "recover_password": "Recuperar Contraseña",
     "reset_password": "Restablecer Contraseña",
+    "change_password": "Cambiar Contraseña",
+    "current_password": "Contraseña Actual",
+    "new_password": "Nueva Contraseña",
+    "confirm_password": "Confirmar Contraseña",
     "messages": "Mensajes",
     "schools": "Escuelas",
     "search_messages": "Buscar Mensajes...",
@@ -199,7 +203,15 @@
         "no_client_found": "Ningún cliente encontrado",
         "scanned_successfully": "QR escaneado con éxito",
         "scan_error": "Error de escaneo QR",
-        "recover_correctly": "Recibirás un email con los siguientes pasos para recuperar tu contraseña"
+        "recover_correctly": "Recibirás un email con los siguientes pasos para recuperar tu contraseña",
+        "password_changed": "Contraseña cambiada correctamente",
+        "password_change_failed": "Error al cambiar la contraseña",
+        "fill_all_fields": "Por favor complete todos los campos",
+        "passwords_dont_match": "Las contraseñas no coinciden",
+        "password_min_length": "La contraseña debe tener al menos 6 caracteres",
+        "unavailabilities_created_partial": "Se crearon {created} indisponibilidad(es). {skipped} fecha(s) omitida(s) por solapamientos",
+        "unavailabilities_created_none": "No se pudo crear ninguna indisponibilidad. Todas las fechas tienen solapamientos",
+        "unavailabilities_created_all": "Indisponibilidad(es) guardada(s) exitosamente"
     },
     "close_account_confirm_a": "¿Está seguro de que quiere eliminar su cuenta?",
     "close_account_confirm_b": "Si continúa, eliminará todos sus datos asociados y no podrá recuperarlos. ¿Está seguro de que quiere eliminar su cuenta?",
@@ -208,5 +220,6 @@
     "title_start_b": "Tu planing siempre al día",
     "text_start_b": "Cursos colectivos, privados o actividades, una agenda completa incluso sin conexión.",
     "title_start_c": "Sigue el progreso de tus alumnos",
-    "text_start_c": "Visualiza, evalúa y comunica con tus clientes."
+    "text_start_c": "Visualiza, evalúa y comunica con tus clientes.",
+    "mark_attendance": "Marcar asistencia"
 }

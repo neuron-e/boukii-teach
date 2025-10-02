@@ -380,7 +380,10 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   }
 
   onToggle(clientId: number, checked: boolean, event?: Event) {
-    if (event) { event.stopPropagation(); }
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
 
     const bu = this.bookingUserByClient.get(clientId);
     if (!bu) return;
@@ -401,6 +404,10 @@ export class CourseDetailPage implements OnInit, OnDestroy {
         this.toastr.error(this.translate.instant('toast.error'));
       }
     });
+  }
+
+  goToClientDetail(client: any) {
+    this.goTo('course-detail-level', this.bookingIdFull, this.dateBooking, client.id, this.selectedBooking.course.sport_id);
   }
 
   goTo(...urls: string[]) {

@@ -19,16 +19,19 @@
           <span class="montserrat color-primary">@{{ monitorData.first_name }}{{ monitorData.last_name }}</span> <!--missing username-->
         </div>
         <div class="mt-8 flex-buttons">
-          <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;">
+          <div [ngClass]="{'btn-back-primary': showGeneral, 'btn-back-grey': !showGeneral}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=true;showSports=false;showWork=false;showChangePassword=false;">
             {{ 'data' | translate }}
           </div>
-          <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;showWork=false;">
+          <div [ngClass]="{'btn-back-primary': showSports, 'btn-back-grey': !showSports}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=true;showWork=false;showChangePassword=false;">
             {{ 'sports' | translate }}
           </div>
         </div>
         <div class="mt-8 mb-32 flex-buttons">
-          <div [ngClass]="{'btn-back-primary': showWork, 'btn-back-grey': !showWork}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=false;showWork=true;">
+          <div [ngClass]="{'btn-back-primary': showWork, 'btn-back-grey': !showWork}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=false;showWork=true;showChangePassword=false;">
             {{ 'work_info' | translate }}
+          </div>
+          <div [ngClass]="{'btn-back-primary': showChangePassword, 'btn-back-grey': !showChangePassword}" class="montserrat flex-buttons-button cursor-pointer" (click)="showGeneral=false;showSports=false;showWork=false;showChangePassword=true;">
+            {{ 'change_password' | translate }}
           </div>
         </div>
       </div>
@@ -359,6 +362,45 @@
         </div>
 
         <button (click)="saveChanges()" class="content-button btn-back-primary montserrat mt-24 mb-24">
+          {{ 'save' | translate }}
+        </button>
+
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div *ngIf="showChangePassword" class="mb-24 pt-8">
+
+        <div class="content-title-b mb-24">
+          {{ 'change_password' | translate }}
+        </div>
+
+        <div class="pb-24">
+          <div class="input-label color-light montserrat">
+            {{ 'current_password' | translate }}
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <img src="assets/icon/icon-key.png" />
+            <input class="montserrat" [placeholder]="'current_password' | translate" type="password" [(ngModel)]="currentPassword" />
+          </div>
+
+          <div class="input-label color-light montserrat">
+            {{ 'new_password' | translate }}
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <img src="assets/icon/icon-key.png" />
+            <input class="montserrat" [placeholder]="'new_password' | translate" type="password" [(ngModel)]="newPassword" />
+          </div>
+
+          <div class="input-label color-light montserrat">
+            {{ 'confirm_password' | translate }}
+          </div>
+          <div class="input-form-icon background-color-dark">
+            <img src="assets/icon/icon-key.png" />
+            <input class="montserrat" [placeholder]="'confirm_password' | translate" type="password" [(ngModel)]="confirmPassword" />
+          </div>
+        </div>
+
+        <button (click)="changePassword()" class="content-button btn-back-primary montserrat mt-24 mb-24">
           {{ 'save' | translate }}
         </button>
 
