@@ -48,6 +48,9 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   currentPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
+  showCurrentPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   isMarried:boolean = false;
   isSingle:boolean = false;
@@ -411,7 +414,7 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       new_password_confirmation: this.confirmPassword
     };
 
-    this.teachService.postData('change-password', changePasswordData).subscribe(
+    this.teachService.postData('teach/change-password', changePasswordData).subscribe(
       response => {
         this.spinnerService.hide();
         this.toastr.success(this.translate.instant('toast.password_changed'));

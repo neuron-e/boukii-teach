@@ -379,24 +379,27 @@
             {{ 'current_password' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
-            <img src="assets/icon/icon-key.png" />
-            <input class="montserrat" [placeholder]="'current_password' | translate" type="password" [(ngModel)]="currentPassword" />
+            <img src="assets/icon/icons-outline-lock.svg" />
+            <input class="montserrat" [placeholder]="'current_password' | translate" [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword" />
+            <img [src]="showCurrentPassword ? 'assets/icon/icon-eye.png' : 'assets/icon/icons-outline-eye.svg'" class="cursor-pointer" (click)="showCurrentPassword = !showCurrentPassword" style="width: 20px;" />
           </div>
 
           <div class="input-label color-light montserrat">
             {{ 'new_password' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
-            <img src="assets/icon/icon-key.png" />
-            <input class="montserrat" [placeholder]="'new_password' | translate" type="password" [(ngModel)]="newPassword" />
+            <img src="assets/icon/icons-outline-lock.svg" />
+            <input class="montserrat" [placeholder]="'new_password' | translate" [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword" />
+            <img [src]="showNewPassword ? 'assets/icon/icon-eye.png' : 'assets/icon/icons-outline-eye.svg'" class="cursor-pointer" (click)="showNewPassword = !showNewPassword" style="width: 20px;" />
           </div>
 
           <div class="input-label color-light montserrat">
             {{ 'confirm_password' | translate }}
           </div>
           <div class="input-form-icon background-color-dark">
-            <img src="assets/icon/icon-key.png" />
-            <input class="montserrat" [placeholder]="'confirm_password' | translate" type="password" [(ngModel)]="confirmPassword" />
+            <img src="assets/icon/icons-outline-lock.svg" />
+            <input class="montserrat" [placeholder]="'confirm_password' | translate" [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" />
+            <img [src]="showConfirmPassword ? 'assets/icon/icon-eye.png' : 'assets/icon/icons-outline-eye.svg'" class="cursor-pointer" (click)="showConfirmPassword = !showConfirmPassword" style="width: 20px;" />
           </div>
         </div>
 
