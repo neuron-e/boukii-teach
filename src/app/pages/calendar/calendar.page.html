@@ -71,7 +71,9 @@
     </div>
 
     <!--MONTH-->
-    <div class="padding-wrapper" *ngIf="showMonth">
+    <div class="padding-wrapper" *ngIf="showMonth"
+         (touchstart)="onTouchStart($event)"
+         (touchend)="onTouchEnd($event)">
 
       <div class="calendar mb-24 background-color-dark">
         <div class="weekdays">
@@ -118,7 +120,9 @@
     </div>
 
     <!--WEEK-->
-    <div class="padding-wrapper" *ngIf="showWeek">
+    <div class="padding-wrapper" *ngIf="showWeek"
+         (touchstart)="onTouchStart($event)"
+         (touchend)="onTouchEnd($event)">
 
       <div class="background-color-dark week-calendar-wrapper mt-24">
         <div class="week-calendar-days">
@@ -155,7 +159,9 @@
     </div>
 
     <!--DAY-->
-    <div class="padding-wrapper" *ngIf="showDay">
+    <div class="padding-wrapper" *ngIf="showDay"
+         (touchstart)="onTouchStart($event)"
+         (touchend)="onTouchEnd($event)">
 
       <div class="background-color-dark week-calendar mt-24">
         <div class="hour-section">
@@ -174,8 +180,10 @@
                 'private-icon-full': task.type === 'private',
                 'other-icon-full': task.type === 'other',
                 'block-icon-full': task.type === 'block',
-                'block-payed-icon-full': task.type === 'block_payed'
-              }" 
+                'block-payed-icon-full': task.type === 'block_payed',
+                'overlapped': task.overlapCount === 2,
+                'very-narrow': task.overlapCount >= 3
+              }"
               [ngStyle]="getTaskStyle(task)">
             <!--<img [src]="getIconForTaskType(task.type)" class="task-icon-only" />-->
             <!--Collective-->

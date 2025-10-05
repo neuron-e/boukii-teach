@@ -213,3 +213,17 @@ ion-spinner {
 .toast-top-right {
     top:calc(12px + env(safe-area-inset-top)) !important;
 }
+
+// School Selector Modal
+.school-selector-modal {
+    --width: 90%;
+    --max-width: 500px;
+    --height: auto;
+    --max-height: 80%;
+    --border-radius: 12px;
+    --background: transparent;
+
+    ion-backdrop {
+        --backdrop-opacity: 0.6;
+    }
+}

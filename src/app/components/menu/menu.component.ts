@@ -38,7 +38,7 @@ export class MenuComponent  implements OnInit {
     this.close.emit();
   }
 
-  changeLang(lang: any){  
+  changeLang(lang: any){
     this.translate.use(lang);
     localStorage.setItem('appLang', lang);
     this.changeDetectorRef.detectChanges();
@@ -61,6 +61,7 @@ export class MenuComponent  implements OnInit {
     this.spinnerService.show();
     localStorage.removeItem('token');
     localStorage.removeItem('monitorId');
+    localStorage.removeItem('activeSchool');
     this.monitorDataService.clearMonitorData();
     this.sharedDataService.clearAllData();
     this.monitorDataService.clearSubscriptions();

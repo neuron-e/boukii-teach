@@ -357,17 +357,26 @@ export class ClientLevelPage implements OnInit, OnDestroy {
         school_id: this.monitorData.active_school
     };
 
+    console.log('EVALUATION DEBUG: Assigning level to client', {
+        currentLevel: this.currentLevelMain.id,
+        nextLevel: nextLevel,
+        allGoalsCompleted: this.allGoalsCompleted(),
+        completeLevel: this.completeLevel
+    });
+
     // Check if a client-sport already exists
     if (this.currentClientSport) {
         return this.teachService.updateData('client-sports', this.currentClientSport.id, dataClient).subscribe(
             response => {
-                //console.log('Response:', response);
+                console.log('EVALUATION DEBUG: Client-sport updated successfully', response);
+                // Actualizar el degree_sport del cliente en memoria para que se refleje en la ruleta
+                this.clientMonitor.degree_sport = nextLevel;
                 this.spinnerService.hide();
-                this.goBackType();
                 this.toastr.success(this.translate.instant('toast.evaluation_registered'));
+                this.goBackType();
             },
             error => {
-                console.error('Error:', error);
+                console.error('EVALUATION DEBUG: Error updating client-sport:', error);
                 this.toastr.error(this.translate.instant('toast.error'));
                 this.spinnerService.hide();
             }
@@ -375,13 +384,16 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     } else {
         return this.teachService.postData('client-sports', dataClient).subscribe(
             response => {
-                //console.log('Response:', response);
+                console.log('EVALUATION DEBUG: Client-sport created successfully', response);
+                // Actualizar el degree_sport del cliente en memoria para que se refleje en la ruleta
+                this.clientMonitor.degree_sport = nextLevel;
+                this.currentClientSport = response.data; // Guardar la referencia para futuras actualizaciones
                 this.spinnerService.hide();
-                this.goBackType();
                 this.toastr.success(this.translate.instant('toast.evaluation_registered'));
+                this.goBackType();
             },
             error => {
-                console.error('Error:', error);
+                console.error('EVALUATION DEBUG: Error creating client-sport:', error);
                 this.toastr.error(this.translate.instant('toast.error'));
                 this.spinnerService.hide();
             }

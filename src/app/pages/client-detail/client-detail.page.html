@@ -133,13 +133,22 @@
       </div>
 
       <div class="background-color-dark box-radius box-observations">
-        <div *ngIf="clientMonitor && clientMonitor.observations.general" class="montserrat color-light text-observations">
-          {{clientMonitor.observations.general}}
+        <!-- Observaciones generales del cliente (por escuela) -->
+        <div *ngIf="currentObservation && currentObservation.general" class="montserrat color-light text-observations">
+          {{currentObservation.general}}
         </div>
-        <ng-container *ngIf="clientMonitor && clientMonitor.observations.notes">
+        <ng-container *ngIf="currentObservation && currentObservation.notes">
           <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'school_notes' | translate }}</div>
           <div class="montserrat color-light text-observations">
-            {{clientMonitor.observations.notes}}
+            {{currentObservation.notes}}
+          </div>
+        </ng-container>
+
+        <!-- Observaciones de evaluaciones (por deporte/nivel) -->
+        <ng-container *ngIf="getEvaluationsForCurrentSport().length > 0">
+          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'evaluation_observations' | translate }}</div>
+          <div *ngFor="let evaluation of getEvaluationsForCurrentSport()" class="montserrat color-light text-observations mb-8">
+            <span style="font-weight: 600;">{{ evaluation.degree?.name || 'Nivel' }}:</span> {{ evaluation.observations }}
           </div>
         </ng-container>
       </div>

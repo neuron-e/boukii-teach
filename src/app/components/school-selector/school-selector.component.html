@@ -1,0 +1,29 @@
+<div class="modal-wrapper">
+  <div class="modal-header background-color-dark">
+    <h2 class="montserrat">{{ 'select_school' | translate }}</h2>
+    <img src="assets/icon/icons-outline-close.svg" class="cursor-pointer close-icon" (click)="cancel()" />
+  </div>
+
+  <div class="modal-content">
+    <div *ngIf="schools && schools.length > 0" class="schools-list">
+      <div *ngFor="let school of schools"
+           class="school-item montserrat cursor-pointer"
+           [ngClass]="{'school-selected': school.id === currentSchoolId}"
+           (click)="selectSchool(school)">
+        <div class="school-info">
+          <div class="school-name">{{ school.name }}</div>
+          <div class="school-location color-light" *ngIf="school.city || school.province">
+            {{ school.city }}{{ school.city && school.province ? ', ' : '' }}{{ school.province }}
+          </div>
+        </div>
+        <img *ngIf="school.id === currentSchoolId"
+             src="assets/icon/icons-outline-check-circle-green.svg"
+             class="check-icon" />
+      </div>
+    </div>
+
+    <div *ngIf="!schools || schools.length === 0" class="no-schools montserrat color-light">
+      {{ 'no_schools_available' | translate }}
+    </div>
+  </div>
+</div>

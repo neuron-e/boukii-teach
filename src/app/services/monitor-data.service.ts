@@ -20,7 +20,7 @@ export class MonitorDataService {
   }
 
   fetchMonitorData(id: number) {
-    const sub = this.teachService.getData('monitors', id, {'with[]':'sports'}).subscribe(
+    const sub = this.teachService.getData('monitors', id, {'with[]': 'schools'}).subscribe(
       (data: any) => {
         this.setMonitorData(data.data);
         //console.log(data.data);
@@ -31,6 +31,24 @@ export class MonitorDataService {
     );
     this.subscriptions.add(sub);
     return sub;
+  }
+
+  updateActiveSchool(schoolId: number) {
+    const currentData = this.monitorDataSubject.value;
+    if (currentData) {
+      const updatedData = {
+        ...currentData,
+        active_school: schoolId
+      };
+      this.setMonitorData(updatedData);
+      // Save to localStorage
+      localStorage.setItem('activeSchool', schoolId.toString());
+    }
+  }
+
+  getActiveSchool(): number | null {
+    const stored = localStorage.getItem('activeSchool');
+    return stored ? parseInt(stored, 10) : null;
   }
 
   clearMonitorData() {

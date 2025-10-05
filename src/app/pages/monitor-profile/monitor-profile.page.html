@@ -103,7 +103,7 @@
           </div>
           <div class="input-form-icon background-color-dark width-60">
             <select class="montserrat" [(ngModel)]="country">
-              <option *ngFor="let pays of countries" [value]="pays.id">{{pays.name}}</option>
+              <option *ngFor="let pays of countries" [value]="pays.id">{{ 'countries.' + pays.iso | translate }}</option>
             </select>
           </div>
         </div>
@@ -251,7 +251,7 @@
           </div>
           <div class="input-form-icon background-color-dark">
             <select class="montserrat" placeholder="Nationalité" [(ngModel)]="worldCountry">
-              <option *ngFor="let pays of countries" [value]="pays.id">{{pays.name}}</option>
+              <option *ngFor="let pays of countries" [value]="pays.id">{{ 'countries.' + pays.iso | translate }}</option>
             </select>
           </div>
           <div class="input-label color-light montserrat">

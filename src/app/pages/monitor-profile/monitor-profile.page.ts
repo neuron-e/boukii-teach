@@ -176,10 +176,14 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
 
   async getMonitorSports() {
     try {
-      const data: any = await this.teachService.getData('monitor-sports-degrees', null, { monitor_id: this.monitorData.id }).toPromise();
+      const data: any = await this.teachService.getData('monitor-sports-degrees', null, {
+        monitor_id: this.monitorData.id,
+        school_id: this.monitorData.active_school
+      }).toPromise();
       this.sportDegrees = data.data;
+      console.log('GET MONITOR SPORTS DEBUG: Loaded sport degrees:', this.sportDegrees);
     } catch (error) {
-      console.error('There was an error!', error);
+      console.error('GET MONITOR SPORTS DEBUG: Error loading sports:', error);
     }
   }
 
@@ -228,11 +232,23 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   }  
 
   saveSports() {
+    this.spinnerService.show();
+
+    console.log('SAVE SPORTS DEBUG: Monitor data:', this.monitorData);
+    console.log('SAVE SPORTS DEBUG: Active school:', this.monitorData.active_school);
+    console.log('SAVE SPORTS DEBUG: Current sports:', this.sports);
+    console.log('SAVE SPORTS DEBUG: Current sportDegrees:', this.sportDegrees);
+    console.log('SAVE SPORTS DEBUG: Degrees:', this.degrees);
+
     const checkedSports = this.sports.filter(sport => sport.checked);
     const addObjects = checkedSports.filter(checkedSport =>
       !this.monitorData.sports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
     const deleteObjects = this.monitorData.sports.filter((monitorSport:any) =>
       !checkedSports.some(checkedSport => checkedSport.id === monitorSport.id));
+
+    console.log('SAVE SPORTS DEBUG: Checked sports:', checkedSports);
+    console.log('SAVE SPORTS DEBUG: Sports to add:', addObjects);
+    console.log('SAVE SPORTS DEBUG: Sports to delete:', deleteObjects);
 
     const addRequests = addObjects.map(obj => {
       let filteredDegrees = this.degrees.filter(degree => degree.sport_id === obj.id);
@@ -259,28 +275,41 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
         allow_adults: true,
         is_default: false
       };
+      console.log('SAVE SPORTS DEBUG: Adding sport with data:', data);
       return this.teachService.postData('monitor-sports-degrees', data);
     }).filter(request => request !== null); // Remove null requests
-  
+
     const deleteRequests = deleteObjects.map((obj:any) => {
       const sportDegreeId = this.sportDegrees.find(sd => sd.sport_id === obj.id && sd.monitor_id === this.monitorData.id)?.id;
       if (sportDegreeId) {
+        console.log('SAVE SPORTS DEBUG: Deleting sport degree id:', sportDegreeId);
         return this.teachService.deleteData('monitor-sports-degrees', sportDegreeId);
       }
       return null;
     }).filter((request:any) => request !== null);
-  
+
     const allRequests = [...addRequests, ...deleteRequests];
-  
+
     if (allRequests.length > 0) {
-      forkJoin(allRequests).subscribe(results => {
-        //console.log('All add and delete operations completed:', results);
-        this.router.navigate(['home']); // Navigate to 'home' after completion
-      }, error => {
-        console.error('An error occurred:', error);
+      console.log('SAVE SPORTS DEBUG: Total requests to execute:', allRequests.length);
+      forkJoin(allRequests).subscribe({
+        next: (results) => {
+          console.log('SAVE SPORTS DEBUG: All operations completed successfully:', results);
+          this.spinnerService.hide();
+          this.toastr.success(this.translate.instant('toast.updated_correctly'));
+          this.monitorDataService.fetchMonitorData(this.monitorData.id);
+          this.router.navigate(['home']);
+        },
+        error: (error) => {
+          console.error('SAVE SPORTS DEBUG: Error occurred:', error);
+          this.spinnerService.hide();
+          this.toastr.error(this.translate.instant('toast.update_failed'));
+        }
       });
     } else {
-      // No operations to perform, directly navigate to 'home'
+      console.log('SAVE SPORTS DEBUG: No changes to save');
+      this.spinnerService.hide();
+      this.toastr.info(this.translate.instant('toast.no_changes'));
       this.router.navigate(['home']);
     }
   }

@@ -27,6 +27,11 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- Support for 16KB page sizes (required by Google Play as of Nov 1, 2025) -->
+        <property
+            android:name="android.app.supports_16kb_page_sizes"
+            android:value="true" />
     </application>
 
     <!-- Permissions -->

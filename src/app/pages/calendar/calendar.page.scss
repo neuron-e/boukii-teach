@@ -191,65 +191,120 @@
 }
 
 .collective-icon-only {
-    position:absolute;width:calc(14.25% - 4px);background:rgba(251,153,23,0.3);border:1px solid rgba(251,153,23,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:calc(14.25% - 4px);background:rgba(251,153,23,0.3);border:1px solid rgba(251,153,23,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .private-icon-only {
-    position:absolute;width:calc(14.25% - 4px);background:rgba(42,201,64,0.3);border:1px solid rgba(42,201,64,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:calc(14.25% - 4px);background:rgba(42,201,64,0.3);border:1px solid rgba(42,201,64,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .other-icon-only {
-    position:absolute;width:calc(14.25% - 4px);background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:calc(14.25% - 4px);background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .block-icon-only {
-    position:absolute;width:calc(14.25% - 4px);border-radius:8px;cursor:pointer;
+    position:absolute;width:calc(14.25% - 4px);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .block-payed-icon-only {
-    position:absolute;width:calc(14.25% - 4px);border-radius:8px;cursor:pointer;
+    position:absolute;width:calc(14.25% - 4px);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .collective-icon-full {
-    position:absolute;width:100%;background:rgba(251,153,23,0.3);border:1px solid rgba(251,153,23,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:100%;background:rgba(251,153,23,0.3);border:1px solid rgba(251,153,23,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .private-icon-full {
-    position:absolute;width:100%;background:rgba(42,201,64,0.3);border:1px solid rgba(42,201,64,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:100%;background:rgba(42,201,64,0.3);border:1px solid rgba(42,201,64,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .other-icon-full {
-    position:absolute;width:100%;background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;
+    position:absolute;width:100%;background:rgba(241,36,120,0.3);border:1px solid rgba(241,36,120,0.6);border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .block-icon-full {
-    position:absolute;width:100%;border-radius:8px;cursor:pointer;
+    position:absolute;width:100%;border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .block-payed-icon-full {
-    position:absolute;width:100%;border-radius:8px;cursor:pointer;
+    position:absolute;width:100%;border-radius:8px;cursor:pointer;box-sizing:border-box;
 }
 .task-content-block {
-    background:rgba(7, 10, 14, 0.7);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#fff;font-weight:500;text-align:center;padding:8px 16px;border-radius:8px;max-width: 220px;width:80%;
+    background:rgba(7, 10, 14, 0.7);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#fff;font-weight:500;text-align:center;padding:8px 16px;border-radius:8px;max-width: 220px;width:80%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box;
 }
 .task-icon-only {
     height:20px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
 }
 .task-content {
-    display:flex;align-items:center;gap:8px;position: absolute;top: 50%;padding: 0 14px 0 12px;transform: translateY(-50%);width:100%;
+    display:flex;align-items:center;gap:8px;position: absolute;top: 50%;padding: 0 14px 0 12px;transform: translateY(-50%);width:100%;box-sizing:border-box;overflow:hidden;
 }
 .task-content-img {
-    height:20px;
+    height:20px;flex-shrink:0;
 }
 .task-content-text {
-    display:flex;flex-direction:column;gap:3px;
+    display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;
 }
 .task-content-text div {
-    font-size:14px;color:#fff;
+    font-size:14px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .task-content-text span {
-    font-size:12px;
+    font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .task-content-icon-list {
-    display:flex;flex-direction:column;gap:2px;
+    display:flex;flex-direction:column;gap:2px;flex-shrink:0;
 }
 .task-content-icon {
-    display:flex;align-items:center;gap:4px;
+    display:flex;align-items:center;gap:4px;white-space:nowrap;
 }
 .task-content-icon img {
-    width:18px;
+    width:18px;flex-shrink:0;
 }
 .task-content-icon span {
     font-size:12px;
+}
+
+// Estilos para eventos solapados (ancho reducido)
+.collective-icon-full.overlapped,
+.private-icon-full.overlapped,
+.other-icon-full.overlapped,
+.block-icon-full.overlapped,
+.block-payed-icon-full.overlapped {
+    .task-content {
+        padding: 0 6px 0 6px;
+        gap: 4px;
+    }
+
+    .task-content-text div {
+        font-size: 12px;
+    }
+
+    .task-content-text span {
+        font-size: 10px;
+    }
+
+    .task-content-icon-list {
+        display: none; // Ocultar iconos de contadores cuando hay poco espacio
+    }
+
+    .task-content-img {
+        height: 16px;
+    }
+}
+
+// Para eventos muy estrechos (3 o más solapados)
+.collective-icon-full.very-narrow,
+.private-icon-full.very-narrow,
+.other-icon-full.very-narrow,
+.block-icon-full.very-narrow,
+.block-payed-icon-full.very-narrow {
+    .task-content {
+        flex-direction: column;
+        padding: 4px;
+        gap: 2px;
+        justify-content: center;
+    }
+
+    .task-content-text {
+        align-items: center;
+        text-align: center;
+    }
+
+    .task-content-text div {
+        font-size: 11px;
+    }
+
+    .task-content-text span {
+        font-size: 9px;
+    }
 }

@@ -1,0 +1,88 @@
+.modal-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--ion-background-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #444953;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .close-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.modal-content {
+  padding: 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.schools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.school-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: #2b303b;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #343a47;
+  }
+
+  &.school-selected {
+    background: rgba(42, 201, 64, 0.1);
+    border: 1px solid rgba(42, 201, 64, 0.3);
+  }
+}
+
+.school-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.school-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.school-location {
+  font-size: 13px;
+}
+
+.check-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.no-schools {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 14px;
+}

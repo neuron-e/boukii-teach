@@ -44,6 +44,8 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   sports: any[] = [];
   sportSelected:any;
   languages: any[] = [];
+  clientEvaluations: any[] = [];
+  currentObservation: any = null;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
@@ -129,6 +131,12 @@ export class ClientDetailPage implements OnInit, OnDestroy {
         console.log('Selected sport:', useSport);
         this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === useSport) : [];
         console.log('Filtered sport degrees:', this.sportDegrees);
+
+        // Filtrar observaciones por escuela activa
+        this.filterObservationsBySchool();
+
+        // Cargar evaluaciones del cliente
+        await this.getClientEvaluations();
       } else {
         // Not a client of monitor
         this.goTo('clients');
@@ -136,6 +144,49 @@ export class ClientDetailPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('There was an error fetching clients!', error);
     }
+  }
+
+  filterObservationsBySchool() {
+    if (this.clientMonitor && this.clientMonitor.observations && this.monitorData) {
+      // Buscar la observación de la escuela activa
+      this.currentObservation = this.clientMonitor.observations.find(
+        (obs: any) => obs.school_id === this.monitorData.active_school
+      );
+
+      if (!this.currentObservation) {
+        // Si no existe, crear un objeto vacío
+        this.currentObservation = {
+          general: '',
+          notes: '',
+          historical: ''
+        };
+      }
+
+      console.log('CLIENT DETAIL DEBUG: Current observation for school:', this.currentObservation);
+    }
+  }
+
+  async getClientEvaluations() {
+    try {
+      const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientId }).toPromise();
+      this.clientEvaluations = data.data;
+      console.log('CLIENT DETAIL DEBUG: Loaded evaluations:', this.clientEvaluations);
+    } catch (error) {
+      console.error('CLIENT DETAIL DEBUG: Error loading evaluations:', error);
+      this.clientEvaluations = [];
+    }
+  }
+
+  getEvaluationsForCurrentSport() {
+    if (!this.clientEvaluations || !this.sportSelected) {
+      return [];
+    }
+
+    // Filtrar evaluaciones por el deporte seleccionado
+    const sportDegreeIds = this.sportDegrees.map(d => d.id);
+    return this.clientEvaluations
+      .filter(evaluation => sportDegreeIds.includes(evaluation.degree_id) && evaluation.observations)
+      .sort((a, b) => b.id - a.id); // Más recientes primero
   }  
 
   changeSport(index:any) {

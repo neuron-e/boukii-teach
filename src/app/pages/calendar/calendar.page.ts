@@ -18,11 +18,11 @@ import * as moment from 'moment';
 export class CalendarPage implements OnInit, OnDestroy {
   monitorData: any;
   private subscription: Subscription;
-  
+
   showMonth:boolean = true;
   showWeek:boolean = false;
   showDay:boolean = false;
-  
+
   today = new Date();
   currentMonth: number;
   currentYear: number;
@@ -31,6 +31,11 @@ export class CalendarPage implements OnInit, OnDestroy {
   selectedDate: Date;
   weekStart: Date;
   weekEnd: Date;
+
+  // Touch/Swipe detection
+  private touchStartX: number = 0;
+  private touchStartY: number = 0;
+  private readonly SWIPE_THRESHOLD = 50; // minimum distance for swipe
 
   monthNames: string[] = [];
   weekdays: string[] = [];
@@ -640,7 +645,7 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   async updateTasksWithStyles() {
     const hourHeight = 54;
-    const hourSeparator = 3; 
+    const hourSeparator = 3;
     const totalHourHeight = hourHeight + hourSeparator;
     const startHourOffset = 11;
 
@@ -653,7 +658,8 @@ export class CalendarPage implements OnInit, OnDestroy {
       '5': '57%',
       '6': '71.25%'
     };
-  
+
+    // First pass: calculate basic styles
     this.tasksCalendar = this.tasksCalendar.map(task => {
       const dayOfWeek = this.getDayOfWeek(task.date);
       //Check start time is inside hours range
@@ -668,12 +674,12 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (endTime > lastTimeRange) {
         endTime.setHours(lastTimeRange.getHours(), lastTimeRange.getMinutes(), 0, 0);
       }
-  
+
       //calculate top
       const startHour = startTime.getHours() - parseInt(this.hourStartDay.split(':')[0], 10);
       const startMinutes = startTime.getMinutes();
       const top = startHourOffset + (startHour * totalHourHeight) + (startMinutes / 60) * hourHeight;
-  
+
       //calculate height
       const durationMs = endTime.getTime() - startTime.getTime();
       const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
@@ -688,9 +694,15 @@ export class CalendarPage implements OnInit, OnDestroy {
 
       // Left from day of week
       const left = leftValues[dayOfWeek.toString()];
-  
+
       return {
         ...task,
+        startTimeMs: startTime.getTime(),
+        endTimeMs: endTime.getTime(),
+        topPx: top,
+        heightPx: height,
+        dayOfWeek: dayOfWeek,
+        leftValue: left,
         style: {
           top: `${top}px`,
           height: `${height}px`
@@ -703,7 +715,138 @@ export class CalendarPage implements OnInit, OnDestroy {
       };
     });
 
+    // Second pass: detect overlaps and adjust widths for day view
+    this.adjustOverlappingTasks();
+
     this.renderCalendar()
+  }
+
+  adjustOverlappingTasks() {
+    // Group tasks by date for day view
+    const tasksByDate: { [key: string]: any[] } = {};
+    this.tasksCalendar.forEach(task => {
+      if (!tasksByDate[task.date]) {
+        tasksByDate[task.date] = [];
+      }
+      tasksByDate[task.date].push(task);
+      // Initialize overlapCount
+      task.overlapCount = 1;
+    });
+
+    // Process each date
+    Object.keys(tasksByDate).forEach(date => {
+      const dateTasks = tasksByDate[date];
+      const overlappingGroups = this.findOverlappingGroups(dateTasks);
+
+      overlappingGroups.forEach(group => {
+        const groupSize = group.length;
+        if (groupSize > 1) {
+          // Sort by start time to maintain consistent order
+          group.sort((a, b) => a.startTimeMs - b.startTimeMs);
+
+          // Adjust width and left offset for each task in the group
+          group.forEach((task, index) => {
+            const widthPercent = 100 / groupSize;
+            const leftOffset = (100 / groupSize) * index;
+
+            // Store overlap count for CSS classes
+            task.overlapCount = groupSize;
+
+            // Update day view style
+            task.style = {
+              ...task.style,
+              width: `${widthPercent}%`,
+              left: `${leftOffset}%`,
+              'z-index': index + 1
+            };
+          });
+        }
+      });
+    });
+
+    // Group tasks by date AND day of week for week view
+    const tasksByDateAndDay: { [key: string]: any[] } = {};
+    this.tasksCalendar.forEach(task => {
+      const key = `${task.date}_${task.dayOfWeek}`;
+      if (!tasksByDateAndDay[key]) {
+        tasksByDateAndDay[key] = [];
+      }
+      tasksByDateAndDay[key].push(task);
+    });
+
+    // Process each date/day combination for week view
+    Object.keys(tasksByDateAndDay).forEach(key => {
+      const dateTasks = tasksByDateAndDay[key];
+      const overlappingGroups = this.findOverlappingGroups(dateTasks);
+
+      overlappingGroups.forEach(group => {
+        const groupSize = group.length;
+        if (groupSize > 1) {
+          // Sort by start time
+          group.sort((a, b) => a.startTimeMs - b.startTimeMs);
+
+          // Calculate the column width (14.25% is the day column width)
+          const columnWidth = 14.25;
+          const taskWidth = columnWidth / groupSize;
+
+          group.forEach((task, index) => {
+            // Parse the base left value (e.g., "28.5%" -> 28.5)
+            const baseLeft = parseFloat(task.leftValue);
+            const additionalOffset = (taskWidth * index);
+            const newLeft = baseLeft + additionalOffset;
+
+            // Update week view style
+            task.styleWeek = {
+              ...task.styleWeek,
+              width: `calc(${taskWidth}% - 2px)`,
+              left: `${newLeft}%`,
+              'z-index': index + 1
+            };
+          });
+        }
+      });
+    });
+  }
+
+  findOverlappingGroups(tasks: any[]): any[][] {
+    if (tasks.length === 0) return [];
+
+    // Sort tasks by start time
+    const sortedTasks = [...tasks].sort((a, b) => a.startTimeMs - b.startTimeMs);
+    const groups: any[][] = [];
+
+    let currentGroup: any[] = [sortedTasks[0]];
+
+    for (let i = 1; i < sortedTasks.length; i++) {
+      const currentTask = sortedTasks[i];
+
+      // Check if current task overlaps with any task in the current group
+      const overlapsWithGroup = currentGroup.some(groupTask =>
+        this.tasksOverlap(groupTask, currentTask)
+      );
+
+      if (overlapsWithGroup) {
+        currentGroup.push(currentTask);
+      } else {
+        // No overlap, save current group and start a new one
+        if (currentGroup.length > 0) {
+          groups.push(currentGroup);
+        }
+        currentGroup = [currentTask];
+      }
+    }
+
+    // Add the last group
+    if (currentGroup.length > 0) {
+      groups.push(currentGroup);
+    }
+
+    return groups;
+  }
+
+  tasksOverlap(task1: any, task2: any): boolean {
+    // Tasks overlap if one starts before the other ends
+    return task1.startTimeMs < task2.endTimeMs && task2.startTimeMs < task1.endTimeMs;
   }
 
   getDayOfWeek(dateStr: string): number {
@@ -732,6 +875,42 @@ export class CalendarPage implements OnInit, OnDestroy {
       }
       else{
         this.goTo('calendar-available');
+      }
+    }
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].screenX;
+    this.touchStartY = event.changedTouches[0].screenY;
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    const touchEndX = event.changedTouches[0].screenX;
+    const touchEndY = event.changedTouches[0].screenY;
+
+    const deltaX = touchEndX - this.touchStartX;
+    const deltaY = touchEndY - this.touchStartY;
+
+    // Check if it's a horizontal swipe (more horizontal than vertical)
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > this.SWIPE_THRESHOLD) {
+      if (deltaX > 0) {
+        // Swipe right - go to previous
+        if (this.showMonth) {
+          this.previousMonth();
+        } else if (this.showWeek) {
+          this.previousWeek();
+        } else if (this.showDay) {
+          this.previousDay();
+        }
+      } else {
+        // Swipe left - go to next
+        if (this.showMonth) {
+          this.nextMonth();
+        } else if (this.showWeek) {
+          this.nextWeek();
+        } else if (this.showDay) {
+          this.nextDay();
+        }
       }
     }
   }

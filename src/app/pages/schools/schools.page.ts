@@ -52,6 +52,7 @@ export class SchoolsPage implements OnInit, OnDestroy {
       if (data) {
         this.spinnerService.show();
         this.monitorData = data;
+
         try {
           this.stations = await firstValueFrom(this.sharedDataService.fetchStations());
           this.schools = await firstValueFrom(this.sharedDataService.fetchSchools());
@@ -59,8 +60,14 @@ export class SchoolsPage implements OnInit, OnDestroy {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
-        
-        this.fetchAllData();
+
+        // If monitor already has schools loaded, use them directly
+        if (this.monitorData.schools && this.monitorData.schools.length > 0) {
+          this.useMonitorSchools();
+        } else {
+          // Otherwise fetch from API
+          this.fetchAllData();
+        }
       }
     }, error => {
       console.error('Error fetching monitor data:', error);
@@ -88,10 +95,21 @@ export class SchoolsPage implements OnInit, OnDestroy {
     });
   }
 
+  useMonitorSchools() {
+    // Create a single "group" with all schools (no station grouping)
+    this.monitorStationsWithSchools = [{
+      id: 0,
+      name: this.translate.instant('my_schools'),
+      schools: this.monitorData.schools
+    }];
+
+    this.spinnerService.hide();
+  }
+
   onlyMonitorStationsWithSchools() {
     //Get only monitors data
     const validSchoolIds = this.monitorSchools.map((ms:any) => ms.school_id);
-  
+
     this.stations.sort((a, b) => a.id - b.id);
 
     this.monitorStationsWithSchools = this.stations.map(station => {
@@ -107,47 +125,36 @@ export class SchoolsPage implements OnInit, OnDestroy {
     this.spinnerService.hide();
   }
   
-  changeSchoolActive(school_id:number, station_id:number) {
+  async changeSchoolActive(school_id:number, station_id:number) {
     if(school_id){
-      const isConfirmed = confirm("Etes-vous sûr de vouloir changer d'école active?");
+      const isConfirmed = confirm(this.translate.instant('change_school_confirm'));
       if (isConfirmed && this.monitorData) {
         this.spinnerService.show();
-        //console.log('changing active school');
 
-        const updateData = {
-          active_school: school_id,
-          active_station: station_id,
+        try {
+          // Update in backend
+          await firstValueFrom(this.teachService.updateData('monitors', this.monitorData.id, {
+            active_school: school_id,
+            active_station: station_id
+          }));
 
-          //Required for put
-          phone: this.monitorData.phone,
-          telephone: this.monitorData.telephone,
-          first_name: this.monitorData.first_name,
-          last_name: this.monitorData.last_name,
-          birth_date: moment.utc(this.monitorData.birth_date).format('YYYY-MM-DDTHH:mm:ss.SSS') + '000Z',
-          address: this.monitorData.address,
-          avs: this.monitorData.avs,
-          bank_details: this.monitorData.bank_details,
-          children: this.monitorData.children,
-          work_license: this.monitorData.work_license
-        };
-    
-        this.teachService.updateData('monitors', this.monitorData.id, updateData).subscribe(
-          response => {
-            // Handle response
-            //console.log('Update successful', response);
-            //Update monitor subscription
-            this.monitorDataService.fetchMonitorData(this.monitorData.id);
-            this.spinnerService.hide();
-            this.toastr.success(this.translate.instant('toast.updated_correctly'));
-            this.goTo('home');
-          },
-          error => {
-            // Handle error
-            this.spinnerService.hide();
-            this.toastr.error(this.translate.instant('toast.update_failed'));
-            console.error('Update failed', error);
-          }
-        );
+          // Update local data
+          this.monitorDataService.updateActiveSchool(school_id);
+
+          // Refresh data for new school
+          await firstValueFrom(this.sharedDataService.fetchDegrees(school_id));
+          await firstValueFrom(this.sharedDataService.fetchSports(school_id));
+
+          this.spinnerService.hide();
+          this.toastr.success(this.translate.instant('toast.school_changed'));
+
+          // Reload page to refresh all data
+          window.location.reload();
+        } catch (error) {
+          console.error('Error changing school:', error);
+          this.spinnerService.hide();
+          this.toastr.error(this.translate.instant('toast.error'));
+        }
       }
     }
   }
