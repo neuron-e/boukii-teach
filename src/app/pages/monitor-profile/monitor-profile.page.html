@@ -102,10 +102,21 @@
             <input class="montserrat" type="text" placeholder="{{ 'postal_code' | translate }}" [(ngModel)]="cp" />
           </div>
           <div class="input-form-icon background-color-dark width-60">
-            <select class="montserrat" [(ngModel)]="country">
+            <select class="montserrat" [(ngModel)]="country" (change)="onCountryChange()">
+              <option [value]="null">{{ 'select_country' | translate }}</option>
               <option *ngFor="let pays of countries" [value]="pays.id">{{ 'countries.' + pays.iso | translate }}</option>
             </select>
           </div>
+        </div>
+
+        <div class="input-label color-light montserrat">
+          {{ 'province' | translate }}
+        </div>
+        <div class="input-form-icon background-color-dark">
+          <select class="montserrat" [(ngModel)]="province" [disabled]="!country || filteredProvinces.length === 0">
+            <option [value]="null">{{ 'select_province' | translate }}</option>
+            <option *ngFor="let prov of filteredProvinces" [value]="prov.id">{{prov.name}}</option>
+          </select>
         </div>
 
         <div class="inputs-flex">
@@ -449,17 +460,22 @@
                 {{ 'training' | translate }}
               </div>
               <div class="input-form-icon background-color-dark">
-                <input class="montserrat" type="text" />
+                <input class="montserrat" type="text" [(ngModel)]="trainingName" [placeholder]="'training' | translate" />
               </div>
 
               <div class="input-label color-light montserrat mt-24">
                 {{ 'training_proof' | translate }}
               </div>
+              <div *ngIf="trainingProof" class="mb-12">
+                <div class="montserrat color-primary" style="font-size: 12px;">
+                  ✓ {{ 'file_uploaded' | translate }}
+                </div>
+              </div>
               <div class="position-relative">
                 <label for="file-upload" class="custom-file-upload montserrat">
-                  {{ 'upload_pdf' | translate }}
+                  {{ trainingProof ? ('change_file' | translate) : ('upload_pdf' | translate) }}
                 </label>
-                <input id="file-upload" type="file" accept=".pdf" class="file-display-none" />
+                <input id="file-upload" type="file" accept=".pdf" class="file-display-none" (change)="onFileSelected($event)" />
               </div>
       </div>
 

@@ -66,6 +66,10 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   sportDegrees: any[] = [];
   selectedSport:any;
   currentLevel: number = 0;
+  monitorTrainings: any[] = [];
+  selectedTraining: any = null;
+  trainingName: string = '';
+  trainingProof: string = '';
 
   email: string;
   phone: string;
@@ -105,6 +109,7 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
 
   countries = MOCK_COUNTRIES;
   provinces = MOCK_PROVINCES;
+  filteredProvinces: any[] = [];
 
   constructor(private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
@@ -122,12 +127,12 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
           this.degrees.sort((a, b) => a.degree_order - b.degree_order);
           this.sports = await firstValueFrom(this.sharedDataService.fetchSports(this.monitorData.active_school));
           this.sports.sort((a, b) => a.id - b.id);
+/*          const monitorSports = Array.isArray(this.monitorData?.sports) ? this.monitorData.sports : [];
+          this.monitorData.sports = monitorSports;*/
           this.sports = this.sports.map(sport => {
-            // Check if this sport's id is in monitorData.sports
-            const isChecked = this.monitorData.sports.some((monitorSport:any) => monitorSport.id === sport.id);
+            const isChecked = this.sportDegrees.some((monitorSport:any) => monitorSport.sport_id === sport.id);
             return { ...sport, checked: isChecked };
           });
-          
           this.filteredSports = this.sports.filter(sport => sport.sport_type === this.typeSport);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -169,9 +174,26 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
         this.workLicense = data.work_license;
         this.worldCountry = data.world_country;
 
+        // Filter provinces based on selected country
+        this.filterProvinces();
+
         this.spinnerService.hide();
       }
     });
+  }
+
+  filterProvinces(): void {
+    if (this.country) {
+      this.filteredProvinces = this.provinces.filter(province => province.id_country == parseInt(this.country));
+    } else {
+      this.filteredProvinces = [];
+    }
+  }
+
+  onCountryChange(): void {
+    // Reset province when country changes
+    this.province = '';
+    this.filterProvinces();
   }
 
   async getMonitorSports() {
@@ -184,6 +206,20 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       console.log('GET MONITOR SPORTS DEBUG: Loaded sport degrees:', this.sportDegrees);
     } catch (error) {
       console.error('GET MONITOR SPORTS DEBUG: Error loading sports:', error);
+    }
+  }
+
+  async getMonitorTrainings(sportId: number) {
+    try {
+      const data: any = await this.teachService.getData('monitor-trainings', null, {
+        monitor_id: this.monitorData.id,
+        sport_id: sportId,
+        school_id: this.monitorData.active_school
+      }).toPromise();
+      this.monitorTrainings = data.data;
+      console.log('GET MONITOR TRAININGS DEBUG: Loaded trainings:', this.monitorTrainings);
+    } catch (error) {
+      console.error('GET MONITOR TRAININGS DEBUG: Error loading trainings:', error);
     }
   }
 
@@ -201,8 +237,8 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
     });
     this.filterSports(this.typeSport);
   }
-  
-  doShowLevel(sport:any) {
+
+  async doShowLevel(sport:any) {
     this.selectedSport=sport;
     if(sport.level){
       this.currentLevel = sport.level;
@@ -210,14 +246,78 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
     else{
       this.currentLevel = 0;
     }
+
+    // Cargar las formaciones del deporte seleccionado
+    await this.getMonitorTrainings(sport.id);
+
+    // Cargar la formación existente si hay una
+    if (this.monitorTrainings.length > 0) {
+      this.selectedTraining = this.monitorTrainings[0];
+      this.trainingName = this.selectedTraining.training_name || '';
+      this.trainingProof = this.selectedTraining.training_proof || '';
+    } else {
+      this.selectedTraining = null;
+      this.trainingName = '';
+      this.trainingProof = '';
+    }
+
     this.showLevel=true;
   }
 
-  updateLevel() {
-    this.selectedSport.checked=true;
-    this.selectedSport.level = this.currentLevel;
-    this.currentLevel=0;
-    this.showLevel=false;
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.trainingProof = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  async updateLevel() {
+    this.spinnerService.show();
+
+    try {
+      // Guardar o actualizar la formación
+      const trainingData = {
+        monitor_id: this.monitorData.id,
+        sport_id: this.selectedSport.id,
+        school_id: this.monitorData.active_school,
+        training_name: this.trainingName,
+        training_proof: this.trainingProof
+      };
+
+      if (this.selectedTraining && this.selectedTraining.id) {
+        // Actualizar formación existente
+        await this.teachService.updateData('monitor-trainings', this.selectedTraining.id, {
+          training_name: this.trainingName,
+          training_proof: this.trainingProof
+        }).toPromise();
+      } else {
+        // Crear nueva formación
+        await this.teachService.postData('monitor-trainings', trainingData).toPromise();
+      }
+
+      // Actualizar el deporte en el array principal
+      const sportIndex = this.sports.findIndex(s => s.id === this.selectedSport.id);
+      if (sportIndex !== -1) {
+        this.sports[sportIndex].checked = true;
+        this.sports[sportIndex].level = this.currentLevel;
+      }
+
+      // Actualizar también filteredSports
+      this.filterSports(this.typeSport);
+
+      this.currentLevel=0;
+      this.showLevel=false;
+      this.spinnerService.hide();
+      this.toastr.success(this.translate.instant('toast.updated_correctly'));
+    } catch (error) {
+      console.error('Error saving training:', error);
+      this.spinnerService.hide();
+      this.toastr.error(this.translate.instant('toast.update_failed'));
+    }
   }
 
   disableChildButton(): boolean {
@@ -229,7 +329,7 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       return true;
     }
     return false;
-  }  
+  }
 
   saveSports() {
     this.spinnerService.show();
@@ -240,10 +340,12 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
     console.log('SAVE SPORTS DEBUG: Current sportDegrees:', this.sportDegrees);
     console.log('SAVE SPORTS DEBUG: Degrees:', this.degrees);
 
+    const monitorSports = Array.isArray(this.monitorData?.sports) ? this.monitorData.sports : [];
+    this.monitorData.sports = monitorSports;
     const checkedSports = this.sports.filter(sport => sport.checked);
     const addObjects = checkedSports.filter(checkedSport =>
-      !this.monitorData.sports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
-    const deleteObjects = this.monitorData.sports.filter((monitorSport:any) =>
+      !monitorSports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
+    const deleteObjects = monitorSports.filter((monitorSport:any) =>
       !checkedSports.some(checkedSport => checkedSport.id === monitorSport.id));
 
     console.log('SAVE SPORTS DEBUG: Checked sports:', checkedSports);
@@ -474,3 +576,4 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
   }
 
 }
+
