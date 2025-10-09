@@ -55,7 +55,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           console.error('Error fetching data:', error);
           this.toastr.error(this.translate.instant('toast.error_loading_data'));
         }
-  
+
         this.activatedRoute.params.subscribe( async params => {
           if (params['id'].startsWith('s-')) {
             this.bookingIdFull = params['id'];
@@ -137,7 +137,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   processBookings(bookings: any[], subgroups: any[]) {
     const uniqueCourseGroups = new Map();
     this.bookingsCurrent = [];
-  
+
     bookings.forEach(booking => {
       if (booking.course) {
         let key = `${booking.course_id}`;
@@ -179,7 +179,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           };
 
           uniqueCourseGroups.get(key).all_clients.push(clientWithBooking);
-          
+
           if (!this.isSubgroup && booking.id === this.bookingId) {
             uniqueCourseGroups.get(key).selected_detail = true;
           }
@@ -228,8 +228,8 @@ export class CourseDetailPage implements OnInit, OnDestroy {
       if (hourStartA > hourStartB) return 1;
       return 0;
     });
-    
-  
+
+
     this.selectedBooking = this.bookingsCurrent.find(booking => booking.selected_detail === true);
     // Cargar asistencia para el curso/fecha seleccionada
     if (this.selectedBooking && this.selectedBooking.course_id) {
@@ -283,27 +283,27 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   getPositionDate(courseDates: any[], courseDateId: string): number {
     const index = courseDates.findIndex(date => date.id === courseDateId);
     return index >= 0 ? index + 1 : 0;
-  }  
+  }
 
   getHoursMinutes(hour_start:string, hour_end:string) {
     const parseTime = (time:string) => {
       const [hours, minutes] = time.split(':').map(Number);
       return { hours, minutes };
     };
-  
+
     const startTime = parseTime(hour_start);
     const endTime = parseTime(hour_end);
-  
+
     let durationHours = endTime.hours - startTime.hours;
     let durationMinutes = endTime.minutes - startTime.minutes;
-  
+
     if (durationMinutes < 0) {
       durationHours--;
       durationMinutes += 60;
     }
-  
+
     return `${durationHours}h${durationMinutes}m`;
-  }  
+  }
 
   getBirthYears(date:string) {
     const birthDate = moment(date);

@@ -340,66 +340,59 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
     console.log('SAVE SPORTS DEBUG: Current sportDegrees:', this.sportDegrees);
     console.log('SAVE SPORTS DEBUG: Degrees:', this.degrees);
 
-    const monitorSports = Array.isArray(this.monitorData?.sports) ? this.monitorData.sports : [];
-    this.monitorData.sports = monitorSports;
     const checkedSports = this.sports.filter(sport => sport.checked);
-    const addObjects = checkedSports.filter(checkedSport =>
-      !monitorSports.some((monitorSport:any) => monitorSport.id === checkedSport.id));
-    const deleteObjects = monitorSports.filter((monitorSport:any) =>
-      !checkedSports.some(checkedSport => checkedSport.id === monitorSport.id));
+    const currentSportDegrees = Array.isArray(this.sportDegrees) ? this.sportDegrees : [];
+    const existingSportIds = new Set(currentSportDegrees.map((degree: any) => degree.sport_id));
+
+    const addObjects = checkedSports.filter(checkedSport => !existingSportIds.has(checkedSport.id));
+    const deleteObjects = currentSportDegrees.filter((degree: any) =>
+      !checkedSports.some(checkedSport => checkedSport.id === degree.sport_id)
+    );
 
     console.log('SAVE SPORTS DEBUG: Checked sports:', checkedSports);
     console.log('SAVE SPORTS DEBUG: Sports to add:', addObjects);
     console.log('SAVE SPORTS DEBUG: Sports to delete:', deleteObjects);
 
-    const addRequests = addObjects.map(obj => {
-      let filteredDegrees = this.degrees.filter(degree => degree.sport_id === obj.id);
-      let degreeId;
+    const addRequests = addObjects
+      .map(obj => {
+        const degreeId = this.getDefaultDegreeForSport(obj.id);
+        if (!degreeId) {
+          console.warn(`No degrees available for sport ${obj.id}, skipping`);
+          return null;
+        }
 
-      if (filteredDegrees && filteredDegrees.length > 0) {
-        // Use the highest degree for the sport
-        degreeId = filteredDegrees[filteredDegrees.length - 1].id;
-      } else if (this.degrees && this.degrees.length > 0) {
-        // Use the first available degree if no sport-specific degrees found
-        degreeId = this.degrees[0].id;
-      } else {
-        // Skip creating this entry if no degrees are available
-        console.warn(`No degrees available for sport ${obj.id}, skipping`);
-        return null;
-      }
+        const data = {
+          sport_id: obj.id,
+          school_id: this.monitorData.active_school,
+          degree_id: degreeId,
+          monitor_id: this.monitorData.id,
+          salary_level: 1,
+          allow_adults: true,
+          is_default: false
+        };
 
-      const data = {
-        sport_id: obj.id,
-        school_id: this.monitorData.active_school,
-        degree_id: degreeId,
-        monitor_id: this.monitorData.id,
-        salary_level: 1,
-        allow_adults: true,
-        is_default: false
-      };
-      console.log('SAVE SPORTS DEBUG: Adding sport with data:', data);
-      return this.teachService.postData('monitor-sports-degrees', data);
-    }).filter(request => request !== null); // Remove null requests
+        console.log('SAVE SPORTS DEBUG: Adding sport with data:', data);
+        return this.teachService.postData('monitor-sports-degrees', data);
+      })
+      .filter(request => request !== null);
 
-    const deleteRequests = deleteObjects.map((obj:any) => {
-      const sportDegreeId = this.sportDegrees.find(sd => sd.sport_id === obj.id && sd.monitor_id === this.monitorData.id)?.id;
-      if (sportDegreeId) {
-        console.log('SAVE SPORTS DEBUG: Deleting sport degree id:', sportDegreeId);
-        return this.teachService.deleteData('monitor-sports-degrees', sportDegreeId);
-      }
-      return null;
-    }).filter((request:any) => request !== null);
+    const deleteRequests = deleteObjects.map((degree: any) => {
+      console.log('SAVE SPORTS DEBUG: Deleting sport degree id:', degree.id);
+      return this.teachService.deleteData('monitor-sports-degrees', degree.id);
+    });
 
     const allRequests = [...addRequests, ...deleteRequests];
 
     if (allRequests.length > 0) {
       console.log('SAVE SPORTS DEBUG: Total requests to execute:', allRequests.length);
       forkJoin(allRequests).subscribe({
-        next: (results) => {
+        next: async (results) => {
           console.log('SAVE SPORTS DEBUG: All operations completed successfully:', results);
+          await this.getMonitorSports();
+          this.monitorData.sports = checkedSports.map(sport => ({ ...sport }));
+          this.monitorDataService.fetchMonitorData(this.monitorData.id);
           this.spinnerService.hide();
           this.toastr.success(this.translate.instant('toast.updated_correctly'));
-          this.monitorDataService.fetchMonitorData(this.monitorData.id);
           this.router.navigate(['home']);
         },
         error: (error) => {
@@ -410,10 +403,21 @@ export class MonitorProfilePage implements OnInit, OnDestroy {
       });
     } else {
       console.log('SAVE SPORTS DEBUG: No changes to save');
+      this.monitorData.sports = checkedSports.map(sport => ({ ...sport }));
+      this.monitorDataService.fetchMonitorData(this.monitorData.id);
       this.spinnerService.hide();
       this.toastr.info(this.translate.instant('toast.no_changes'));
       this.router.navigate(['home']);
     }
+  }
+
+  private getDefaultDegreeForSport(sportId: number): number | null {
+    const sportSpecificDegrees = this.degrees?.filter((degree: any) => degree.sport_id === sportId) || [];
+    if (sportSpecificDegrees.length > 0) {
+      return sportSpecificDegrees[sportSpecificDegrees.length - 1].id;
+    }
+
+    return this.degrees && this.degrees.length > 0 ? this.degrees[0].id : null;
   }
 
   saveChanges(): void {

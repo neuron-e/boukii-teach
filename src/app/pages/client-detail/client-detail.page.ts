@@ -100,50 +100,93 @@ export class ClientDetailPage implements OnInit, OnDestroy {
 
   async getClient() {
     try {
-      // Fetch client data and wait for the response
-      const data: any = await this.teachService.getData(`teach/clients/${this.clientId}`).toPromise();
+      const data: any = await this.teachService
+        .getData('teach/clients', this.clientId, {
+          'with[]': ['main', 'sports', 'clientSports', 'clientSports.degree', 'clientSports.sport', 'observations'],
+          school_id: this.monitorData?.active_school
+        })
+        .toPromise();
+
       const client = data.data;
       if (client) {
         const birthDate = moment(client.birth_date);
-        const age = moment().diff(birthDate, 'years');
-        client.birth_years = age;
-  
-        client.degree_sport = 0;
-        if(client.sports && client.sports.length){
-          if(client.sports[0]){
-            client.sports[0].selected = true;
-            if(client.sports[0].pivot.degree_id){
-              client.degree_sport = client.sports[0].pivot.degree_id;
-            }
-          }
-        }
+        client.birth_years = moment().diff(birthDate, 'years');
+
+        this.buildClientSports(client);
         this.clientMonitor = client;
 
-          // Filter by sport
-        let useSport = 1;
-        if(this.clientMonitor && this.clientMonitor.sports && this.clientMonitor.sports.length) {
-          if(this.clientMonitor.sports[0].id){
-            useSport = this.clientMonitor.sports[0].id;
-          }
-        }
-        this.sportSelected = useSport;
+        const activeSport = this.clientMonitor.sports && this.clientMonitor.sports.length
+          ? this.clientMonitor.sports.find((sport: any) => sport.selected) || this.clientMonitor.sports[0]
+          : null;
+
+        this.sportSelected = activeSport?.id ?? null;
+
         console.log('Available degrees:', this.degrees);
-        console.log('Selected sport:', useSport);
-        this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === useSport) : [];
+        console.log('Selected sport:', this.sportSelected);
+
+        this.sportDegrees = this.degrees && this.degrees.length > 0 && this.sportSelected
+          ? this.degrees.filter(degree => degree.sport_id === this.sportSelected)
+          : [];
+
         console.log('Filtered sport degrees:', this.sportDegrees);
 
-        // Filtrar observaciones por escuela activa
         this.filterObservationsBySchool();
-
-        // Cargar evaluaciones del cliente
         await this.getClientEvaluations();
       } else {
-        // Not a client of monitor
         this.goTo('clients');
       }
     } catch (error) {
       console.error('There was an error fetching clients!', error);
     }
+  }
+
+  private buildClientSports(client: any): void {
+    const availableSports = Array.isArray(this.sports) ? this.sports : [];
+
+    let sportsFromApi: any[] = [];
+    if (Array.isArray(client?.sports) && client.sports.length) {
+      sportsFromApi = client.sports;
+    } else if (Array.isArray(client?.client_sports) && client.client_sports.length) {
+      sportsFromApi = client.client_sports.map((entry: any) => {
+        const sportInfo = entry.sport || availableSports.find(sport => sport.id === entry.sport_id) || {};
+        const sportId = entry.sport_id ?? sportInfo.id ?? entry.id;
+
+        return {
+          ...sportInfo,
+          ...entry,
+          id: sportId,
+          sport_id: sportId,
+          pivot: {
+            ...(entry.pivot || {}),
+            degree_id: entry.pivot?.degree_id ?? entry.degree_id ?? null
+          }
+        };
+      });
+    }
+
+    const enrichedSports = sportsFromApi.map((sport: any, index: number) => {
+      const sportId = sport.id ?? sport.sport_id;
+      const catalogSport = availableSports.find(item => item.id === sportId) || {};
+      const pivotDegreeId = sport.pivot?.degree_id ?? sport.degree_id ?? null;
+
+      return {
+        ...catalogSport,
+        ...sport,
+        id: sportId,
+        sport_id: sportId,
+        name: sport.name ?? catalogSport.name,
+        icon_selected: sport.icon_selected ?? catalogSport.icon_selected,
+        icon_unselected: sport.icon_unselected ?? catalogSport.icon_unselected,
+        selected: index === 0,
+        pivot: {
+          ...(sport.pivot || {}),
+          degree_id: pivotDegreeId
+        }
+      };
+    });
+
+    client.sports = enrichedSports;
+    client.degree_sport = enrichedSports[0]?.pivot?.degree_id ?? 0;
   }
 
   filterObservationsBySchool() {
@@ -191,19 +234,24 @@ export class ClientDetailPage implements OnInit, OnDestroy {
 
   changeSport(index:any) {
     let newDegree = 0;
-      if(this.clientMonitor.sports[index]){
-        this.clientMonitor.sports.forEach((sport:any) => {
-          sport.selected = false;
-        });
-        this.clientMonitor.sports[index].selected = true;
-        if(this.clientMonitor.sports[index].pivot.degree_id){
-          newDegree = this.clientMonitor.sports[index].pivot.degree_id;
-        }
+    const sport = this.clientMonitor?.sports ? this.clientMonitor.sports[index] : null;
+    if(!sport){
+      return;
+    }
 
-        this.sportSelected = this.clientMonitor.sports[index].id;
-      }
+    this.clientMonitor.sports.forEach((item:any) => {
+      item.selected = false;
+    });
+
+    sport.selected = true;
+
+    if(sport.pivot?.degree_id){
+      newDegree = sport.pivot.degree_id;
+    }
+
+    this.sportSelected = sport.id;
     this.clientMonitor.degree_sport = newDegree;
-    this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === this.clientMonitor.sports[index].id) : [];
+    this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === sport.id) : [];
     console.log('Sport Degrees after change:', this.sportDegrees);
   }
 

@@ -210,18 +210,18 @@
         </div>
         
         <div class="custom-radio mb-32">
-          <label *ngFor="let sport of filteredSports" class="radio-option background-color-dark" (click)="checkSport(sport.id)">
-            <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" />
-            <div class="radio-wrapper">
+          <div *ngFor="let sport of filteredSports" class="radio-option background-color-dark">
+            <input type="checkbox" [(ngModel)]="sport.checked" [value]="sport.checked" [id]="'sport-' + sport.id" />
+            <label [for]="'sport-' + sport.id" class="radio-wrapper">
               <img [src]="sport.icon_selected" />
               <span class="montserrat">{{sport.name}}</span>
-              <div class="extra-check montserrat color-primary uppercase cursor-pointer" (click)="doShowLevel(sport); $event.stopPropagation();">
+              <div class="extra-check montserrat color-primary uppercase cursor-pointer" (click)="doShowLevel(sport); $event.preventDefault();">
                 {{ 'training' | translate }}
               </div>
-            </div>
-            <div class="custom-check"></div>
-          </label>
-        
+            </label>
+            <label [for]="'sport-' + sport.id" class="custom-check"></label>
+          </div>
+
         </div>
 
         <button (click)="saveSports()" class="content-button btn-back-primary montserrat mt-24 mb-24">

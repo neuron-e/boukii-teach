@@ -15,10 +15,10 @@
     </div>
 
     <div class="padding-wrapper">
-      
+
       <div class="flex-sections mb-24">
-        <div *ngFor="let booking of bookingsCurrent" 
-             [ngClass]="selectedBooking === booking ? 'section-selected' : 'section-title'" 
+        <div *ngFor="let booking of bookingsCurrent"
+             [ngClass]="selectedBooking === booking ? 'section-selected' : 'section-title'"
              (click)="selectBooking(booking)">
           {{formatTimeStart(booking.hour_start)}}
           <br>
@@ -26,7 +26,7 @@
           <div *ngIf="selectedBooking === booking" class="section-bullet"></div>
         </div>
       </div>
-      
+
       <div *ngIf="selectedBooking" class="background-color-dark padding-wrapper box-radius">
 
         <div class="mb-24 content-flex-top">
@@ -48,6 +48,10 @@
               </span>
             </div>
             <div>{{selectedBooking.course.name}}</div>
+            <div *ngIf="selectedBooking.degree_sport" class="montserrat color-light" style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
+              <ion-icon name="ribbon-outline" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></ion-icon>
+              {{ 'course_level' | translate }}: {{selectedBooking.degree_sport.league}} {{selectedBooking.degree_sport.annotation}}
+            </div>
           </div>
         </div>
 
@@ -75,7 +79,7 @@
         </div>
 
         <div class="list-box-selector-b mt-12 mb-12">
-          <div *ngIf="selectedBooking.course.course_type == 1 && selectedBooking.degree_sport && degrees.length" 
+          <div *ngIf="selectedBooking.course.course_type == 1 && selectedBooking.degree_sport && degrees.length"
               class="box-selector-type flex-large color-light cursor-pointer" [ngStyle]="{'background': selectedBooking.degree_sport.color}">
             <img src="assets/icon/icon-award-level-grey.svg" />
             <div class="montserrat">{{selectedBooking.degree_sport.league}}</div>
@@ -111,11 +115,14 @@
           <ion-icon name="checkmark-circle-outline" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></ion-icon>
           {{ 'mark_attendance' | translate }}
         </div>
-        
+
         <div class="member-list">
 
           <div *ngFor="let client of selectedBooking.all_clients" class="pb-8 mb-8 member-list-item">
-            <app-level-user *ngIf="selectedBooking && selectedBooking.sport_degrees && selectedBooking.sport_degrees.length" [allLevels]="selectedBooking.sport_degrees" [selectLevel]="client.degree_sport" [size]="60" [userImage]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'"></app-level-user>
+            <app-level-user *ngIf="selectedBooking && selectedBooking.sport_degrees && selectedBooking.sport_degrees.length"
+                            [allLevels]="selectedBooking.sport_degrees" [selectLevel]="client.degree_sport"
+                            [size]="60" [userImage]="client.image ? client.image : 'assets/icon/icons-outline-default-avatar.svg'">
+            </app-level-user>
             <div class="member-item-flex">
               <div class="member-item-content">
                 <div class="member-item-title">

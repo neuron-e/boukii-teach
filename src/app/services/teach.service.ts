@@ -35,7 +35,18 @@ export class TeachService {
 
     if (params) {
       Object.keys(params).forEach(key => {
-        httpParams = httpParams.set(key, params[key]);
+        const value = params[key];
+
+        if (Array.isArray(value)) {
+          httpParams = httpParams.delete(key);
+          value
+            .filter(item => item !== undefined && item !== null)
+            .forEach(item => {
+              httpParams = httpParams.append(key, item);
+            });
+        } else if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value);
+        }
       });
     }
 

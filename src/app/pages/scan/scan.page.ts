@@ -29,21 +29,43 @@ export class ScanPage implements OnDestroy {
     private translate: TranslateService
   ) {}
 
-  ionViewDidEnter() {
-    this.initializeScanner();
+  async ionViewDidEnter() {
+    // Pedir permisos primero
+    const hasPermissions = await this.requestCameraPermissions();
+    if (hasPermissions) {
+      await this.initializeScanner();
+    }
+  }
+
+  async requestCameraPermissions(): Promise<boolean> {
+    try {
+      console.log('Checking camera permissions...');
+      const perm = await BarcodeScanner.checkPermissions();
+      console.log('Camera permissions status:', perm);
+
+      if (perm.camera !== 'granted') {
+        console.log('Requesting camera permissions...');
+        const req = await BarcodeScanner.requestPermissions();
+        console.log('Permission request result:', req);
+
+        if (req.camera !== 'granted') {
+          this.toastr.error(this.translate.instant('toast.camera_permission_denied'));
+          this.router.navigate(['/home']);
+          return false;
+        }
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error('Error requesting camera permissions:', error);
+      this.toastr.error(this.translate.instant('toast.camera_permission_denied'));
+      this.router.navigate(['/home']);
+      return false;
+    }
   }
 
   async initializeScanner() {
     try {
-      // Permisos
-      const perm = await BarcodeScanner.checkPermissions();
-      if (perm.camera !== 'granted') {
-        const req = await BarcodeScanner.requestPermissions();
-        if (req.camera !== 'granted') {
-          this.toastr.error(this.translate.instant('toast.scan_error'));
-          return;
-        }
-      }
 
       // Preparar UI
       const wrapper = document.querySelector('.qr-scanner-wrapper');
@@ -90,10 +112,23 @@ export class ScanPage implements OnDestroy {
       await BarcodeScanner.addListener('scanError', (e: ScanErrorEvent) => {
         this.toastr.error(e?.message ?? this.translate.instant('toast.scan_error'));
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error starting QR Code scanner:', error);
-      this.toastr.error(this.translate.instant('toast.scan_error'));
+      console.error('Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name
+      });
+
+      // Si el error es de permisos, redirigir
+      if (error?.message?.includes('permission') || error?.message?.includes('Permission')) {
+        this.toastr.error(this.translate.instant('toast.camera_permission_denied'));
+      } else {
+        this.toastr.error(this.translate.instant('toast.scan_error'));
+      }
+
       await this.stopScanner();
+      this.router.navigate(['/home']);
     }
   }
 

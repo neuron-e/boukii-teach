@@ -20,7 +20,7 @@ export class MonitorDataService {
   }
 
   fetchMonitorData(id: number) {
-    const sub = this.teachService.getData('monitors', id, {'with[]': 'schools'}).subscribe(
+    const sub = this.teachService.getData('monitors', id, { 'with[]': ['schools', 'sports'] }).subscribe(
       (data: any) => {
         this.setMonitorData(data.data);
         //console.log(data.data);
