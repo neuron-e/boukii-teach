@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "997722570718",
+    "project_id": "boukii-68cdb",
+    "storage_bucket": "boukii-68cdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997722570718:android:cd2018930e49d62ddde74f",
+        "android_client_info": {
+          "package_name": "com.quental.boukii.boukii"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNqHHzpxNzhhSxXiXyA5lsjbWB9ylMbo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
