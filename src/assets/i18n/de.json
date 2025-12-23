@@ -444,5 +444,7 @@
         "YE": "Jemen",
         "ZM": "Sambia",
         "ZW": "Simbabwe"
-    }
+    },
+  "interval_date_range": "Intervall-Datumsbereich",
+  "mail_booking_create_sent": "Buchungsbestätigung gesendet"
 }
