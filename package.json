@@ -3,6 +3,9 @@
   "version": "1.0.24",
   "author": "Antonio Dianez",
   "homepage": "https://ionicframework.com/",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
