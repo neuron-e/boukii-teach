@@ -39,7 +39,6 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@pusher/push-notifications-web": "^1.1.0",
-    "pusher-push-notifications-cordova": "^1.1.0",
     "chart.js": "^4.4.0",
     "ionicons": "^7.0.0",
     "laravel-echo": "^2.2.6",
