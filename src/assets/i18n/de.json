@@ -446,5 +446,24 @@
         "ZW": "Simbabwe"
     },
   "interval_date_range": "Intervall-Datumsbereich",
-  "mail_booking_create_sent": "Buchungsbestätigung gesendet"
+  "mail_booking_create_sent": "Buchungsbestätigung gesendet",
+  "scan_booking.course": "Kurs",
+  "scan_booking.date": "Datum",
+  "scan_booking.assigned": "Dir zugewiesen",
+  "scan_booking.not_assigned": "Nicht dir zugewiesen",
+  "scan_booking.monitor": "Lehrer",
+  "scan_booking.meeting_point": "Treffpunkt",
+  "scan_booking.sport": "Sport",
+  "scan_booking.participant": "Teilnehmer",
+  "scan_booking.time": "Uhrzeit",
+  "scan_booking.address": "Adresse",
+  "scan_booking.title": "Buchungsscan",
+  "scan_booking.instructions": "Anweisungen",
+  "scan_booking.degree": "Stufe",
+  "scan_booking.client": "Kunde",
+  "scan_booking.booking": "Buchung",
+  "scan_booking.booking_id": "Buchungs-ID",
+  "scan_booking.booking_status": "Buchungsstatus",
+  "scan_booking.paid": "Bezahlt",
+  "scan_booking.payment_status": "Zahlungsstatus"
 }

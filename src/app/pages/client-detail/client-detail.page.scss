@@ -56,6 +56,27 @@
 .header-user-data-text-icons img {
     width:34px;
 }
+.header-user-data-text-contacts {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-top:4px;
+}
+.header-user-data-text-contact {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+}
+.header-user-data-text-contact-label {
+    color:#9aa4b2;
+    min-width:72px;
+}
+.header-user-data-text-contact a {
+    color:#e6e9ef;
+    text-decoration:none;
+    word-break:break-word;
+}
 
 .box-sport {
     display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;padding: 18px 12px;border-radius:8px;

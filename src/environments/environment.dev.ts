@@ -1,14 +1,15 @@
 export const environment = {
-  production: true,
-  apiUrl: 'https://api.boukii.com/api',
+  production: false,
+  apiUrl: 'https://dev.api.boukii.com/api',
   wsConfig: {
-    enabled: false, // TODO: enable with production websocket host/keys
-    key: 'PUSHER_APP_KEY',
-    cluster: 'mt1',
-    wsHost: 'localhost',
-    wsPort: 6001,
+    enabled: true,
+    key: '0d1281165753592eacc0',
+    cluster: 'eu',
+    authEndpoint: 'https://dev.api.boukii.com/broadcasting/auth',
+    // Leave wsHost/wsPort unset to use Pusher SaaS (cluster-based)
     forceTLS: true,
     disableStats: true,
     enabledTransports: ['ws', 'wss'],
-  }
+  },
+  beamsInstanceId: 'd0a6d82d-dced-40d8-8057-5a77c87ab250',
 };

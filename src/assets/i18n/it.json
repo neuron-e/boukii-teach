@@ -446,5 +446,24 @@
     "ZW": "Zimbabwe"
   },
   "interval_date_range": "Intervallo di Date dell'Intervallo",
-  "mail_booking_create_sent": "Email di conferma prenotazione inviata"
+  "mail_booking_create_sent": "Email di conferma prenotazione inviata",
+  "scan_booking.course": "Corso",
+  "scan_booking.date": "Data",
+  "scan_booking.assigned": "Assegnato a te",
+  "scan_booking.not_assigned": "Non assegnato a te",
+  "scan_booking.monitor": "Istruttore",
+  "scan_booking.meeting_point": "Punto d'incontro",
+  "scan_booking.sport": "Sport",
+  "scan_booking.participant": "Partecipante",
+  "scan_booking.time": "Ora",
+  "scan_booking.address": "Indirizzo",
+  "scan_booking.title": "Scansione prenotazione",
+  "scan_booking.instructions": "Istruzioni",
+  "scan_booking.degree": "Livello",
+  "scan_booking.client": "Cliente",
+  "scan_booking.booking": "Prenotazione",
+  "scan_booking.booking_id": "ID prenotazione",
+  "scan_booking.booking_status": "Stato prenotazione",
+  "scan_booking.paid": "Pagato",
+  "scan_booking.payment_status": "Stato pagamento"
 }

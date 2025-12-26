@@ -80,7 +80,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.translate.onLangChange.subscribe(() => {
       this.loadWeekdays();
     });
-  
+
     this.loadWeekdays();
   }
 
@@ -253,7 +253,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.bookingsCurrent = [];
     this.nwdsCurrent = nwds;
     this.subgroupsCurrent = subgroups;
-  
+
     bookings.forEach(booking => {
       if (booking.course) {
         let key = `${booking.course_id}-${booking.course_date_id}`;
@@ -274,7 +274,7 @@ export class CalendarPage implements OnInit, OnDestroy {
         }
       }
     });
-  
+
    //console.log('Processed Bookings:', this.bookingsCurrent);
 
 
@@ -306,14 +306,14 @@ export class CalendarPage implements OnInit, OnDestroy {
           default:
             type = 'unknown';
         }
-    
+
         const dateTotalAndIndex = booking.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
           date_total: booking.course.course_dates.length,
           date_index: this.getPositionDate(booking.course.course_dates, booking.course_date_id)
         };
-        
+
         const sport = this.sports.find(s => s.id === booking.course.sport_id);
-    
+
         return {
           booking_id: booking.id,
           date: moment(booking.date).format('YYYY-MM-DD'),
@@ -363,14 +363,14 @@ export class CalendarPage implements OnInit, OnDestroy {
           default:
             type = 'unknown';
         }
-    
+
         const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
           date_total: subgroup.course.course_dates.length,
           date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
         };
-        
+
         const sport = this.sports.find(s => s.id === subgroup.course.sport_id);
-    
+
         if(dateTotalAndIndex.date_index > 0){
           return {
             booking_id: 's-'+subgroup.id,
@@ -391,11 +391,11 @@ export class CalendarPage implements OnInit, OnDestroy {
         }
       }).filter(Boolean)
     ];
-    
+
     //console.log('Combined Tasks Calendar:', this.tasksCalendar);
     this.updateTasksWithStyles();
     this.spinnerService.hide();
-  }  
+  }
 
   getPositionDate(courseDates: any[], courseDateId: string): number {
     const index = courseDates.findIndex(date => date.id === courseDateId);
@@ -404,7 +404,7 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   getTaskStyle(task: any, weekStyle: boolean = false) {
     let baseStyle = weekStyle ? task.styleWeek : task.style;
-  
+
     if (task.type === 'block' || task.type === 'block_payed') {
       return {
         ...baseStyle,
@@ -493,7 +493,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     const formattedDay = moment(this.selectedDate).format('YYYY-MM-DD');
     this.restartTasksRange(formattedDay,formattedDay);
   }
-  
+
   nextDay(): void {
     this.selectedDate.setDate(this.selectedDate.getDate() + 1);
     this.currentMonth = this.selectedDate.getMonth();
@@ -516,7 +516,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.currentDay = this.selectedDate.getDate();
     this.calculateWeekRange();
   }
-  
+
   nextWeek(): void {
     this.selectedDate.setDate(this.selectedDate.getDate() + 7);
     this.currentDay = this.selectedDate.getDate();
@@ -527,15 +527,15 @@ export class CalendarPage implements OnInit, OnDestroy {
     const dayOfWeek = this.selectedDate.getDay();
     //start monday
     const startOffset = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-  
+
     this.weekStart = new Date(this.selectedDate);
     this.weekStart.setDate(this.selectedDate.getDate() - startOffset);
     this.weekStart.setHours(0, 0, 0, 0);
-  
+
     this.weekEnd = new Date(this.weekStart);
     this.weekEnd.setDate(this.weekStart.getDate() + 6);
     this.weekEnd.setHours(0, 0, 0, 0);
-  
+
     this.currentMonth = this.weekEnd.getMonth();
     this.currentYear = this.weekEnd.getFullYear();
 
@@ -543,12 +543,12 @@ export class CalendarPage implements OnInit, OnDestroy {
     const formattedWeekEnd = moment(this.weekEnd).format('YYYY-MM-DD');
     this.restartTasksRange(formattedWeekStart,formattedWeekEnd);
   }
-  
+
   renderCalendar() {
     this.spinnerService.show();
     const startDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-    
+
     this.days = [];
     //Start monday
     let adjustedStartDay = startDay - 1;
@@ -560,7 +560,7 @@ export class CalendarPage implements OnInit, OnDestroy {
 
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-    
+
     const currentDay = currentDate.getDate();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
@@ -568,14 +568,14 @@ export class CalendarPage implements OnInit, OnDestroy {
     for(let i = 1; i <= daysInMonth; i++) {
       const spanDate = new Date(this.currentYear, this.currentMonth, i);
       spanDate.setHours(0, 0, 0, 0);
-      
+
       const isPast = spanDate < currentDate;
       //Format month/day 2 digits
       const monthStr = `${this.currentMonth + 1}`.padStart(2, '0');
       const dayStr = `${i}`.padStart(2, '0');
       const dateStr = `${this.currentYear}-${monthStr}-${dayStr}`;
       const isToday = i === currentDay && this.currentMonth === currentMonth && this.currentYear === currentYear;
-      
+
       const taskTypes = this.tasksCalendar.reduce((accumulator, task) => {
         if (task.date === dateStr) {
           accumulator.isPrivate = accumulator.isPrivate || task.type === 'private';
@@ -586,10 +586,10 @@ export class CalendarPage implements OnInit, OnDestroy {
         }
         return accumulator;
       }, { isPrivate: false, isCollective: false, isOther: false, isBlock: false, isBlockPayed: false });
-            
-      this.days.push({ 
+
+      this.days.push({
         number: i, selected: false, past: isPast, today: isToday,
-        private: taskTypes.isPrivate, collective: taskTypes.isCollective, other: taskTypes.isOther, 
+        private: taskTypes.isPrivate, collective: taskTypes.isCollective, other: taskTypes.isOther,
         block: taskTypes.isBlock, blockPayed: taskTypes.isBlockPayed
       });
     }

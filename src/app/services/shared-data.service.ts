@@ -23,14 +23,17 @@ export class SharedDataService {
       }
       return this.teachService.getData('degrees', null, searchData).pipe(
         switchMap((data: any) => {
-          if (data && data.data && Array.isArray(data.data)) {
-            data.data.sort((a: any, b: any) => a.degree_order - b.degree_order);
-            data.data.forEach((degree: any) => {
-              degree.inactive_color = this.lightenColor(degree.color, 30);
-            });
-            this.degreesSubject.next(data.data);
-            return of(data.data);
-          } else {
+            if (data && data.data && Array.isArray(data.data)) {
+              const schoolDegrees = data.data.filter((degree: any) => String(degree.school_id) === String(school_id));
+              const fallback = data.data.find((degree: any) => degree.school_id == null);
+              const resolved = schoolDegrees.length ? schoolDegrees : (fallback ? [fallback] : []);
+              resolved.sort((a: any, b: any) => a.degree_order - b.degree_order);
+              resolved.forEach((degree: any) => {
+                degree.inactive_color = this.lightenColor(degree.color, 30);
+              });
+              this.degreesSubject.next(resolved);
+              return of(resolved);
+            } else {
             console.error('Invalid degrees data structure:', data);
             this.degreesSubject.next([]);
             return of([]);

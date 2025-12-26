@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MonitorRealtimeService } from '../../services/monitor-realtime.service';
 
 @Component({
   selector: 'app-menu',
@@ -30,7 +31,7 @@ export class MenuComponent  implements OnInit {
 
   showLang:boolean=false;
 
-  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private toastr: ToastrService, private spinnerService: SpinnerService, public translate: TranslateService, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private toastr: ToastrService, private spinnerService: SpinnerService, public translate: TranslateService, private changeDetectorRef: ChangeDetectorRef, private monitorRealtimeService: MonitorRealtimeService) {}
 
   ngOnInit() {}
 
@@ -62,6 +63,7 @@ export class MenuComponent  implements OnInit {
     localStorage.removeItem('token');
     localStorage.removeItem('monitorId');
     localStorage.removeItem('activeSchool');
+    this.monitorRealtimeService.disconnect();
     this.monitorDataService.clearMonitorData();
     this.sharedDataService.clearAllData();
     this.monitorDataService.clearSubscriptions();

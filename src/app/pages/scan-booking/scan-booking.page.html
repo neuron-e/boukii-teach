@@ -1,0 +1,102 @@
+<ion-content class="scan-booking-content">
+  <div class="scan-booking">
+    <div class="scan-booking__header">
+      <div class="scan-booking__title">{{ 'scan_booking.title' | translate }}</div>
+      <button class="scan-booking__back" (click)="goTo('home')">×</button>
+    </div>
+
+    <div *ngIf="data" class="scan-booking__card">
+      <div class="scan-booking__status" [ngClass]="{'ok': data.is_assigned_to_monitor, 'warn': !data.is_assigned_to_monitor}">
+        {{ data.is_assigned_to_monitor ? ('scan_booking.assigned' | translate) : ('scan_booking.not_assigned' | translate) }}
+      </div>
+
+      <div class="scan-booking__section">
+        <div class="scan-booking__section-title">{{ 'scan_booking.client' | translate }}</div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.participant' | translate }}</span>
+          <span class="scan-booking__value">{{ data.client?.full_name || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.client?.email">
+          <span class="scan-booking__label">{{ 'email' | translate }}</span>
+          <span class="scan-booking__value">{{ data.client?.email }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.client?.phone">
+          <span class="scan-booking__label">{{ 'mobile' | translate }}</span>
+          <span class="scan-booking__value">
+            <a class="scan-booking__link" [href]="'tel:' + data.client?.phone">{{ data.client?.phone }}</a>
+          </span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.client?.telephone">
+          <span class="scan-booking__label">{{ 'telephone' | translate }}</span>
+          <span class="scan-booking__value">
+            <a class="scan-booking__link" [href]="'tel:' + data.client?.telephone">{{ data.client?.telephone }}</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="scan-booking__section">
+        <div class="scan-booking__section-title">{{ 'scan_booking.booking' | translate }}</div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.booking_id' | translate }}</span>
+          <span class="scan-booking__value">{{ data.booking?.id || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.booking?.status !== undefined && data.booking?.status !== null">
+          <span class="scan-booking__label">{{ 'scan_booking.booking_status' | translate }}</span>
+          <span class="scan-booking__value">{{ data.booking?.status }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.booking?.paid !== undefined && data.booking?.paid !== null">
+          <span class="scan-booking__label">{{ 'scan_booking.paid' | translate }}</span>
+          <span class="scan-booking__value">{{ data.booking?.paid ? ('yes' | translate) : ('no' | translate) }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.booking?.payment_method_status !== undefined && data.booking?.payment_method_status !== null">
+          <span class="scan-booking__label">{{ 'scan_booking.payment_status' | translate }}</span>
+          <span class="scan-booking__value">{{ data.booking?.payment_method_status }}</span>
+        </div>
+      </div>
+
+      <div class="scan-booking__section">
+        <div class="scan-booking__section-title">{{ 'activity' | translate }}</div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.course' | translate }}</span>
+          <span class="scan-booking__value">{{ data.course?.name || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.sport' | translate }}</span>
+          <span class="scan-booking__value">{{ data.course?.sport?.name || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.degree' | translate }}</span>
+          <span class="scan-booking__value">{{ data.degree?.name || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.date' | translate }}</span>
+          <span class="scan-booking__value">{{ formatDate(data.booking_user?.date) || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.time' | translate }}</span>
+          <span class="scan-booking__value">
+            {{ formatTimeRange(data.booking_user?.hour_start, data.booking_user?.hour_end) }}
+          </span>
+        </div>
+        <div class="scan-booking__row">
+          <span class="scan-booking__label">{{ 'scan_booking.monitor' | translate }}</span>
+          <span class="scan-booking__value">{{ data.monitor?.full_name || 'NDF' }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.meeting_point?.name">
+          <span class="scan-booking__label">{{ 'scan_booking.meeting_point' | translate }}</span>
+          <span class="scan-booking__value">{{ data.meeting_point?.name }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.meeting_point?.address">
+          <span class="scan-booking__label">{{ 'scan_booking.address' | translate }}</span>
+          <span class="scan-booking__value">{{ data.meeting_point?.address }}</span>
+        </div>
+        <div class="scan-booking__row" *ngIf="data.meeting_point?.instructions">
+          <span class="scan-booking__label">{{ 'scan_booking.instructions' | translate }}</span>
+          <span class="scan-booking__value">{{ data.meeting_point?.instructions }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer section="scan"></app-footer>
+</ion-content>

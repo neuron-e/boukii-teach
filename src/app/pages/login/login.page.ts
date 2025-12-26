@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SchoolSelectorComponent } from '../../components/school-selector/school-selector.component';
+import { MonitorRealtimeService } from '../../services/monitor-realtime.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginPage implements OnInit {
   password:string;
   emailRecover:string;
 
-  constructor(private router: Router, private teachService: TeachService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private modalController: ModalController, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
+  constructor(private router: Router, private teachService: TeachService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private modalController: ModalController, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService, private monitorRealtimeService: MonitorRealtimeService) {}
 
   ngOnInit() {
   }
@@ -40,6 +41,7 @@ export class LoginPage implements OnInit {
         //console.log('Login successful', response);
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('monitorId', response.data.user.monitors[0].id);
+        this.monitorRealtimeService.connect(response.data.user.monitors[0].id);
 
         const monitor = response.data.user.monitors[0];
         let activeSchool = monitor.active_school;

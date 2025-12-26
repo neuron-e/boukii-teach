@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular';
 import { MenuService } from './services/menu.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppVersionService } from './services/app-version.service';
+import { MonitorRealtimeService } from './services/monitor-realtime.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ export class AppComponent implements OnInit {
     public menuService: MenuService,
     private translate: TranslateService,
     private platform: Platform,
-    private appVersionService: AppVersionService
+    private appVersionService: AppVersionService,
+    private monitorRealtimeService: MonitorRealtimeService
   ) {
     const savedLang = localStorage.getItem('appLang') || 'fr';
     translate.setDefaultLang(savedLang);
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.platform.ready().then(() => {
+      this.tryReconnectRealtime();
       // Check for app updates only on mobile devices
       if (this.platform.is('cordova') || this.platform.is('capacitor')) {
         this.checkAppVersion();
@@ -38,6 +41,17 @@ export class AppComponent implements OnInit {
         this.appVersionService.showUpdateAlert(true);
       }
     });
+  }
+
+  private tryReconnectRealtime() {
+    const token = localStorage.getItem('token');
+    const monitorId = localStorage.getItem('monitorId');
+    if (token && monitorId) {
+      const parsedMonitorId = Number(monitorId);
+      if (!Number.isNaN(parsedMonitorId) && parsedMonitorId > 0) {
+        this.monitorRealtimeService.connect(parsedMonitorId);
+      }
+    }
   }
 
 }

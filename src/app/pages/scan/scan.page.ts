@@ -100,7 +100,7 @@ export class ScanPage implements OnDestroy {
             await this.stopScanner();          // cerrar cámara y UI
             await this.scanSub?.remove();      // evitar llamadas duplicadas
             this.toastr.success(this.translate.instant('toast.scanned_successfully'));
-            this.router.navigate(['/scan-client', value]);
+            this.router.navigate(['/scan-booking', value]);
           } finally {
             this.spinnerService.hide();
             this.handling = false;

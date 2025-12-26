@@ -35,6 +35,20 @@
             <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
+          <div class="header-user-data-text-contacts" *ngIf="clientMonitor.main.phone || clientMonitor.main.telephone || clientMonitor.main.email">
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.main.phone">
+              <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
+              <a [href]="'tel:' + clientMonitor.main.phone">{{ clientMonitor.main.phone }}</a>
+            </div>
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.main.telephone">
+              <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
+              <a [href]="'tel:' + clientMonitor.main.telephone">{{ clientMonitor.main.telephone }}</a>
+            </div>
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.main.email">
+              <span class="header-user-data-text-contact-label">{{ 'email' | translate }}</span>
+              <a [href]="'mailto:' + clientMonitor.main.email">{{ clientMonitor.main.email }}</a>
+            </div>
+          </div>
         </div>
       </div>
       <!--/Only if group-->
@@ -62,6 +76,20 @@
             <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
+          </div>
+          <div class="header-user-data-text-contacts" *ngIf="clientMonitor.phone || clientMonitor.telephone || clientMonitor.email">
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.phone">
+              <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
+              <a [href]="'tel:' + clientMonitor.phone">{{ clientMonitor.phone }}</a>
+            </div>
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.telephone">
+              <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
+              <a [href]="'tel:' + clientMonitor.telephone">{{ clientMonitor.telephone }}</a>
+            </div>
+            <div class="header-user-data-text-contact" *ngIf="clientMonitor.email">
+              <span class="header-user-data-text-contact-label">{{ 'email' | translate }}</span>
+              <a [href]="'mailto:' + clientMonitor.email">{{ clientMonitor.email }}</a>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +124,20 @@
               <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
               <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
+            </div>
+            <div class="header-user-data-text-contacts" *ngIf="clientMonitor.phone || clientMonitor.telephone || clientMonitor.email">
+              <div class="header-user-data-text-contact" *ngIf="clientMonitor.phone">
+                <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
+                <a [href]="'tel:' + clientMonitor.phone">{{ clientMonitor.phone }}</a>
+              </div>
+              <div class="header-user-data-text-contact" *ngIf="clientMonitor.telephone">
+                <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
+                <a [href]="'tel:' + clientMonitor.telephone">{{ clientMonitor.telephone }}</a>
+              </div>
+              <div class="header-user-data-text-contact" *ngIf="clientMonitor.email">
+                <span class="header-user-data-text-contact-label">{{ 'email' | translate }}</span>
+                <a [href]="'mailto:' + clientMonitor.email">{{ clientMonitor.email }}</a>
+              </div>
             </div>
           </div>
         </div>

@@ -144,6 +144,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'scan-booking/:token',
+    loadChildren: () => import('./pages/scan-booking/scan-booking.module').then( m => m.ScanBookingPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'scan',
     loadChildren: () => import('./pages/scan/scan.module').then( m => m.ScanPageModule),
     canActivate: [AuthGuard]

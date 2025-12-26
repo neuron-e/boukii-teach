@@ -444,5 +444,26 @@
         "YE": "Yemen",
         "ZM": "Zambia",
         "ZW": "Zimbabwe"
-    }
+    },
+  "interval_date_range": "Rango de Fechas del Intervalo",
+  "mail_booking_create_sent": "Correo de confirmaciÃ³n de reserva enviado",
+  "scan_booking.course": "Curso",
+  "scan_booking.date": "Fecha",
+  "scan_booking.assigned": "Asignado a ti",
+  "scan_booking.not_assigned": "No asignado a ti",
+  "scan_booking.monitor": "Monitor",
+  "scan_booking.meeting_point": "Punto de encuentro",
+  "scan_booking.sport": "Deporte",
+  "scan_booking.participant": "Participante",
+  "scan_booking.time": "Hora",
+  "scan_booking.address": "Dirección",
+  "scan_booking.title": "Escaneo de reserva",
+  "scan_booking.instructions": "Instrucciones",
+  "scan_booking.degree": "Nivel",
+  "scan_booking.client": "Cliente",
+  "scan_booking.booking": "Reserva",
+  "scan_booking.booking_id": "ID Reserva",
+  "scan_booking.booking_status": "Estado de reserva",
+  "scan_booking.paid": "Pagado",
+  "scan_booking.payment_status": "Estado de pago"
 }
