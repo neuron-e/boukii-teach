@@ -12,8 +12,8 @@ android {
         applicationId "com.quental.boukii.boukii"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
-        versionName "1.0.24"
+        versionCode 40
+        versionName "1.1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         // Soporte para dispositivos con páginas de memoria de 16 KB
