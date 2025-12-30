@@ -30,6 +30,7 @@
     "delete": "Eliminar",
     "write_message": "Escribir un Mensaje",
     "group": "Grupo",
+    "subgroup": "Subgrupo",
     "years": "Años",
     "evaluate_progress": "Evaluar Progreso",
     "observations": "Observaciones",
@@ -64,6 +65,15 @@
     "confirm_participation": "Confirmar Participación",
     "confirm": "Confirmar",
     "transfer_students": "Transferir Estudiantes",
+  "transfer_scope": "Ambito de traslado",
+  "transfer_scope_single": "Solo este dia",
+  "transfer_scope_single_hint": "Mover alumnos solo para esta fecha",
+  "transfer_scope_future": "Este dia y posteriores",
+  "transfer_scope_future_hint": "Mover alumnos desde esta fecha en adelante",
+  "transfer_scope_all": "Todos los dias",
+  "transfer_scope_all_hint": "Mover alumnos para todas las fechas del curso",
+  "transfer_confirm_title": "Confirmar traslado",
+  "transfer_confirm_message": "Quieres transferir los alumnos seleccionados?",
     "select_students": "Seleccionar Estudiantes",
     "continue": "Continuar",
     "choose_group": "Elegir Grupo",
@@ -456,7 +466,7 @@
   "scan_booking.sport": "Deporte",
   "scan_booking.participant": "Participante",
   "scan_booking.time": "Hora",
-  "scan_booking.address": "Direcci�n",
+  "scan_booking.address": "Dirección",
   "scan_booking.title": "Escaneo de reserva",
   "scan_booking.instructions": "Instrucciones",
   "scan_booking.degree": "Nivel",
@@ -467,3 +477,4 @@
   "scan_booking.paid": "Pagado",
   "scan_booking.payment_status": "Estado de pago"
 }
+

@@ -30,6 +30,7 @@
   "delete": "Elimina",
   "write_message": "Scrivere un messaggio",
   "group": "Gruppo",
+    "subgroup": "Sottogruppo",
   "years": "anni",
   "evaluate_progress": "Valutare i progressi",
   "observations": "Osservazioni",
@@ -64,6 +65,15 @@
   "confirm_participation": "Conferma partecipazione",
   "confirm": "Conferma",
   "transfer_students": "Trasferisci studenti",
+  "transfer_scope": "Ambito del trasferimento",
+  "transfer_scope_single": "Solo questo giorno",
+  "transfer_scope_single_hint": "Spostare gli studenti solo per questa data",
+  "transfer_scope_future": "Questo giorno e successivi",
+  "transfer_scope_future_hint": "Spostare gli studenti da questa data in poi",
+  "transfer_scope_all": "Tutti i giorni",
+  "transfer_scope_all_hint": "Spostare gli studenti per tutte le date del corso",
+  "transfer_confirm_title": "Conferma trasferimento",
+  "transfer_confirm_message": "Vuoi trasferire gli studenti selezionati?",
   "select_students": "Seleziona studenti",
   "continue": "Continua",
   "choose_group": "Scegli gruppo",
@@ -467,3 +477,4 @@
   "scan_booking.paid": "Pagato",
   "scan_booking.payment_status": "Stato pagamento"
 }
+

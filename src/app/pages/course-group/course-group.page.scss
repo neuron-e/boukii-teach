@@ -160,7 +160,10 @@
     border:none !important;
 }
 .box-selector-level {
-    font-size: 12px;padding: 4px 6px;border-radius: 20px;
+    font-size: 11px;padding: 3px 6px;border-radius: 20px;line-height: 1.1;
+}
+.member-item-title .box-selector-level {
+    font-size: 11px !important;
 }
 .box-selector-subgroup {
     font-size:12px;color:#fff;

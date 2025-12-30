@@ -282,6 +282,9 @@
 .chip-selected {
     font-weight:600;
 }
+.chip-clickable {
+    cursor:pointer;
+}
 
 .capitalize {
     text-transform:capitalize;

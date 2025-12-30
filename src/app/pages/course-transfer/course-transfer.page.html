@@ -98,6 +98,22 @@
 
         <div class="border-separator mt-24 mb-24"></div>
 
+        <div class="menu-section-content mt-24 mb-12">
+          <div class="menu-section-title">{{ 'transfer_scope' | translate }}</div>
+        </div>
+
+        <div class="transfer-scope-chips">
+          <button type="button" class="transfer-scope-chip" [class.active]="transferScope === 'single'" (click)="transferScope='single'">
+            {{ 'transfer_scope_single' | translate }}
+          </button>
+          <button type="button" class="transfer-scope-chip" [class.active]="transferScope === 'future'" (click)="transferScope='future'">
+            {{ 'transfer_scope_future' | translate }}
+          </button>
+          <button type="button" class="transfer-scope-chip" [class.active]="transferScope === 'all'" (click)="transferScope='all'">
+            {{ 'transfer_scope_all' | translate }}
+          </button>
+        </div>
+
         <div class="menu-section-content mt-24 mb-24">
           <div class="menu-section-title">{{ 'choose_group' | translate }}</div>
         </div>
@@ -122,14 +138,13 @@
                 <div class="member-item-title">
                   <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
                   <div *ngIf="!subgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
-                  <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
-                    {{subgroup.degree_data.annotation}}
-                  </div>
                 </div>
                 <div class="member-item-subtitle">
                   <span class="montserrat color-light">{{ subgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
-                  <div *ngIf="subgroup.degree_data && degrees.length" class="box-selector-subgroup">
-                    {{subgroup.degree_data.annotation}}-{{subgroup.subgroup_order}}
+                  <div class="box-selector-subgroup-inline">
+                    <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
+                      {{subgroup.degree_data.annotation || subgroup.degree_data.name || subgroup.degree_data.league}} {{subgroup.subgroup_order}}
+                    </div>
                   </div>
                 </div>
                 <div class="member-item-data">

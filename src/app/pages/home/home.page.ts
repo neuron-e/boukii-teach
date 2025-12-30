@@ -169,7 +169,7 @@ export class HomePage implements OnInit, OnDestroy {
 
 
         const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
-          date_total: subgroup.course.course_dates.length,
+          date_total: (subgroup.course.course_dates_total ?? subgroup.course.course_dates.length),
           date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
         };
 

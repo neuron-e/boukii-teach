@@ -50,14 +50,16 @@
             <div>{{selectedBooking.course.name}}</div>
             <div *ngIf="selectedBooking.degree_sport" class="montserrat color-light" style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
               <ion-icon name="ribbon-outline" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></ion-icon>
-              {{ 'course_level' | translate }}: {{selectedBooking.degree_sport.league}} {{selectedBooking.degree_sport.annotation}}
+              {{ 'course_level' | translate }}: {{getDegreeLabel(selectedBooking.degree_sport)}}
             </div>
           </div>
         </div>
 
         <div class="list-dates-chips mt-24 mb-24">
           <ng-container *ngIf="selectedBooking.course.course_type === 1">
-            <div *ngFor="let date of selectedBooking.course.course_dates" class="background-grey-translucent montserrat chip-date" [ngClass]="{'chip-selected': selectedBooking.course_date_id == date.id}">
+            <div *ngFor="let date of getMonitorAssignedDates()" class="background-grey-translucent montserrat chip-date chip-clickable"
+                 [ngClass]="{'chip-selected': isSelectedAssignedDate(date)}"
+                 (click)="selectAssignedDate(date)">
               {{formatDate(date.date)}}
             </div>
           </ng-container>
@@ -82,8 +84,7 @@
           <div *ngIf="selectedBooking.course.course_type == 1 && selectedBooking.degree_sport && degrees.length"
               class="box-selector-type flex-large color-light cursor-pointer" [ngStyle]="{'background': selectedBooking.degree_sport.color}">
             <img src="assets/icon/icon-award-level-grey.svg" />
-            <div class="montserrat">{{selectedBooking.degree_sport.league}}</div>
-            <span>{{selectedBooking.degree_sport.annotation}}</span>
+            <div class="montserrat">{{getDegreeLabel(selectedBooking.degree_sport)}}</div>
           </div>
           <div *ngIf="selectedBooking.course.course_type == 1" class="background-grey-translucent box-selector-type flex-normal cursor-pointer">
             <img src="assets/icon/icon-calendar-tick.png" />
@@ -106,7 +107,7 @@
           <div class="menu-section-title">{{ 'students' | translate }}</div>
           <div class="menu-section-icons">
             <img *ngIf="selectedBooking.course.confirm_attendance" src="assets/icon/icon-user-tick-w.png" class="cursor-pointer" (click)="goTo('course-participation',bookingIdFull,dateBooking,selectedBooking.course_id)" />
-            <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="goTo('course-transfer',bookingIdFull,dateBooking,selectedBooking.course_id,selectedBooking.hour_start,selectedBooking.course_group_id,selectedBooking.course_subgroup_id)" />
+            <img *ngIf="selectedBooking.course.course_type == 1" src="assets/icon/icon-transfer.png" class="cursor-pointer" (click)="openCourseTransfer()" />
           </div>
         </div>
 

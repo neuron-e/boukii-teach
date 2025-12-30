@@ -207,6 +207,10 @@ export class CourseGroupPage implements OnInit, OnDestroy {
     return moment(date).format('DD-MM-YYYY');
   }
 
+  getDegreeLabel(degree: any): string {
+    return degree?.annotation || degree?.name || degree?.league || '';
+  }
+
   isDateBeforeOrEqualToToday(dateString: string): boolean {
     const inputDate = moment(dateString).startOf('day');
     const today = moment().startOf('day');

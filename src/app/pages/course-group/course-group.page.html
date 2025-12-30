@@ -46,14 +46,11 @@
                   <div *ngIf="monitorSubgroup.monitor" class="montserrat">{{monitorSubgroup.monitor.first_name}} {{monitorSubgroup.monitor.last_name}}</div>
                   <div *ngIf="!monitorSubgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
                   <div class="box-selector-level color-light" [ngStyle]="{'background': monitorSubgroup.degree_data.color}" *ngIf="monitorSubgroup.degree_data && degrees.length">
-                    {{monitorSubgroup.degree_data.annotation}}
+                    {{getDegreeLabel(monitorSubgroup.degree_data)}} {{monitorSubgroup.subgroup_order}}
                   </div>
                 </div>
                 <div class="member-item-subtitle">
                   <span class="montserrat color-light">{{ monitorSubgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
-                  <div *ngIf="monitorSubgroup.degree_data && degrees.length && (monitorSubgroup.degree_data.annotation && monitorSubgroup.degree_data.annotation !== '-1') || (monitorSubgroup.degree_data.league && monitorSubgroup.degree_data.league !== '-1')" class="box-selector-subgroup">
-                    {{(monitorSubgroup.degree_data.annotation && monitorSubgroup.degree_data.annotation !== '-1') ? monitorSubgroup.degree_data.annotation : monitorSubgroup.degree_data.league}}
-                  </div>
                 </div>
                 <div class="member-item-data">
                     <div class="task-content-icon">
@@ -89,14 +86,11 @@
                   <div *ngIf="subgroup.monitor" class="montserrat">{{subgroup.monitor.first_name}} {{subgroup.monitor.last_name}}</div>
                   <div *ngIf="!subgroup.monitor" class="montserrat">{{ 'no_monitor' | translate }}</div>
                   <div class="box-selector-level color-light" [ngStyle]="{'background': subgroup.degree_data.color}" *ngIf="subgroup.degree_data && degrees.length">
-                    {{subgroup.degree_data.annotation}}
+                    {{getDegreeLabel(subgroup.degree_data)}} {{subgroup.subgroup_order}}
                   </div>
                 </div>
                 <div class="member-item-subtitle">
                   <span class="montserrat color-light">{{ subgroup.monitor_id == monitorData.id ? ('you' | translate) : ('teacher' | translate) }}</span>
-                  <div *ngIf="subgroup.degree_data && degrees.length && (subgroup.degree_data.annotation && subgroup.degree_data.annotation !== '-1') || (subgroup.degree_data.league && subgroup.degree_data.league !== '-1')" class="box-selector-subgroup">
-                    {{(subgroup.degree_data.annotation && subgroup.degree_data.annotation !== '-1') ? subgroup.degree_data.annotation : subgroup.degree_data.league}}
-                  </div>
                 </div>
                 <div class="member-item-data">
                     <div class="task-content-icon">

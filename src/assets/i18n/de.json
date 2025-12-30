@@ -30,6 +30,7 @@
     "delete": "Löschen",
     "write_message": "Eine Nachricht schreiben",
     "group": "Gruppe",
+    "subgroup": "Untergruppe",
     "years": "Jahre",
     "evaluate_progress": "Fortschritt bewerten",
     "observations": "Beobachtungen",
@@ -64,6 +65,15 @@
     "confirm_participation": "Teilnahme bestätigen",
     "confirm": "Bestätigen",
     "transfer_students": "Schüler übertragen",
+  "transfer_scope": "Transferumfang",
+  "transfer_scope_single": "Nur dieser Tag",
+  "transfer_scope_single_hint": "Schuler nur fur das ausgewahlte Datum verschieben",
+  "transfer_scope_future": "Dieser Tag und folgende",
+  "transfer_scope_future_hint": "Schuler ab diesem Datum verschieben",
+  "transfer_scope_all": "Alle Tage",
+  "transfer_scope_all_hint": "Schuler fur alle Kurstermine verschieben",
+  "transfer_confirm_title": "Transfer bestaetigen",
+  "transfer_confirm_message": "Ausgewaehlte Schueler transferieren?",
     "select_students": "Schüler auswählen",
     "continue": "Fortsetzen",
     "choose_group": "Gruppe wählen",
@@ -467,3 +477,4 @@
   "scan_booking.paid": "Bezahlt",
   "scan_booking.payment_status": "Zahlungsstatus"
 }
+

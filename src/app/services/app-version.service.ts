@@ -11,9 +11,9 @@ import { environment } from '../../environments/environment';
 export class AppVersionService {
   // Current app version - update this with each release
   private readonly currentVersion = {
-    android: '1.0.20',
-    ios: '1.1.6',
-    versionCode: 33
+    android: '1.1.8',
+    ios: '1.1.8',
+    versionCode: 41
   };
 
   constructor(

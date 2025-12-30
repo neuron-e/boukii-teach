@@ -5,6 +5,7 @@ import { MonitorDataService } from '../../services/monitor-data.service';
 import { SharedDataService } from '../../services/shared-data.service';
 import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
+import { AlertController } from '@ionic/angular';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
@@ -44,8 +45,9 @@ export class CourseTransferPage implements OnInit, OnDestroy {
   checkedBookings: any[] = [];
   selectedSubgroup: any;
   selectedClients: any[] = [];
+  transferScope: 'single' | 'future' | 'all' = 'all';
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService, private alertController: AlertController) {}
 
   async ngOnInit() {
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
@@ -102,6 +104,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
     this.teachService.getData('teach/courses', this.courseId).subscribe(
       (data:any) => {
         //console.log(data);
+        this.resetTransferState();
         this.courseBookings = data.data;
         this.courseBookings.course_dates.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -136,7 +139,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
           // Do something with the matching course date
 
           const allSubgroups:any[] = [];
-          matchingCourseDate.course_groups.forEach((group:any) => {
+          matchingCourseDate.course_groups.forEach((group:any, groupIndex:number) => {
             //Add the group to the subgroup
             //const groupInfo = { ...group };
             //delete groupInfo.course_subgroups;
@@ -148,6 +151,7 @@ export class CourseTransferPage implements OnInit, OnDestroy {
                 ...subgroup, 
                 /*group: groupInfo,*/ 
                 group_id: group.id,
+                group_order: groupIndex + 1,
                 subgroup_order: index+1,
                 degree_data: degree_data,
                 bookings_number: bookings_number
@@ -227,38 +231,67 @@ export class CourseTransferPage implements OnInit, OnDestroy {
 
   saveTransfer() {
     if (!this.isDisabledSave() && !this.isDisabledContinue()) {
+      this.selectedClients = [];
       this.checkedBookings.forEach(booking => {
         this.selectedClients.push(booking.client_id);
       });
-      //console.log('Old Subgroup:', this.monitorSubgroup);
-      //console.log('New Subgroup:', this.selectedSubgroup);
-      //console.log('Clients to transfer:', this.selectedClients);
-      const isConfirmed = confirm('Êtes-vous sûr de vouloir transférer ces étudiants?');
-      if (isConfirmed) {
-        this.spinnerService.show();
-      
-        const data = {
-          initialSubgroupId: this.monitorSubgroup.id,
-          targetSubgroupId: this.selectedSubgroup.id,
-          clientIds: this.selectedClients,
-          moveAllDays: true
-        };
-      
-        firstValueFrom(this.teachService.postData('clients/transfer', data))
-          .then(response => {
-            //console.log('Transfer successful:', response);
-            this.spinnerService.hide();
-            this.toastr.success(this.translate.instant('toast.registered_correctly'));
-            this.goTo('course-detail', this.bookingId, this.dateBooking);
-          })
-          .catch(error => {
-            console.error('Error during transfer:', error);
-            this.spinnerService.hide();
-            this.toastr.error(this.translate.instant('toast.error'));
-          });
-      }
+      this.presentTransferConfirm();
     }
-  }  
+  }
+
+  private async presentTransferConfirm() {
+    const alert = await this.alertController.create({
+      header: this.translate.instant('transfer_confirm_title'),
+      message: this.translate.instant('transfer_confirm_message'),
+      buttons: [
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel'
+        },
+        {
+          text: this.translate.instant('confirm'),
+          handler: () => {
+            this.executeTransfer();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  private resetTransferState() {
+    this.checkedBookings = [];
+    this.selectedClients = [];
+    this.selectedSubgroup = null;
+    this.confirmTransfer = false;
+  }
+
+  private executeTransfer() {
+    this.spinnerService.show();
+
+    const data = {
+      initialSubgroupId: this.monitorSubgroup.id,
+      targetSubgroupId: this.selectedSubgroup.id,
+      clientIds: this.selectedClients,
+      scope: this.transferScope,
+      scope_date: this.dateBooking,
+      moveAllDays: this.transferScope === 'all'
+    };
+
+    firstValueFrom(this.teachService.postData('clients/transfer', data))
+      .then(() => {
+        this.spinnerService.hide();
+        this.toastr.success(this.translate.instant('toast.registered_correctly'));
+        this.resetTransferState();
+        this.goTo('course-detail', this.bookingId, this.dateBooking);
+      })
+      .catch(error => {
+        console.error('Error during transfer:', error);
+        this.spinnerService.hide();
+        this.toastr.error(this.translate.instant('toast.error'));
+      });
+  }
 
   goTo(...urls: string[]) {
     this.router.navigate(urls);
@@ -266,8 +299,9 @@ export class CourseTransferPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.subscription) {
-        this.subscription.unsubscribe();
+      this.subscription.unsubscribe();
     }
   }
-
 }
+
+

@@ -26,6 +26,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   degrees: any[] = [];
   sports: any[] = [];
   languages: any[] = [];
+  selectedCourseDetail: any;
 
   selectedBooking:any;
   bookingId:any;
@@ -85,6 +86,10 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     this.currentDateFull = moment(date).format('D MMMM YYYY');
   }
 
+  getDegreeLabel(degree: any): string {
+    return degree?.annotation || degree?.name || degree?.league || '';
+  }
+
   getLanguageById(languageId: number): string {
     const language = this.languages.find(c => c.id === languageId);
     return language ? language.code.toUpperCase() : '';
@@ -140,30 +145,36 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
     bookings.forEach(booking => {
       if (booking.course) {
-        let key = `${booking.course_id}`;
-        if(booking.course.course_type == 1){
-          key = `${booking.course_id}-${booking.course_subgroup_id}`;
+        const normalizedBooking = {
+          ...booking,
+          course_group_id: booking.course_group_id ?? booking.group_id ?? booking.course_group?.id,
+          course_subgroup_id: booking.course_subgroup_id ?? booking.subgroup_id
+        };
+
+        let key = `${normalizedBooking.course_id}`;
+        if(normalizedBooking.course.course_type == 1){
+          key = `${normalizedBooking.course_id}-${normalizedBooking.course_subgroup_id}`;
         }
-        else if(booking.course.course_type == 2){
-          key = `${booking.course_id}-${booking.hour_start}-${booking.hour_end}`;
+        else if(normalizedBooking.course.course_type == 2){
+          key = `${normalizedBooking.course_id}-${normalizedBooking.hour_start}-${normalizedBooking.hour_end}`;
         }
         if (!uniqueCourseGroups.has(key)) {
           //insert booking in client
           const clientWithBooking = {
-            ...booking.client,
-            booking_client: booking.booking,
-            degree_sport: this.getClientLevel(booking.client.sports,booking.course.sport_id)
+            ...normalizedBooking.client,
+            booking_client: normalizedBooking.booking,
+            degree_sport: this.getClientLevel(normalizedBooking.client.sports,normalizedBooking.course.sport_id)
           };
 
-          const course_sport = this.sports.find(s => s.id === booking.course.sport_id);
-          const sport_degrees = this.degrees.filter(degree => degree.sport_id === booking.course.sport_id);
-          let degree_sport = this.degrees.find(degree => degree.id === booking.degree_id);
+          const course_sport = this.sports.find(s => s.id === normalizedBooking.course.sport_id);
+          const sport_degrees = this.degrees.filter(degree => degree.sport_id === normalizedBooking.course.sport_id);
+          let degree_sport = this.degrees.find(degree => degree.id === normalizedBooking.degree_id);
           degree_sport = degree_sport ? degree_sport : this.degrees[0];
 
           uniqueCourseGroups.set(key, {
-            ...booking,
+            ...normalizedBooking,
             all_clients: [clientWithBooking],
-            selected_detail: !this.isSubgroup ? booking.id === this.bookingId : false,
+            selected_detail: !this.isSubgroup ? normalizedBooking.id === this.bookingId : false,
             course_sport: course_sport,
             sport_degrees: sport_degrees,
             degree_sport: degree_sport,
@@ -173,14 +184,14 @@ export class CourseDetailPage implements OnInit, OnDestroy {
         } else {
           //insert booking in client
           const clientWithBooking = {
-            ...booking.client,
-            booking_client: booking.booking,
-            degree_sport: this.getClientLevel(booking.client.sports,booking.course.sport_id)
+            ...normalizedBooking.client,
+            booking_client: normalizedBooking.booking,
+            degree_sport: this.getClientLevel(normalizedBooking.client.sports,normalizedBooking.course.sport_id)
           };
 
           uniqueCourseGroups.get(key).all_clients.push(clientWithBooking);
 
-          if (!this.isSubgroup && booking.id === this.bookingId) {
+          if (!this.isSubgroup && normalizedBooking.id === this.bookingId) {
             uniqueCourseGroups.get(key).selected_detail = true;
           }
         }
@@ -197,7 +208,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
 
         const dateTotalAndIndex = subgroup.course.course_type === 2 ? { date_total: 0, date_index: 0 } : {
-          date_total: subgroup.course.course_dates.length,
+          date_total: (subgroup.course.course_dates_total ?? subgroup.course.course_dates.length),
           date_index: this.getPositionDate(subgroup.course.course_dates, subgroup.course_date_id)
         };
 
@@ -205,6 +216,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
           const subgroupObject = {
             ...subgroup,
             course_subgroup_id: subgroup.id,
+            course_group_id: subgroup.course_group_id ?? subgroup.group_id ?? subgroup.course_group?.id,
             hour_start: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_start,
             hour_end: subgroup.course.course_dates[dateTotalAndIndex.date_index - 1].hour_end,
             client: null,
@@ -231,9 +243,10 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
 
     this.selectedBooking = this.bookingsCurrent.find(booking => booking.selected_detail === true);
-    // Cargar asistencia para el curso/fecha seleccionada
-    if (this.selectedBooking && this.selectedBooking.course_id) {
-      this.loadAttendance(this.selectedBooking.course_id);
+    if (!this.selectedBooking && this.bookingsCurrent.length) {
+      this.applySelection(this.bookingsCurrent[0]);
+    } else if (this.selectedBooking) {
+      this.applySelection(this.selectedBooking);
     }
 
     this.spinnerService.hide();
@@ -242,6 +255,11 @@ export class CourseDetailPage implements OnInit, OnDestroy {
   }
 
   selectBooking(booking:any) {
+    this.applySelection(booking);
+  }
+
+  private applySelection(booking: any) {
+    if (!booking) return;
     if(booking.is_subgroup){
       this.bookingId = booking.id;
       this.bookingIdFull = 's-'+booking.id;
@@ -251,6 +269,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
       this.bookingIdFull = booking.id;
     }
     this.selectedBooking = booking;
+    this.selectedCourseDetail = null;
     if (this.selectedBooking && this.selectedBooking.course_id) {
       this.loadAttendance(this.selectedBooking.course_id);
     }
@@ -278,6 +297,89 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
   formatDate(date:string) {
     return moment(date).format('DD-MM-YYYY');
+  }
+
+  getMonitorAssignedDates(): any[] {
+    if (!this.selectedBooking || !this.selectedBooking.course || this.selectedBooking.course.course_type !== 1) {
+      return [];
+    }
+
+    const courseDates = Array.isArray(this.selectedCourseDetail?.course_dates)
+      ? this.selectedCourseDetail.course_dates
+      : (Array.isArray(this.selectedBooking.course.course_dates)
+        ? this.selectedBooking.course.course_dates
+        : []);
+    if (!courseDates.length && this.selectedBooking?.course_date_id) {
+      return [
+        {
+          id: this.selectedBooking.course_date_id,
+          date: this.selectedBooking?.date ?? this.dateBooking
+        }
+      ];
+    }
+    const monitorId = this.monitorData?.id;
+    if (!monitorId) {
+      return courseDates;
+    }
+
+    const subgroupDatesId = this.selectedBooking?.subgroup_dates_id;
+    const degreeId = this.selectedBooking?.degree_id;
+
+    const assignedDates = courseDates.filter((courseDate: any) => {
+      const groups = courseDate?.course_groups || [];
+      return groups.some((group: any) => {
+        const subgroups = group?.course_subgroups || [];
+        return subgroups.some((subgroup: any) => {
+          if (subgroup?.monitor_id !== monitorId) return false;
+          if (subgroupDatesId) return subgroup?.subgroup_dates_id === subgroupDatesId;
+          if (degreeId) return subgroup?.degree_id === degreeId;
+          return true;
+        });
+      });
+    });
+
+    return assignedDates.length ? assignedDates : courseDates;
+  }
+
+  isSelectedAssignedDate(courseDate: any): boolean {
+    return !!(this.selectedBooking && this.selectedBooking.course_date_id === courseDate?.id);
+  }
+
+  selectAssignedDate(courseDate: any) {
+    if (!courseDate) return;
+    const selectedDate = moment(courseDate.date).format('YYYY-MM-DD');
+    if (selectedDate === this.dateBooking) return;
+
+    const targetSubgroup = this.findSubgroupForDate(courseDate);
+    if (!targetSubgroup?.id) {
+      this.toastr.error(this.translate.instant('toast.error_loading_data'));
+      return;
+    }
+
+    this.goTo('course-detail', `s-${targetSubgroup.id}`, selectedDate);
+  }
+
+  private findSubgroupForDate(courseDate: any): any {
+    if (!courseDate?.course_groups) {
+      return null;
+    }
+
+    const subgroups: any[] = [];
+    courseDate.course_groups.forEach((group: any) => {
+      (group?.course_subgroups || []).forEach((subgroup: any) => subgroups.push(subgroup));
+    });
+
+    const subgroupDatesId = this.selectedBooking?.subgroup_dates_id;
+    if (subgroupDatesId) {
+      return subgroups.find((subgroup) => subgroup?.subgroup_dates_id === subgroupDatesId) || null;
+    }
+
+    const monitorId = this.monitorData?.id;
+    if (monitorId) {
+      return subgroups.find((subgroup) => subgroup?.monitor_id === monitorId) || null;
+    }
+
+    return subgroups[0] || null;
   }
 
   getPositionDate(courseDates: any[], courseDateId: string): number {
@@ -343,6 +445,9 @@ export class CourseDetailPage implements OnInit, OnDestroy {
     this.teachService.getData<any>('teach/courses', courseId).subscribe({
       next: (resp) => {
         const data = resp?.data;
+        if (data?.id === courseId) {
+          this.selectedCourseDetail = data;
+        }
         const bookingUsers: any[] = Array.isArray(data?.booking_users) ? data.booking_users : [];
         const monitorId = this.monitorData?.id;
         const isGroup = this.isGroupSelected();
@@ -408,6 +513,31 @@ export class CourseDetailPage implements OnInit, OnDestroy {
 
   goToClientDetail(client: any) {
     this.goTo('course-detail-level', this.bookingIdFull, this.dateBooking, client.id, this.selectedBooking.course.sport_id);
+  }
+
+  openCourseTransfer() {
+    if (!this.selectedBooking) {
+      this.toastr.error(this.translate.instant('toast.error_loading_data'));
+      return;
+    }
+
+    const courseGroupId = this.selectedBooking.course_group_id ?? this.selectedBooking.group_id ?? this.selectedBooking.course_group?.id;
+    const courseSubgroupId = this.selectedBooking.course_subgroup_id ?? this.selectedBooking.subgroup_id ?? (this.selectedBooking.is_subgroup ? this.selectedBooking.id : null);
+
+    if (!courseGroupId || !courseSubgroupId) {
+      this.toastr.error(this.translate.instant('toast.error_loading_data'));
+      return;
+    }
+
+    this.goTo(
+      'course-transfer',
+      this.bookingIdFull,
+      this.dateBooking,
+      this.selectedBooking.course_id,
+      this.selectedBooking.hour_start,
+      courseGroupId,
+      courseSubgroupId
+    );
   }
 
   goTo(...urls: string[]) {
