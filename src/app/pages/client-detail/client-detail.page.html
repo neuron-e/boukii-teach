@@ -31,16 +31,23 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="isPhone(clientMonitor.main.phone)" [href]="'tel:' + clientMonitor.main.phone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">M</span>
+            </a>
+            <a *ngIf="isPhone(clientMonitor.main.telephone)" [href]="'tel:' + clientMonitor.main.telephone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">T</span>
+            </a>
+            <a *ngIf="clientMonitor.main.email" [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
           <div class="header-user-data-text-contacts" *ngIf="clientMonitor.main.phone || clientMonitor.main.telephone || clientMonitor.main.email">
-            <div class="header-user-data-text-contact" *ngIf="clientMonitor.main.phone">
+            <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.main.phone)">
               <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
               <a [href]="'tel:' + clientMonitor.main.phone">{{ clientMonitor.main.phone }}</a>
             </div>
-            <div class="header-user-data-text-contact" *ngIf="clientMonitor.main.telephone">
+            <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.main.telephone)">
               <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
               <a [href]="'tel:' + clientMonitor.main.telephone">{{ clientMonitor.main.telephone }}</a>
             </div>
@@ -72,17 +79,24 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="isPhone(clientMonitor.phone)" [href]="'tel:' + clientMonitor.phone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">M</span>
+            </a>
+            <a *ngIf="isPhone(clientMonitor.telephone)" [href]="'tel:' + clientMonitor.telephone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">T</span>
+            </a>
+            <a *ngIf="clientMonitor.email" [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
           </div>
           <div class="header-user-data-text-contacts" *ngIf="clientMonitor.phone || clientMonitor.telephone || clientMonitor.email">
-            <div class="header-user-data-text-contact" *ngIf="clientMonitor.phone">
+            <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.phone)">
               <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
               <a [href]="'tel:' + clientMonitor.phone">{{ clientMonitor.phone }}</a>
             </div>
-            <div class="header-user-data-text-contact" *ngIf="clientMonitor.telephone">
+            <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.telephone)">
               <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
               <a [href]="'tel:' + clientMonitor.telephone">{{ clientMonitor.telephone }}</a>
             </div>
@@ -120,17 +134,24 @@
             </div>
             <div class="header-user-data-text-icons">
               <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-              <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-              <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+              <a *ngIf="isPhone(clientMonitor.phone)" [href]="'tel:' + clientMonitor.phone" class="icon-with-label">
+                <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+                <span class="icon-label">M</span>
+              </a>
+              <a *ngIf="isPhone(clientMonitor.telephone)" [href]="'tel:' + clientMonitor.telephone" class="icon-with-label">
+                <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+                <span class="icon-label">T</span>
+              </a>
+              <a *ngIf="clientMonitor.email" [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
               <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
             </div>
             <div class="header-user-data-text-contacts" *ngIf="clientMonitor.phone || clientMonitor.telephone || clientMonitor.email">
-              <div class="header-user-data-text-contact" *ngIf="clientMonitor.phone">
+              <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.phone)">
                 <span class="header-user-data-text-contact-label">{{ 'mobile' | translate }}</span>
                 <a [href]="'tel:' + clientMonitor.phone">{{ clientMonitor.phone }}</a>
               </div>
-              <div class="header-user-data-text-contact" *ngIf="clientMonitor.telephone">
+              <div class="header-user-data-text-contact" *ngIf="isPhone(clientMonitor.telephone)">
                 <span class="header-user-data-text-contact-label">{{ 'telephone' | translate }}</span>
                 <a [href]="'tel:' + clientMonitor.telephone">{{ clientMonitor.telephone }}</a>
               </div>
@@ -153,10 +174,29 @@
 
         </div>
         <div class="pt-24">
-          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length" (click)="goTo('client-level','client','1','1',clientId,sportSelected)" [allLevels]="sportDegrees" [selectLevel]="clientMonitor.degree_sport" [size]="280" class="cursor-pointer"></app-level-full>
+          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length"
+            [allLevels]="sportDegrees"
+            [selectLevel]="selectedLevelId"
+            (levelSelected)="onLevelSelected($event)"
+            [size]="280"
+            class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">
-            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level','client','1','1',clientId,sportSelected)">
+            <div class="level-current-banner background-color-dark mb-12 level-current-clickable" (click)="resetToCurrentLevel()">
+              <div class="level-current-label">{{ 'level_in_progress' | translate }}</div>
+              <div class="level-current-value">{{ getLevelNameById(clientMonitor?.degree_sport) }}</div>
+            </div>
+            <div class="level-meta mb-16">
+              <div class="level-meta-item level-meta-left">
+                <span class="level-meta-label">{{ 'previous_level' | translate }}</span>
+                <span class="level-meta-value">{{ getPreviousLevelName() }}</span>
+              </div>
+              <div class="level-meta-item level-meta-right">
+                <span class="level-meta-label">{{ 'next_level' | translate }}</span>
+                <span class="level-meta-value">{{ getNextLevelName() }}</span>
+              </div>
+            </div>
+            <button class="content-button btn-back-primary montserrat level-cta" (click)="goToClientLevelSelected()">
               {{ 'evaluate_progress' | translate }}
             </button>
           </div>
@@ -193,6 +233,26 @@
             <span style="font-weight: 600;">{{ evaluation.degree?.name || 'Nivel' }}:</span> {{ evaluation.observations }}
           </div>
         </ng-container>
+
+        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'monitor_comments' | translate }}</div>
+        <div *ngIf="commentsLoading" class="mini-empty">
+          {{ 'loading' | translate }}
+        </div>
+        <ng-container *ngIf="!commentsLoading">
+          <div *ngIf="getVisibleComments().length === 0" class="mini-empty">
+            {{ 'no_comments' | translate }}
+          </div>
+          <div class="comment-mini" *ngFor="let comment of getVisibleComments()">
+            <div class="comment-mini-text">{{ comment.comment }}</div>
+            <div class="comment-mini-meta">
+              <span class="comment-mini-author">{{ getCommentAuthor(comment) }}</span>
+              <span>{{ comment.created_at | date:'short' }}</span>
+            </div>
+          </div>
+          <button *ngIf="evaluationComments.length > commentsPreviewLimit" class="mini-toggle" (click)="toggleCommentsView()">
+            {{ showAllComments ? ('show_less' | translate) : ('view_more' | translate) }}
+          </button>
+        </ng-container>
       </div>
 
       <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
@@ -210,6 +270,27 @@
         <div *ngIf="clientMonitor && clientMonitor.observations.historical" class="montserrat color-light text-observations">
           {{clientMonitor.observations.historical}}
         </div>
+        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'history' | translate }}</div>
+        <div *ngIf="historyLoading" class="mini-empty">
+          {{ 'loading' | translate }}
+        </div>
+        <ng-container *ngIf="!historyLoading">
+          <div *ngIf="getVisibleHistory().length === 0" class="mini-empty">
+            {{ 'history_no_changes' | translate }}
+          </div>
+          <div class="history-mini" *ngFor="let entry of getVisibleHistory()">
+            <div class="history-mini-title">{{ getHistoryTitle(entry) }}</div>
+            <div class="history-mini-meta">
+              {{ getHistoryUserLabel(entry) }} · {{ entry.created_at | date:'short' }}
+            </div>
+            <div class="history-mini-detail" *ngIf="getHistorySummary(entry)">
+              {{ getHistorySummary(entry) }}
+            </div>
+          </div>
+          <button *ngIf="evaluationHistory.length > historyPreviewLimit" class="mini-toggle" (click)="toggleHistoryView()">
+            {{ showAllHistory ? ('show_less' | translate) : ('view_more' | translate) }}
+          </button>
+        </ng-container>
       </div>
       
     </div>

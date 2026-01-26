@@ -3,7 +3,7 @@
 
       <div class="content-img-wrapper">
         <div class="wrapper-back"></div>
-        <img *ngIf="monitorStation && monitorStation.image" [src]="monitorStation.image" class="content-img-back" />
+        <img *ngIf="monitorStation" [src]="getStationCoverImage()" class="content-img-back" />
         <img src="assets/images/boukii-logo.png" class="box-icon-logo" />
         <!-- PENDIENTEHACER
         <div class="box-icon-left cursor-pointer" (click)="goTo('notifications')">
@@ -13,6 +13,9 @@
         -->
         <div class="box-icon-right cursor-pointer" (click)="toggleMenu()">
           <img src="assets/icon/icon-menu.png" />
+          <div *ngIf="(unreadCount$ | async) as unreadCount" class="menu-badge" [ngClass]="{'menu-badge-hidden': unreadCount <= 0}">
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </div>
         </div>
 
         <div *ngIf="monitorData" class="content-img-text cursor-pointer" (click)="goTo('monitor-profile')">
@@ -97,8 +100,11 @@
       </div>
 
 
+      <div class="montserrat mb-8 color-light title-selector-small uppercase">
+        {{ 'courses_today' | translate }}
+      </div>
 
-      <div class="list-box-selector mt-24">
+      <div *ngIf="bookingsToday.length; else noCoursesToday" class="list-box-selector mt-8">
         <!--1-->
         <div *ngFor="let booking of bookingsToday" class="background-color-dark box-selector cursor-pointer" (click)="goTo('course-detail',booking.id,todayDate)">
           <div class="box-selector-top">
@@ -160,6 +166,11 @@
           </div>
         </div>
       </div>
+      <ng-template #noCoursesToday>
+        <div class="background-grey-translucent box-radius empty-courses">
+          <div class="montserrat color-light">{{ 'no_courses_today' | translate }}</div>
+        </div>
+      </ng-template>
 
     </div>
 

@@ -66,6 +66,12 @@
 .box-icon-right img {
     width:14px;
 }
+.menu-badge {
+    min-width: 16px;height: 16px;padding: 0 4px;border-radius: 8px;background: var(--ion-color-primary);color: #fff;font-size: 10px;line-height: 16px;text-align: center;position:absolute;top:-6px;right:-6px;
+}
+.menu-badge-hidden {
+    display:none;
+}
 .bullet-notification {
     width: 12px;height: 12px;border-radius: 6px;background: var(--ion-color-primary);position: absolute;top: 2px;left: 50%;transform: translateX(-50%);margin-left:6px;
 }
@@ -285,6 +291,9 @@
 }
 .box-selector-type span {
     font-size:15px;font-weight:500;
+}
+.empty-courses {
+    padding:12px 14px;text-align:center;font-size:13px;
 }
 
 .capitalize {

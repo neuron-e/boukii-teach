@@ -46,6 +46,15 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   languages: any[] = [];
   clientEvaluations: any[] = [];
   currentObservation: any = null;
+  selectedLevelId: number | null = null;
+  evaluationComments: any[] = [];
+  evaluationHistory: any[] = [];
+  commentsLoading = false;
+  historyLoading = false;
+  showAllComments = false;
+  showAllHistory = false;
+  readonly commentsPreviewLimit = 3;
+  readonly historyPreviewLimit = 3;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
@@ -132,6 +141,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
 
         this.filterObservationsBySchool();
         await this.getClientEvaluations();
+        this.setSelectedLevel(this.clientMonitor?.degree_sport || this.sportDegrees[0]?.id || null);
       } else {
         this.goTo('clients');
       }
@@ -214,6 +224,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
       const data: any = await this.teachService.getData('evaluations', null, { client_id: this.clientId }).toPromise();
       this.clientEvaluations = data.data;
       console.log('CLIENT DETAIL DEBUG: Loaded evaluations:', this.clientEvaluations);
+      await this.loadEvaluationSummary();
     } catch (error) {
       console.error('CLIENT DETAIL DEBUG: Error loading evaluations:', error);
       this.clientEvaluations = [];
@@ -231,6 +242,193 @@ export class ClientDetailPage implements OnInit, OnDestroy {
       .filter(evaluation => sportDegreeIds.includes(evaluation.degree_id) && evaluation.observations)
       .sort((a, b) => b.id - a.id); // Más recientes primero
   }  
+
+  getEvaluationForSelectedLevel(): any {
+    if (!this.selectedLevelId) return null;
+    const evaluations = (this.clientEvaluations || [])
+      .filter((evaluation: any) => evaluation.degree_id === this.selectedLevelId);
+    if (!evaluations.length) return null;
+    return evaluations.sort((a: any, b: any) => b.id - a.id)[0];
+  }
+
+  getVisibleComments(): any[] {
+    if (this.showAllComments) return this.evaluationComments;
+    return this.evaluationComments.slice(0, this.commentsPreviewLimit);
+  }
+
+  getVisibleHistory(): any[] {
+    if (this.showAllHistory) return this.evaluationHistory;
+    return this.evaluationHistory.slice(0, this.historyPreviewLimit);
+  }
+
+  toggleCommentsView(): void {
+    this.showAllComments = !this.showAllComments;
+  }
+
+  toggleHistoryView(): void {
+    this.showAllHistory = !this.showAllHistory;
+  }
+
+  getCommentAuthor(comment: any): string {
+    const monitor = comment?.monitor;
+    if (monitor) {
+      const name = [monitor.first_name, monitor.last_name].filter(Boolean).join(' ').trim()
+        || monitor.name
+        || monitor.email
+        || '';
+      const roleLabel = this.translate.instant('history_role_monitor');
+      if (name) return `${name} (${roleLabel})`;
+    }
+    return this.getUserDisplayLabel(comment?.user);
+  }
+
+  getHistoryUserLabel(entry: any): string {
+    const monitor = entry?.monitor;
+    if (monitor) {
+      const name = [monitor.first_name, monitor.last_name].filter(Boolean).join(' ').trim()
+        || monitor.name
+        || monitor.email
+        || '';
+      const roleLabel = this.translate.instant('history_role_monitor');
+      if (name) return `${name} (${roleLabel})`;
+    }
+    return this.getUserDisplayLabel(entry?.user);
+  }
+
+  getHistoryTitle(entry: any): string {
+    switch (entry?.type) {
+      case 'goal_created':
+        return this.translate.instant('history_change_goal_created');
+      case 'goal_updated':
+        return this.translate.instant('history_change_goal_updated');
+      case 'goal_deleted':
+        return this.translate.instant('history_change_goal_deleted');
+      case 'observation_updated':
+        return this.translate.instant('history_change_observation_updated');
+      case 'comment_added':
+        return this.translate.instant('history_change_comment_added');
+      case 'file_added':
+        return this.translate.instant('history_change_file_added');
+      case 'file_deleted':
+        return this.translate.instant('history_change_file_deleted');
+      default:
+        return this.translate.instant('history_change_generic');
+    }
+  }
+
+  getHistorySummary(entry: any): string {
+    const payload = entry?.payload || {};
+    if (payload.comment) {
+      return payload.comment;
+    }
+    if (payload.file) {
+      const fileName = payload.file.split('/').pop();
+      return fileName || payload.file;
+    }
+    if (payload.new) {
+      return payload.new;
+    }
+    if (payload.score !== undefined) {
+      return `${this.translate.instant('history_change_status_label')}: ${this.getScoreLabel(payload.score)}`;
+    }
+    return '';
+  }
+
+  private getScoreLabel(score: number): string {
+    if (score >= 10) return this.translate.instant('achieved');
+    if (score >= 5) return this.translate.instant('to_improve');
+    return this.translate.instant('not_started');
+  }
+
+  setSelectedLevel(levelId: number | null): void {
+    this.selectedLevelId = levelId;
+    this.showAllComments = false;
+    this.showAllHistory = false;
+    this.loadEvaluationSummary();
+  }
+
+  resetToCurrentLevel(): void {
+    const currentLevelId = this.clientMonitor?.degree_sport || null;
+    if (!currentLevelId) return;
+    this.setSelectedLevel(currentLevelId);
+  }
+
+  onLevelSelected(levelId: number): void {
+    this.setSelectedLevel(levelId);
+  }
+
+  getLevelNameById(levelId: number | null): string {
+    if (!levelId) return '-';
+    const level = this.sportDegrees.find(item => item.id === levelId);
+    return level?.name || '-';
+  }
+
+  getPreviousLevelName(): string {
+    if (!this.sportDegrees?.length || !this.selectedLevelId) return '-';
+    const index = this.sportDegrees.findIndex(item => item.id === this.selectedLevelId);
+    return index > 0 ? this.sportDegrees[index - 1]?.name || '-' : '-';
+  }
+
+  getNextLevelName(): string {
+    if (!this.sportDegrees?.length || !this.selectedLevelId) return '-';
+    const index = this.sportDegrees.findIndex(item => item.id === this.selectedLevelId);
+    if (index >= 0 && this.sportDegrees[index + 1]) {
+      return this.sportDegrees[index + 1]?.name || '-';
+    }
+    return '-';
+  }
+
+  isPhone(value: string | null | undefined): boolean {
+    if (!value) return false;
+    const text = String(value);
+    return /[0-9]/.test(text) && !text.includes('@');
+  }
+
+  async loadEvaluationSummary(): Promise<void> {
+    const evaluation = this.getEvaluationForSelectedLevel();
+    if (!evaluation?.id) {
+      this.evaluationComments = [];
+      this.evaluationHistory = [];
+      return;
+    }
+
+    await Promise.all([
+      this.loadEvaluationComments(evaluation.id),
+      this.loadEvaluationHistory(evaluation.id)
+    ]);
+  }
+
+  async loadEvaluationComments(evaluationId: number): Promise<void> {
+    if (!evaluationId || this.commentsLoading) return;
+    this.commentsLoading = true;
+    try {
+      const response: any = await this.teachService
+        .getData(`teach/evaluations/${evaluationId}/comments`, null, { limit: 200 })
+        .toPromise();
+      this.evaluationComments = response?.data || [];
+    } catch (error) {
+      console.error('Error loading evaluation comments:', error);
+      this.evaluationComments = [];
+    } finally {
+      this.commentsLoading = false;
+    }
+  }
+
+  async loadEvaluationHistory(evaluationId: number): Promise<void> {
+    if (!evaluationId || this.historyLoading) return;
+    this.historyLoading = true;
+    try {
+      const response: any = await this.teachService
+        .getData(`teach/evaluations/${evaluationId}/history`, null, { limit: 200 })
+        .toPromise();
+      this.evaluationHistory = response?.data || [];
+    } catch (error) {
+      console.error('Error loading evaluation history:', error);
+      this.evaluationHistory = [];
+    } finally {
+      this.historyLoading = false;
+    }
+  }
 
   changeSport(index:any) {
     let newDegree = 0;
@@ -253,6 +451,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
     this.clientMonitor.degree_sport = newDegree;
     this.sportDegrees = this.degrees && this.degrees.length > 0 ? this.degrees.filter(degree => degree.sport_id === sport.id) : [];
     console.log('Sport Degrees after change:', this.sportDegrees);
+    this.setSelectedLevel(this.clientMonitor.degree_sport || this.sportDegrees[0]?.id || null);
   }
 
   getBirthYears(date:string) {
@@ -277,8 +476,40 @@ export class ClientDetailPage implements OnInit, OnDestroy {
     this.showLevel=false;
   }
 
+  private getUserDisplayLabel(user: any): string {
+    if (!user) return this.translate.instant('history_change_system');
+    const name = [user.first_name, user.last_name].filter(Boolean).join(' ').trim()
+      || user.name
+      || user.username
+      || user.email
+      || '';
+    const roleLabel = this.getUserRoleLabel(user);
+    if (name && roleLabel) return `${name} (${roleLabel})`;
+    if (name) return name;
+    if (roleLabel) return roleLabel;
+    return this.translate.instant('history_change_system');
+  }
+
+  private getUserRoleLabel(user: any): string | null {
+    const type = user?.type;
+    if (type === 1 || type === 'admin') return this.translate.instant('history_role_admin');
+    if (type === 3 || type === 'monitor') return this.translate.instant('history_role_monitor');
+    return null;
+  }
+
   goTo(...urls: string[]) {
     this.router.navigate(urls);
+  }
+
+  goToClientLevelSelected(): void {
+    this.router.navigate(
+      ['client-level', 'client', '1', '1', this.clientId, this.sportSelected],
+      {
+        queryParams: {
+          levelId: this.selectedLevelId ?? null
+        }
+      }
+    );
   }
 
   ngOnDestroy() {

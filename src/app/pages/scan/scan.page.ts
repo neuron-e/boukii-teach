@@ -11,6 +11,7 @@ import type { PluginListenerHandle } from '@capacitor/core';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-scan',
@@ -20,13 +21,15 @@ import { TranslateService } from '@ngx-translate/core';
 export class ScanPage implements OnDestroy {
   private scanSub?: PluginListenerHandle;
   private handling = false;
+  unreadCount$ = this.notificationService.unreadCount$;
 
   constructor(
     private router: Router,
     private menuService: MenuService,
     private toastr: ToastrService,
     private spinnerService: SpinnerService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private notificationService: NotificationService
   ) {}
 
   async ionViewDidEnter() {

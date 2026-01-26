@@ -469,6 +469,7 @@ export class CourseDetailPage implements OnInit, OnDestroy {
             this.bookingUserByClient.set(bu.client_id, bu);
           }
         });
+
       },
       error: () => {
         // Silencioso; no bloquea la pantalla principal

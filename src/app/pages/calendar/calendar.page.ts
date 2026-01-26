@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { MonitorDataService } from '../../services/monitor-data.service';
@@ -8,6 +8,7 @@ import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
 
 @Component({
@@ -46,6 +47,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   filteredTasks: any[];
   filteredTasksWeek: any[] = [];
   tasksCalendar: any[] = [];
+  unreadCount$ = this.notificationService.unreadCount$;
   /*tasksCalendar: any[] = [
     {date:'2023-11-5',hour_start:'09:30',hour_end:'11:00',type:'collective',name:'Name',sport_id:1,clients:5,max_participants:6,date_index:3,date_total:6},
     {date:'2023-11-5',hour_start:'11:30',hour_end:'13:30',type:'private'},
@@ -65,6 +67,8 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   hourStartDay: string;
   hourEndDay: string;
+  displayHourStart: string;
+  displayHourEnd: string;
   hoursRange: string[] = [];
   vacationDays:any[];
 
@@ -75,8 +79,20 @@ export class CalendarPage implements OnInit, OnDestroy {
   sports: any[] = [];
   monthBoundaries:any;
   canRestart:boolean=false;
+  private pendingDate: string | null = null;
 
-  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private menuService: MenuService,
+    private monitorDataService: MonitorDataService,
+    private sharedDataService: SharedDataService,
+    private teachService: TeachService,
+    private toastr: ToastrService,
+    private spinnerService: SpinnerService,
+    private translate: TranslateService,
+    private notificationService: NotificationService
+  ) {
     this.translate.onLangChange.subscribe(() => {
       this.loadWeekdays();
     });
@@ -85,6 +101,13 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.pendingDate = params?.['date'] || localStorage.getItem('calendarTargetDate');
+      if (this.monitorData) {
+        this.applyPendingDate();
+      }
+    });
+
     this.subscription = this.monitorDataService.getMonitorData().subscribe(async monitorData => {
       if (monitorData) {
         //console.log(monitorData);
@@ -105,6 +128,7 @@ export class CalendarPage implements OnInit, OnDestroy {
         const { firstDay, lastDay } = this.getMonthBoundaries(this.currentYear, this.currentMonth);
         await this.generateHoursRange();
         this.loadBookings(firstDay,lastDay);
+        this.applyPendingDate();
       }
     });
   }
@@ -431,8 +455,10 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   async generateHoursRange() {
-    const startTime = this.parseTime(this.hourStartDay);
-    const endTime = this.parseTime(this.hourEndDay);
+    this.hoursRange = [];
+    const { start: startTime, end: endTime } = this.getDisplayHourBounds();
+    this.displayHourStart = this.formatTime(startTime);
+    this.displayHourEnd = this.formatTime(endTime);
     let currentTime = new Date(startTime);
 
     while (currentTime <= endTime) {
@@ -450,6 +476,23 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   formatTime(date: Date): string {
     return date.toTimeString().substring(0, 5);
+  }
+
+  getDisplayHourBounds(): { start: Date; end: Date } {
+    const startTime = this.parseTime(this.hourStartDay);
+    const endTime = this.parseTime(this.hourEndDay);
+
+    if (startTime.getMinutes() !== 0) {
+      startTime.setMinutes(0, 0, 0);
+    }
+    if (endTime.getMinutes() !== 0) {
+      endTime.setHours(endTime.getHours() + 1, 0, 0, 0);
+    }
+    if (endTime < startTime) {
+      endTime.setTime(startTime.getTime());
+    }
+
+    return { start: startTime, end: endTime };
   }
 
   previousMonth(): void {
@@ -595,7 +638,9 @@ export class CalendarPage implements OnInit, OnDestroy {
     }
 
     let lastDayOfWeek = new Date(this.currentYear, this.currentMonth, daysInMonth).getDay();
-    for (let k = lastDayOfWeek; k <= 6 && lastDayOfWeek !== 6; k++) {
+    let adjustedLastDay = lastDayOfWeek - 1;
+    if (adjustedLastDay < 0) adjustedLastDay = 6;
+    for (let k = adjustedLastDay; k < 6; k++) {
       this.days.push({ number: '', active: false, selected: false, today: false });
     }
 
@@ -631,6 +676,39 @@ export class CalendarPage implements OnInit, OnDestroy {
     }
   }
 
+  private applyPendingDate(): void {
+    if (!this.pendingDate) {
+      return;
+    }
+    const normalized = this.normalizeDateString(this.pendingDate);
+    const parsed = moment(normalized, 'YYYY-MM-DD', true);
+    if (!parsed.isValid()) {
+      return;
+    }
+
+    const date = parsed.toDate();
+    this.selectedDate = date;
+    this.currentMonth = date.getMonth();
+    this.currentYear = date.getFullYear();
+    this.currentDay = date.getDate();
+    this.showDay = true;
+    this.showMonth = false;
+    this.showWeek = false;
+    this.calculateDayRange();
+    localStorage.removeItem('calendarTargetDate');
+  }
+
+  private normalizeDateString(value: any): string {
+    if (!value) {
+      return '';
+    }
+    const raw = String(value);
+    if (raw.includes('T') || raw.includes(' ')) {
+      return raw.slice(0, 10);
+    }
+    return raw;
+  }
+
   getWeekdayName(date: Date): string {
     return this.weekdayNames[date.getDay()];
   }
@@ -647,7 +725,9 @@ export class CalendarPage implements OnInit, OnDestroy {
     const hourHeight = 54;
     const hourSeparator = 3;
     const totalHourHeight = hourHeight + hourSeparator;
-    const startHourOffset = 11;
+    const { start: displayStart, end: displayEnd } = this.getDisplayHourBounds();
+    const baseTime = new Date(displayStart);
+    const baseMinutesTotal = (baseTime.getHours() * 60) + baseTime.getMinutes();
 
     const leftValues:any = {
       '0': '85.5%',
@@ -663,34 +743,27 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.tasksCalendar = this.tasksCalendar.map(task => {
       const dayOfWeek = this.getDayOfWeek(task.date);
       //Check start time is inside hours range
-      const firstTimeRange = this.parseTime(this.hourStartDay);
+      const firstTimeRange = new Date(displayStart);
       const startTime = this.parseTime(task.hour_start);
       if (startTime < firstTimeRange) {
         startTime.setHours(firstTimeRange.getHours(), firstTimeRange.getMinutes(), 0, 0);
       }
       //Check end time is inside hours range
-      const lastTimeRange = this.parseTime(this.hourEndDay);
+      const lastTimeRange = new Date(displayEnd);
       const endTime = this.parseTime(task.hour_end);
       if (endTime > lastTimeRange) {
         endTime.setHours(lastTimeRange.getHours(), lastTimeRange.getMinutes(), 0, 0);
       }
 
       //calculate top
-      const startHour = startTime.getHours() - parseInt(this.hourStartDay.split(':')[0], 10);
-      const startMinutes = startTime.getMinutes();
-      const top = startHourOffset + (startHour * totalHourHeight) + (startMinutes / 60) * hourHeight;
+      const startMinutesTotal = (startTime.getHours() * 60) + startTime.getMinutes();
+      const minutesFromStart = startMinutesTotal - baseMinutesTotal;
+      const top = (minutesFromStart / 60) * totalHourHeight;
 
       //calculate height
       const durationMs = endTime.getTime() - startTime.getTime();
-      const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
-      const durationMinutes = (durationMs % (1000 * 60 * 60)) / (1000 * 60);
-      let height = 0;
-      if(durationHours <= 1){
-        height = (hourHeight * durationHours) + (totalHourHeight * durationMinutes / 60);
-      }
-      else{
-        height = hourHeight + (totalHourHeight * (durationHours - 1) ) + (totalHourHeight * durationMinutes / 60);
-      }
+      const durationMinutesTotal = durationMs / (1000 * 60);
+      const height = (durationMinutesTotal / 60) * totalHourHeight;
 
       // Left from day of week
       const left = leftValues[dayOfWeek.toString()];

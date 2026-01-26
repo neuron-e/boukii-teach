@@ -11,13 +11,13 @@
     width:100%;min-height:100vh;background:var(--ion-back-color-dark);
 }
 .header-content {
-    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:60px;
+    position:relative;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:60px;padding-left:36px;padding-right:12px;
 }
 .header-content-icon {
     position:absolute;left:0;top: 50%;transform: translateY(-50%);width:28px;
 }
 .header-top-title {
-    font-size:15px;color:#fff;font-weight:600;
+    font-size:15px;color:#fff;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;
 }
 
 .header-user-data {
@@ -52,6 +52,12 @@
 }
 .header-user-data-text-icons {
     display:flex;align-items:center;gap:12px;
+}
+.icon-with-label {
+    position:relative;display:inline-flex;align-items:center;justify-content:center;
+}
+.icon-label {
+    position:absolute;right:-4px;bottom:-4px;background:#1f2937;color:#fff;font-size:9px;line-height:1;padding:2px 4px;border-radius:999px;
 }
 .header-user-data-text-icons img {
     width:34px;
@@ -123,6 +129,42 @@
 .content-button {
     width: 100%;height: 44px;line-height: 44px;display: block;text-align: center;border-radius: 44px;color: #000;text-align: center;font-size: 14px;font-weight: 500;cursor:pointer;transition:all ease-in-out 0.3s;
 }
+.level-meta {
+    display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;
+}
+.level-meta-item {
+    background:#2b303b;border-radius:12px;padding:8px 12px;display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 140px;
+}
+.level-meta-clickable {
+    cursor:pointer;
+}
+.level-meta-label {
+    font-size:11px;color:#b0b7c3;
+}
+.level-meta-value {
+    font-size:13px;font-weight:600;color:#fff;
+}
+.level-meta-left {
+    text-align:left;
+}
+.level-meta-right {
+    text-align:right;
+}
+.level-current-banner {
+    display:flex;flex-direction:column;gap:4px;align-items:center;padding:12px;border-radius:12px;
+}
+.level-current-label {
+    font-size:11px;text-transform:uppercase;color:#b0b7c3;
+}
+.level-current-value {
+    font-size:16px;font-weight:600;color:#fff;text-align:center;
+}
+.level-current-clickable {
+    cursor:pointer;
+}
+.level-cta {
+    margin-top:12px;
+}
 
 .box-observations {
     padding:12px 16px;
@@ -132,6 +174,36 @@
 }
 .title-observations {
     font-size:15px;border-top:1px solid #444953;
+}
+.mini-empty {
+    font-size:12px;color:#b0b7c3;margin-top:6px;
+}
+.comment-mini {
+    background:#2b303b;border-radius:10px;padding:10px 12px;margin-top:8px;display:flex;flex-direction:column;gap:6px;
+}
+.comment-mini-text {
+    font-size:13px;color:#fff;
+}
+.comment-mini-meta {
+    display:flex;justify-content:space-between;font-size:11px;color:#b0b7c3;
+}
+.comment-mini-author {
+    font-weight:600;color:#d6dde8;
+}
+.history-mini {
+    background:#2b303b;border-radius:10px;padding:10px 12px;margin-top:8px;display:flex;flex-direction:column;gap:6px;
+}
+.history-mini-title {
+    font-size:12px;font-weight:600;color:#fff;
+}
+.history-mini-meta {
+    font-size:11px;color:#b0b7c3;
+}
+.history-mini-detail {
+    font-size:12px;color:#d6dde8;
+}
+.mini-toggle {
+    margin-top:8px;background:transparent;border:1px solid #3a414f;border-radius:10px;padding:8px 12px;color:#fff;font-size:12px;
 }
 
 .list-box-selector-users {

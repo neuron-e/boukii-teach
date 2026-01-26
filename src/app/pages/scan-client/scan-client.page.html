@@ -8,7 +8,12 @@
           <img src="assets/icon/icon-scan-blue.png" />
           <div>{{ 'scan' | translate }}</div>
         </div>
-        <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+        <div class="header-section-menu header-menu-wrapper cursor-pointer" (click)="toggleMenu()">
+          <img src="assets/icon/icon-menu.png" />
+          <div *ngIf="(unreadCount$ | async) as unreadCount" class="menu-badge" [ngClass]="{'menu-badge-hidden': unreadCount <= 0}">
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </div>
+        </div>
       </div>
 
       <!--Only if group-->
@@ -31,8 +36,9 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="clientMonitor.main.phone" [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a *ngIf="clientMonitor.main.telephone" [href]="'tel:' + clientMonitor.main.telephone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a *ngIf="clientMonitor.main.email" [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
         </div>
@@ -58,8 +64,9 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="clientMonitor.phone" [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a *ngIf="clientMonitor.telephone" [href]="'tel:' + clientMonitor.telephone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+            <a *ngIf="clientMonitor.email" [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
           </div>
         </div>
@@ -178,8 +185,9 @@
                 </div>
                 <div class="header-user-data-text-icons">
                   <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-                  <a [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-                  <a [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.phone" [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.telephone" [href]="'tel:' + booking.monitor_data.telephone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.email" [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
                   <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
                 </div>
               </div>
@@ -279,8 +287,9 @@
                 </div>
                 <div class="header-user-data-text-icons">
                   <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-                  <a [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-                  <a [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.phone" [href]="'tel:' + booking.monitor_data.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.telephone" [href]="'tel:' + booking.monitor_data.telephone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
+                  <a *ngIf="booking.monitor_data.email" [href]="'mailto:' + booking.monitor_data.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
                   <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
                 </div>
               </div>

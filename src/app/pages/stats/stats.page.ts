@@ -109,125 +109,57 @@ export class StatsPage implements OnInit, OnDestroy {
     // Initialize the months data
     const monthsDataB:any = this.initializeMonthsData();
     const oldestMonth = monthsDataB[0];
-    
-    // Format the start and end dates
     const date_start = moment(`${oldestMonth.year}-${oldestMonth.name}-01`, 'YYYY-MMM-DD').startOf('month').format('YYYY-MM-DD');
     const date_end = moment().format('YYYY-MM-DD');
 
-    //console.log(date_start);//console.log(date_end);
     const searchData:any = {
-      date_start: date_start, date_end: date_end
+      start_date: date_start,
+      end_date: date_end
     };
     if(this.monitorData.active_school){
       searchData.school_id = this.monitorData.active_school;
     }
-    this.teachService.getData('teach/getAgenda', null, searchData).subscribe(
+
+    this.teachService.getData('teach/statistics/monitors/daily', null, searchData).subscribe(
       (data: any) => {
-        //console.log(data.data);
-        const bookingsByDate:any = {};
         this.monthsData = this.initializeMonthsData();
-        let collectiveCourses:any = { totalDuration: 0 };
-        let privateCourses:any = { totalDuration: 0 };
-        let blockPayed:any = { totalDuration: 0 };
-        let blockNwd:any = { totalDuration: 0 };
-        let blockNotPayed:any = { totalDuration: 0 };
-    
-        // Group bookings by date
-        data.data.bookings.forEach((booking: any) => {
-          const bookingMonthYear = moment(booking.date).format('MMM YYYY').toUpperCase();
-          const monthData = this.monthsData.find((m:any) => `${m.name} ${m.year}` === bookingMonthYear);
-  
-          if (monthData) {
-            const duration = this.calculateDuration(booking.hour_start, booking.hour_end);
-            if (booking.course.course_type === 1) {
-              monthData.collectiveCourses += duration;
-            } else if (booking.course.course_type === 2) {
-              monthData.privateCourses += duration;
-            }
+        let totalCollectiveDuration = 0;
+        let totalPrivateDuration = 0;
+        let totalPayedDuration = 0;
+
+        data.data.forEach((daily: any) => {
+          const monthKey = moment(daily.date).format('MMM YYYY').toUpperCase();
+          const monthData = this.monthsData.find((m:any) => `${m.name} ${m.year}` === monthKey);
+          if (!monthData) {
+            return;
           }
+
+          const collectiveMinutes = this.parseDurationToMinutes(daily.hours_collective);
+          const privateMinutes = this.parseDurationToMinutes(daily.hours_private);
+          const paidMinutes = this.parseDurationToMinutes(daily.hours_nwd_payed);
+
+          monthData.collectiveCourses += collectiveMinutes;
+          monthData.privateCourses += privateMinutes;
+          monthData.blockPayed += paidMinutes;
+
+          totalCollectiveDuration += collectiveMinutes;
+          totalPrivateDuration += privateMinutes;
+          totalPayedDuration += paidMinutes;
         });
-    
-        // Group nwds by date
-        data.data.nwd.forEach((nwd: any) => {
-          const nwdMonthYear = moment(nwd.start_date).format('MMM YYYY').toUpperCase();
-          const monthData = this.monthsData.find((m:any) => `${m.name} ${m.year}` === nwdMonthYear);
-  
-          if (monthData) {
-            let duration;
-            if(nwd.full_day){
-              duration = this.calculateDuration(this.hourStartDay, this.hourEndDay);
-            }
-            else{
-              duration = this.calculateDuration(nwd.start_time, nwd.end_time);
-            } 
-            if (nwd.user_nwd_subtype_id === 1) {
-              monthData.blockNwd += duration;
-            } else if (nwd.user_nwd_subtype_id === 2) {
-              monthData.blockPayed += duration;
-            } else if (nwd.user_nwd_subtype_id === 3) {
-              monthData.blockNotPayed += duration;
-            }
-          }
-        });
-  
-        // Convert total duration to hours and minutes
-        collectiveCourses.totalDuration = this.formatDuration(collectiveCourses.totalDuration);
-        privateCourses.totalDuration = this.formatDuration(privateCourses.totalDuration);
-        blockNwd.totalDuration = this.formatDuration(blockNwd.totalDuration);
-        blockPayed.totalDuration = this.formatDuration(blockPayed.totalDuration);
-        blockNotPayed.totalDuration = this.formatDuration(blockNotPayed.totalDuration);
-  
-        // Convert monthly durations to hours and minutes
+
         Object.keys(this.monthsData).forEach((month:any) => {
           this.monthsData[month].collectiveCourses = this.formatDuration(this.monthsData[month].collectiveCourses);
           this.monthsData[month].privateCourses = this.formatDuration(this.monthsData[month].privateCourses);
-          this.monthsData[month].blockNwd = this.formatDuration(this.monthsData[month].blockNwd);
           this.monthsData[month].blockPayed = this.formatDuration(this.monthsData[month].blockPayed);
-          this.monthsData[month].blockNotPayed = this.formatDuration(this.monthsData[month].blockNotPayed);
-        });
-  
-        //console.log('Collective Courses:', collectiveCourses);
-        //console.log('Private Courses:', privateCourses);
-        //console.log('Nwd blocks:', blockNwd);
-        //console.log('Payed blocks:', blockPayed);
-        //console.log('Not Payed blocks:', blockNotPayed);
-        //console.log('Monthly Data:', this.monthsData);
-
-        // Prepare chart data
-        const collectiveCourseData = this.monthsData.map((m:any) => this.durationInHours(m.collectiveCourses));
-        const privateCourseData = this.monthsData.map((m:any) => this.durationInHours(m.privateCourses));
-        const blockNwdData = this.monthsData.map((m:any) => this.durationInHours(m.blockNwd));
-        const blockPayedData = this.monthsData.map((m:any) => this.durationInHours(m.blockPayed));
-        const blockNotPayedData = this.monthsData.map((m:any) => this.durationInHours(m.blockNotPayed));
-
-        //TABLE
-        let totalCollectiveDuration = 0;
-        let totalPrivateDuration = 0;
-        let totalNwdDuration = 0;
-        let totalPayedDuration = 0;
-        let totalNotPayedDuration = 0;
-
-        this.monthsData.forEach(month => {
-          totalCollectiveDuration += this.hoursToMinutes(this.durationInHours(month.collectiveCourses));
-          totalPrivateDuration += this.hoursToMinutes(this.durationInHours(month.privateCourses));
-          totalNwdDuration += this.hoursToMinutes(this.durationInHours(month.blockNwd));
-          totalPayedDuration += this.hoursToMinutes(this.durationInHours(month.blockPayed));
-          totalNotPayedDuration += this.hoursToMinutes(this.durationInHours(month.blockNotPayed));
         });
 
-        // Convert the total durations from minutes to hours and minutes format
         this.totalCollectiveDurationFormatted = this.formatDuration(totalCollectiveDuration);
         this.totalPrivateDurationFormatted = this.formatDuration(totalPrivateDuration);
-        this.totalNwdDurationFormatted = this.formatDuration(totalNwdDuration);
         this.totalPayedDurationFormatted = this.formatDuration(totalPayedDuration);
-        this.totalNotPayedDurationFormatted = this.formatDuration(totalNotPayedDuration);
-        //console.log(this.totalCollectiveDurationFormatted);//console.log(this.totalPrivateDurationFormatted);
-        //console.log(this.totalNwdDurationFormatted);//console.log(this.totalPayedDurationFormatted);
-        //console.log(this.totalNotPayedDurationFormatted);
+        this.totalNwdDurationFormatted = this.formatDuration(0);
+        this.totalNotPayedDurationFormatted = this.formatDuration(0);
 
         this.reversedMonthsData = this.monthsData.slice().reverse();
-
-        // Update chart
         this.updateChartData();
       },
       error => {
@@ -349,6 +281,22 @@ export class StatsPage implements OnInit, OnDestroy {
     const [startHours, startMinutes] = start.split(':').map(Number);
     const [endHours, endMinutes] = end.split(':').map(Number);
     return (endHours - startHours) * 60 + (endMinutes - startMinutes); // duration in minutes
+  }
+
+  parseDurationToMinutes(duration: string): number {
+    if (!duration) {
+      return 0;
+    }
+    const match = duration.match(/(\d+)\s*h\s*(\d+)\s*m/i);
+    if (!match) {
+      return 0;
+    }
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+      return 0;
+    }
+    return (hours * 60) + minutes;
   }
   
   formatDuration(duration:any) {

@@ -22,6 +22,15 @@
 .header-section-menu {
     position:absolute;right:0;top: 50%;transform: translateY(-50%);width:22px;display:flex;align-items:center;justify-content:center;
 }
+.header-section-menu img {
+    width:22px;
+}
+.menu-badge {
+    min-width: 16px;height: 16px;padding: 0 4px;border-radius: 8px;background: var(--ion-color-primary);color: #fff;font-size: 10px;line-height: 16px;text-align: center;position:absolute;top:-8px;right:-10px;
+}
+.menu-badge-hidden {
+    display:none;
+}
 
 .box-message {
     display:flex;align-items:center;gap:10px;width:100%;padding:16px;border-radius:8px;
@@ -55,7 +64,7 @@
 }
   
 .filter-floating {
-    width: 54px;position: fixed;right: 12px;bottom:102px;cursor: pointer;
+    width: 54px;position: fixed;right: 12px;bottom: calc(140px + var(--teach-footer-extra-padding, 0px));cursor: pointer;
 }
 
 .flex-sections {

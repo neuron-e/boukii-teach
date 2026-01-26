@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-level-full',
@@ -10,6 +10,7 @@ export class LevelFullComponent  implements OnInit, OnChanges {
   @Input() allLevels: any[] = [];
   @Input() selectLevel: any = 0;
   @Input() size: number;
+  @Output() levelSelected = new EventEmitter<any>();
 
   indexSelectLevel:any = 0;
 
@@ -43,6 +44,18 @@ export class LevelFullComponent  implements OnInit, OnChanges {
       this.selectLevel = 0;
       this.indexSelectLevel = 0;
     }
+  }
+
+  selectLevelByIndex(index: number, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!Array.isArray(this.allLevels) || !this.allLevels[index]) {
+      return;
+    }
+    this.indexSelectLevel = index;
+    this.selectLevel = this.allLevels[index].id;
+    this.levelSelected.emit(this.selectLevel);
   }
 
   private sortLevels(levels: any[]): any[] {

@@ -76,8 +76,21 @@ export class TeachService {
   }
   
   // DELETE
-  deleteData(route: string, id: number): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/${route}/${id}`, { headers: this.getHeaders() });
+  deleteData(route: string, id: number | string, params?: {[param: string]: any}): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        const value = params[key];
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value);
+        }
+      });
+    }
+
+    return this.http.delete(`${environment.apiUrl}/${route}/${id}`, {
+      headers: this.getHeaders(),
+      params: httpParams
+    });
   }
 
 }

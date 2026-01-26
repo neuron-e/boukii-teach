@@ -8,6 +8,7 @@ import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
 import { MOCK_COUNTRIES } from '../../mocks/countries-data';
 import { MOCK_PROVINCES } from '../../mocks/province-data';
@@ -49,8 +50,9 @@ export class ScanClientPage implements OnInit, OnDestroy {
   tomorrowDateFull:string;
   todayDateFormatted: string = moment().format('YYYY-MM-DD');
   tomorrowDateFormatted: string = moment().add(1, 'days').format('YYYY-MM-DD');
+  unreadCount$ = this.notificationService.unreadCount$;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private changeDetectorRef: ChangeDetectorRef, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private changeDetectorRef: ChangeDetectorRef, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService, private notificationService: NotificationService) {
     this.translate.onLangChange.subscribe((lang:any) => {
       this.updateDate(lang.lang);
     });

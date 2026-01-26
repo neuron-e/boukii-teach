@@ -4,7 +4,7 @@
     <div class="background-color-dark padding-wrapper">
       <div class="header-content mb-24">
         <img src="assets/icon/arrow-left.svg" class="cursor-pointer header-content-icon" (click)="goTo('course-detail',bookingId,dateBooking)" />
-        <div *ngIf="selectedBooking" class="header-top-title">
+        <div *ngIf="selectedBooking" class="header-top-title" [title]="selectedBooking.course.name">
           {{selectedBooking.course.name}}
         </div>
       </div>
@@ -29,8 +29,15 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.main.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="isPhone(clientMonitor.main.phone)" [href]="'tel:' + clientMonitor.main.phone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">M</span>
+            </a>
+            <a *ngIf="isPhone(clientMonitor.main.telephone)" [href]="'tel:' + clientMonitor.main.telephone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">T</span>
+            </a>
+            <a *ngIf="clientMonitor.main.email" [href]="'mailto:' + clientMonitor.main.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
           </div>
@@ -57,8 +64,15 @@
           </div>
           <div class="header-user-data-text-icons">
             <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-            <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-            <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+            <a *ngIf="isPhone(clientMonitor.phone)" [href]="'tel:' + clientMonitor.phone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">M</span>
+            </a>
+            <a *ngIf="isPhone(clientMonitor.telephone)" [href]="'tel:' + clientMonitor.telephone" class="icon-with-label">
+              <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+              <span class="icon-label">T</span>
+            </a>
+            <a *ngIf="clientMonitor.email" [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
             <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
           </div>
@@ -91,8 +105,15 @@
             </div>
             <div class="header-user-data-text-icons">
               <!--<img class="cursor-pointer" src="assets/icon/icon-message-box.png" />-->
-              <a [href]="'tel:' + clientMonitor.phone"><img class="cursor-pointer" src="assets/icon/icon-phone-box.png" /></a>
-              <a [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
+              <a *ngIf="isPhone(clientMonitor.phone)" [href]="'tel:' + clientMonitor.phone" class="icon-with-label">
+                <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+                <span class="icon-label">M</span>
+              </a>
+              <a *ngIf="isPhone(clientMonitor.telephone)" [href]="'tel:' + clientMonitor.telephone" class="icon-with-label">
+                <img class="cursor-pointer" src="assets/icon/icon-phone-box.png" />
+                <span class="icon-label">T</span>
+              </a>
+              <a *ngIf="clientMonitor.email" [href]="'mailto:' + clientMonitor.email"><img class="cursor-pointer" src="assets/icon/icon-mail-box.png" /></a>
               <!--<img class="cursor-pointer" src="assets/icon/icon-ticket-box.png" />-->
 
             </div>
@@ -115,10 +136,29 @@
         </div>
         
         <div class="pt-24">
-          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length" (click)="goTo('client-level','course',bookingId,dateBooking,clientIdBooking,sportIdBooking)" [allLevels]="sportDegrees" [selectLevel]="clientMonitor.degree_sport" [size]="280" class="cursor-pointer"></app-level-full>
+          <app-level-full *ngIf="clientMonitor && sportDegrees && sportDegrees.length"
+            [allLevels]="sportDegrees"
+            [selectLevel]="selectedLevelId"
+            (levelSelected)="onLevelSelected($event)"
+            [size]="280"
+            class="cursor-pointer"></app-level-full>
 
           <div class="padding-wrapper mt-8">
-            <button class="content-button btn-back-primary montserrat" (click)="goTo('client-level','course',bookingId,dateBooking,clientIdBooking,sportIdBooking)">
+            <div class="level-current-banner background-color-dark mb-12 level-current-clickable" (click)="resetToCurrentLevel()">
+              <div class="level-current-label">{{ 'level_in_progress' | translate }}</div>
+              <div class="level-current-value">{{ getLevelNameById(clientMonitor?.degree_sport) }}</div>
+            </div>
+            <div class="level-meta mb-16">
+              <div class="level-meta-item level-meta-left level-meta-clickable" (click)="goToPreviousLevel()">
+                <span class="level-meta-label">{{ 'previous_level' | translate }}</span>
+                <span class="level-meta-value">{{ getPreviousLevelName() }}</span>
+              </div>
+              <div class="level-meta-item level-meta-right level-meta-clickable" (click)="goToNextLevel()">
+                <span class="level-meta-label">{{ 'next_level' | translate }}</span>
+                <span class="level-meta-value">{{ getNextLevelName() }}</span>
+              </div>
+            </div>
+            <button class="content-button btn-back-primary montserrat level-cta" (click)="goToClientLevelSelected()">
               {{ 'evaluate_progress' | translate }}
             </button>
           </div>
@@ -146,6 +186,32 @@
             {{clientMonitor.observations.notes}}
           </div>
         </ng-container>
+        <ng-container *ngIf="getEvaluationForSelectedLevel()?.observations">
+          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'evaluation_observations' | translate }}</div>
+          <div class="montserrat color-light text-observations">
+            {{ getEvaluationForSelectedLevel()?.observations }}
+          </div>
+        </ng-container>
+
+        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'monitor_comments' | translate }}</div>
+        <div *ngIf="commentsLoading" class="mini-empty">
+          {{ 'loading' | translate }}
+        </div>
+        <ng-container *ngIf="!commentsLoading">
+          <div *ngIf="getVisibleComments().length === 0" class="mini-empty">
+            {{ 'no_comments' | translate }}
+          </div>
+          <div class="comment-mini" *ngFor="let comment of getVisibleComments()">
+            <div class="comment-mini-text">{{ comment.comment }}</div>
+            <div class="comment-mini-meta">
+              <span class="comment-mini-author">{{ getCommentAuthor(comment) }}</span>
+              <span>{{ comment.created_at | date:'short' }}</span>
+            </div>
+          </div>
+          <button *ngIf="evaluationComments.length > commentsPreviewLimit" class="mini-toggle" (click)="toggleCommentsView()">
+            {{ showAllComments ? ('show_less' | translate) : ('view_more' | translate) }}
+          </button>
+        </ng-container>
       </div>
 
       <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
@@ -163,6 +229,27 @@
         <div *ngIf="clientMonitor && clientMonitor.observations.historical" class="montserrat color-light text-observations">
           {{clientMonitor.observations.historical}}
         </div>
+        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'history' | translate }}</div>
+        <div *ngIf="historyLoading" class="mini-empty">
+          {{ 'loading' | translate }}
+        </div>
+        <ng-container *ngIf="!historyLoading">
+          <div *ngIf="getVisibleHistory().length === 0" class="mini-empty">
+            {{ 'history_no_changes' | translate }}
+          </div>
+          <div class="history-mini" *ngFor="let entry of getVisibleHistory()">
+            <div class="history-mini-title">{{ getHistoryTitle(entry) }}</div>
+            <div class="history-mini-meta">
+              {{ getHistoryUserLabel(entry) }} · {{ entry.created_at | date:'short' }}
+            </div>
+            <div class="history-mini-detail" *ngIf="getHistorySummary(entry)">
+              {{ getHistorySummary(entry) }}
+            </div>
+          </div>
+          <button *ngIf="evaluationHistory.length > historyPreviewLimit" class="mini-toggle" (click)="toggleHistoryView()">
+            {{ showAllHistory ? ('show_less' | translate) : ('view_more' | translate) }}
+          </button>
+        </ng-container>
       </div>
       
     </div>

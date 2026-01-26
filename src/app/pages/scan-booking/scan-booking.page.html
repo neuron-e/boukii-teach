@@ -42,7 +42,7 @@
         </div>
         <div class="scan-booking__row" *ngIf="data.booking?.status !== undefined && data.booking?.status !== null">
           <span class="scan-booking__label">{{ 'scan_booking.booking_status' | translate }}</span>
-          <span class="scan-booking__value">{{ data.booking?.status }}</span>
+          <span class="scan-booking__value">{{ getBookingStatusLabel() }}</span>
         </div>
         <div class="scan-booking__row" *ngIf="data.booking?.paid !== undefined && data.booking?.paid !== null">
           <span class="scan-booking__label">{{ 'scan_booking.paid' | translate }}</span>
@@ -50,7 +50,7 @@
         </div>
         <div class="scan-booking__row" *ngIf="data.booking?.payment_method_status !== undefined && data.booking?.payment_method_status !== null">
           <span class="scan-booking__label">{{ 'scan_booking.payment_status' | translate }}</span>
-          <span class="scan-booking__value">{{ data.booking?.payment_method_status }}</span>
+          <span class="scan-booking__value">{{ getPaymentStatusLabel() }}</span>
         </div>
       </div>
 

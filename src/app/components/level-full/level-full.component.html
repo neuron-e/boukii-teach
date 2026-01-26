@@ -6,7 +6,15 @@
               [attr.d]="getCirclePath(i)" 
               [attr.stroke]="getCircleColor(i, indexSelectLevel)" 
               fill="none" 
-              [attr.stroke-width]="strokeWidth">
+              [attr.stroke-width]="strokeWidth"
+              class="level-path"
+              (click)="selectLevelByIndex(i, $event)">
+        </path>
+        <path *ngFor="let level of allLevels; let i = index"
+              [attr.d]="getCirclePath(i)"
+              fill="none"
+              class="level-hit"
+              (click)="selectLevelByIndex(i, $event)">
         </path>
         <!-- Marker for selected Level-->
         <circle [attr.cx]="getMarkerPosition().x" [attr.cy]="getMarkerPosition().y" [attr.r]="markerRadius" fill="var(--ion-color-primary)" />

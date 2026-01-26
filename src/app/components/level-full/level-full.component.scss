@@ -7,6 +7,15 @@
 .circle-container svg {
     z-index: 2;position: relative;
 }
+.level-path {
+    cursor: pointer;
+}
+.level-hit {
+    stroke: transparent;
+    stroke-width: 18px;
+    cursor: pointer;
+    pointer-events: stroke;
+}
 .level-info {
     position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 1;background:rgba(86,93,102,0.35);
 }

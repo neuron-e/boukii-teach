@@ -20,37 +20,59 @@
           [currentLevel]="clientMonitor.degree_sport" (currentLevelChange)="onCurrentLevelChange($event)"></app-level-wheel>
 
 
-        <div *ngIf="alreadyCompleted" class="completed-banner background-color-dark mt-12 pt-24 pb-24">
-          {{ 'level_completed' | translate }}
+        <div *ngIf="clientMonitor" class="level-current-banner background-color-dark mt-12 level-current-clickable" (click)="resetToCurrentLevel()">
+          <div class="level-current-label">{{ 'level_in_progress' | translate }}</div>
+          <div class="level-current-value">{{ getLevelNameById(clientMonitor?.degree_sport) }}</div>
         </div>
         
         <div class="padding-wrapper mt-12 mb-12">
-          <div class="circle-list-title mb-24">
-            <div>{{ 'goals' | translate }}</div>
-            <span class="color-light">{{countGoalsCompleted()}}/{{filteredGoals.length}}</span>
+          <div class="level-meta mb-16">
+            <div class="level-meta-item level-meta-left level-meta-clickable" (click)="goToPreviousLevel()">
+              <span class="level-meta-label">{{ 'previous_level' | translate }}</span>
+              <span class="level-meta-value">{{ getPreviousLevelName() }}</span>
+            </div>
+            <div class="level-meta-item level-meta-right level-meta-clickable" (click)="goToNextLevel()">
+              <span class="level-meta-label">{{ 'next_level' | translate }}</span>
+              <span class="level-meta-value">{{ getNextLevelName() }}</span>
+            </div>
           </div>
-          <div class="circle-list">
-            <ng-container *ngFor="let goal of filteredGoals;let i=index;">
-              <div class="circle-list-item">
-                <div class="montserrat circle-list-item-text">
-                  {{goal.name}}
+          <div class="level-meta-spacer"></div>
+          <div class="progress-card mb-24">
+            <div class="progress-row">
+              <div class="montserrat">{{ 'progress' | translate }}</div>
+              <div class="montserrat color-light">{{ getGoalsProgressPercent() }}%</div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" [style.width.%]="getGoalsProgressPercent()" [ngClass]="getProgressBarClass()"></div>
+            </div>
+            <!-- Summary badges removed in Teach evaluation view -->
+          </div>
+
+          <div class="goal-list">
+            <div class="goal-card" *ngFor="let goal of filteredGoals">
+              <div class="goal-header">
+                <div class="montserrat goal-name">{{ goal.name }}</div>
+                <div class="goal-status" [ngClass]="getGoalStatusClass(goal.score || 0)">
+                  {{ getGoalStatusLabel(goal.score || 0) }}
                 </div>
               </div>
-              <ion-range [disabled]="alreadyCompleted" [(ngModel)]="goal.score" [ticks]="true" [snaps]="true" step="5" [min]="0" [max]="10"></ion-range>
-              <div class="range-labels mb-24">
-                <div class="montserrat color-light">{{ 'not_accomplished' | translate }}</div>
-                <div class="montserrat color-light">{{ 'to_improve' | translate }}</div>
-                <div class="montserrat color-light">{{ 'accomplished' | translate }}</div>
+              <div class="goal-actions">
+                <button class="goal-action" [class.active]="goal.score === 0" (click)="setGoalScore(goal, 0)">
+                  {{ 'to_improve' | translate }}
+                </button>
+                <button class="goal-action" [class.active]="goal.score === 10" (click)="setGoalScore(goal, 10)">
+                  {{ 'achieved' | translate }}
+                </button>
               </div>
-            </ng-container>
+            </div>
           </div>
 
           <div class="input-label color-light montserrat mt-32">
             {{ 'observations' | translate }}:
           </div>
-          <textarea [disabled]="alreadyCompleted" [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
+          <textarea [(ngModel)]="observationsEvaluation" class="montserrat textarea-form background-color-dark" rows="5"></textarea>
 
-          <ng-container *ngIf="allGoalsCompleted() && !alreadyCompleted">
+          <ng-container *ngIf="allGoalsCompleted()">
             <div class="input-label color-light montserrat mt-12 uppercase">
               {{ 'level_confirmation' | translate }}
             </div>
@@ -66,19 +88,40 @@
               </div>
             </div>
           </ng-container>
-        </div>
 
-        <div class="padding-wrapper mt-12 pt-24 top-border-wrapper">
+          <div class="section-divider mt-24"></div>
 
-          <div class="flex-title-selector-text mb-12">
-            {{ 'multimedia' | translate }}
+          <div class="comments-section mt-24">
+            <div class="flex-title-selector-text mb-12">
+              {{ 'monitor_comments' | translate }}
+            </div>
+            <div class="comment-input-row">
+              <input class="comment-input background-color-dark montserrat" [(ngModel)]="newComment" [placeholder]="'add_comment' | translate">
+              <button class="comment-add-btn" (click)="addComment()" [disabled]="savingComment">
+                {{ 'add' | translate }}
+              </button>
+            </div>
+            <div *ngIf="commentsLoading" class="comment-empty">
+              {{ 'loading' | translate }}
+            </div>
+            <div class="comment-list" *ngIf="!commentsLoading">
+              <div class="comment-empty" *ngIf="evaluationComments.length === 0">
+                {{ 'no_comments' | translate }}
+              </div>
+              <div class="comment-item" *ngFor="let comment of evaluationComments">
+                <div class="comment-text">{{ comment.comment }}</div>
+                <div class="comment-meta">
+                  <span class="comment-author">{{ getCommentAuthor(comment) }}</span>
+                  <span class="comment-date">{{ comment.created_at | date:'short' }}</span>
+                </div>
+              </div>
+            </div>
+            <button class="upload-button comment-upload" (click)="toggleMultimedia()">
+              {{ 'upload_files' | translate }}
+            </button>
           </div>
 
-          <div class="media-list">
-            <div *ngIf="!alreadyCompleted" class="media-list-item">
-              <img (click)="toggleMultimedia()" src="assets/icon/icon-camera-photo-box.png" class="box-selector-image cursor-pointer" />
-            </div>
-
+          <div class="media-list comment-media">
             <!--Multimedia-->
             <div *ngFor="let multimedia of allMultimedia;let i = index" class="media-list-item">
               <img *ngIf="multimedia.type == 'image'" [src]="multimedia.file" (click)="viewMultimedia(multimedia.type,multimedia.file)" class="box-selector-image cursor-pointer">
@@ -86,18 +129,28 @@
               <div *ngIf="multimedia.type == 'video'" class="media-list-video cursor-pointer" (click)="viewMultimedia(multimedia.type,multimedia.file)">
                 <img src="assets/icon/play.png" />
               </div>
-              <div *ngIf="!alreadyCompleted" (click)="deleteMultimedia(i)" class="media-close-box cursor-pointer">
+              <div (click)="deleteMultimedia(i)" class="media-close-box cursor-pointer">
                 <img src="assets/icon/icon-close.png" />
               </div>
             </div>
           </div>
 
-          <button *ngIf="!alreadyCompleted" (click)="saveEvaluation()" class="content-button btn-back-primary montserrat mt-32 mb-32">
-            {{ 'save_progress' | translate }}
-          </button>
+          <div class="section-divider mt-24"></div>
 
-          <button *ngIf="alreadyCompleted" class="content-button btn-back-grey montserrat mt-32 mb-32">
-            {{ 'level_completed' | translate }}
+          <div class="history-section mt-24">
+            <div class="flex-title-selector-text mb-12">
+              {{ 'history' | translate }}
+            </div>
+            <div class="history-summary" *ngIf="historyEntries.length">
+              <span>{{ historyEntries.length }} {{ 'history_changes' | translate }}</span>
+            </div>
+            <button class="content-button btn-back-primary montserrat mt-12" (click)="toggleHistory()">
+              {{ 'view_history' | translate }}
+            </button>
+          </div>
+
+          <button (click)="saveEvaluation()" class="content-button btn-back-primary montserrat mt-32 mb-32 level-cta">
+            {{ 'save_progress' | translate }}
           </button>
         </div>
 
@@ -117,3 +170,56 @@
   [file]="viewFileSelected"
   (close)="toggleView()">
 </app-file-view>
+
+<ion-modal [isOpen]="showHistory" (didDismiss)="closeHistory()">
+  <ng-template>
+    <ion-content class="history-modal">
+      <div class="history-modal-header">
+        <div class="history-modal-title">{{ 'history' | translate }}</div>
+        <button class="history-close" (click)="closeHistory()">×</button>
+      </div>
+      <div class="history-tabs">
+        <button class="history-tab" [class.active]="historyTab === 'history'" (click)="historyTab = 'history'">
+          {{ 'history' | translate }}
+        </button>
+        <button class="history-tab" [class.active]="historyTab === 'media'" (click)="historyTab = 'media'">
+          {{ 'photos_videos' | translate }}
+        </button>
+      </div>
+
+      <div *ngIf="historyTab === 'history'" class="history-list">
+        <div *ngIf="historyLoading" class="comment-empty">{{ 'loading' | translate }}</div>
+        <div *ngIf="!historyLoading && historyEntries.length === 0" class="comment-empty">
+          {{ 'history_no_changes' | translate }}
+        </div>
+        <div *ngFor="let entry of historyEntries" class="history-entry">
+          <div class="history-entry-title">{{ getHistoryTitle(entry) }}</div>
+          <div class="history-entry-meta">
+            {{ getHistoryUserLabel(entry) }} · {{ entry.created_at | date:'short' }}
+          </div>
+          <div class="history-entry-details">
+            <div class="history-entry-detail" *ngFor="let detail of getHistoryDetails(entry)">
+              <span class="detail-label">{{ detail.label }}:</span>
+              <span class="detail-value">{{ detail.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="historyTab === 'media'" class="history-media">
+        <div *ngIf="allMultimedia.length === 0" class="comment-empty">
+          {{ 'no_files' | translate }}
+        </div>
+        <div class="media-list" *ngIf="allMultimedia.length">
+          <div *ngFor="let multimedia of allMultimedia" class="media-list-item">
+            <img *ngIf="multimedia.type == 'image'" [src]="multimedia.file" (click)="viewMultimedia(multimedia.type,multimedia.file)" class="box-selector-image cursor-pointer">
+            <video *ngIf="multimedia.type == 'video'" [src]="multimedia.file" (click)="viewMultimedia(multimedia.type,multimedia.file)" class="box-selector-image cursor-pointer" muted playsinline></video>
+            <div *ngIf="multimedia.type == 'video'" class="media-list-video cursor-pointer" (click)="viewMultimedia(multimedia.type,multimedia.file)">
+              <img src="assets/icon/play.png" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

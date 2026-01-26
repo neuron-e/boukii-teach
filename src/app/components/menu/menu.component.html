@@ -33,12 +33,23 @@
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
         </div>
-        <div class="menu-list-item cursor-pointer no-border" (click)="goTo('stats')">
+        <div class="menu-list-item cursor-pointer" (click)="goTo('stats')">
           <div class="menu-list-text">
             <img src="assets/icon/statistiques.png" />
             <div class="montserrat">{{ 'statistics' | translate }}</div>
           </div>
           <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+        </div>
+
+        <div class="menu-list-item cursor-pointer" (click)="goTo('notifications')">
+          <div class="menu-list-text">
+            <img src="assets/icon/icon-notification-blue.png" class="menu-icon" />
+            <div class="montserrat">{{ 'notifications' | translate }}</div>
+          </div>
+          <div class="menu-list-meta">
+            <div *ngIf="unreadCount > 0" class="menu-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</div>
+            <img src="assets/icon/arrow-right.svg" class="menu-list-arrow" />
+          </div>
         </div>
 
       </div>
@@ -85,6 +96,11 @@
       <button class="menu-button mt-24 montserrat" (click)="logout()">
         <img src="assets/icon/icons-outline-logout-white.svg" />
         <span>{{ 'sign_out' | translate }}</span>
+      </button>
+
+      <button class="menu-button emergency-button montserrat" (click)="emergencyCall()">
+        <img src="assets/icon/icon-phone-blue.png" class="menu-icon" />
+        <span>{{ 'emergency_call' | translate }}</span>
       </button>
 
     </div>

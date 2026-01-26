@@ -37,10 +37,10 @@
     width:22px;
 }
 .filter-floating {
-    width: 54px;position: fixed;right: 12px;bottom:102px;cursor: pointer;
+    width: 54px;position: fixed;right: 12px;bottom: calc(140px + var(--teach-footer-extra-padding, 0px));cursor: pointer;
 }
 .button-floating {
-    position: fixed;right: 12px;bottom:102px;cursor: pointer;display:flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:40px;width:fit-content;font-weight:600;font-size:14px;
+    position: fixed;right: 12px;bottom: calc(140px + var(--teach-footer-extra-padding, 0px));cursor: pointer;display:flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:40px;width:fit-content;font-weight:600;font-size:14px;
 }
 
 .flex-buttons {

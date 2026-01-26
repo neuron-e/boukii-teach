@@ -6,7 +6,12 @@
               <img src="assets/icon/icon-scan-blue.png" />
               <div>{{ 'scan' | translate }}</div>
             </div>
-            <img src="assets/icon/icon-menu.png" class="header-section-menu cursor-pointer" (click)="toggleMenu()" />
+            <div class="header-section-menu header-menu-wrapper cursor-pointer" (click)="toggleMenu()">
+              <img src="assets/icon/icon-menu.png" />
+              <div *ngIf="(unreadCount$ | async) as unreadCount" class="menu-badge" [ngClass]="{'menu-badge-hidden': unreadCount <= 0}">
+                {{ unreadCount > 99 ? '99+' : unreadCount }}
+              </div>
+            </div>
           </div>
         </div>
     

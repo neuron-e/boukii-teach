@@ -73,6 +73,35 @@ export class ScanBookingPage implements OnInit, OnDestroy {
     this.router.navigate(urls);
   }
 
+  getBookingStatusLabel(): string {
+    const statusKey = this.data?.booking?.status_key;
+    if (statusKey) {
+      return this.translate.instant(`scan_booking.status.${statusKey}`);
+    }
+
+    const statusValue = this.data?.booking?.status;
+    if (statusValue === undefined || statusValue === null) {
+      return '';
+    }
+
+    return String(statusValue);
+  }
+
+  getPaymentStatusLabel(): string {
+    const statusValue = this.data?.booking?.payment_method_status;
+    if (statusValue === undefined || statusValue === null) {
+      return '';
+    }
+
+    const statusKey = `scan_booking.payment_status_labels.${statusValue}`;
+    const translated = this.translate.instant(statusKey);
+    if (translated !== statusKey) {
+      return translated;
+    }
+
+    return String(statusValue);
+  }
+
   ngOnDestroy() {
     this.subscription?.unsubscribe();
   }

@@ -2,6 +2,8 @@
   "working_day": "La giornata",
   "meteo": "Meteo",
   "diary": "Agenda",
+    "courses_today": "Corsi di oggi",
+    "no_courses_today": "Nessun corso per oggi",
   "collective": "Collettivo",
   "private": "Privato",
   "other": "Altro",
@@ -88,6 +90,8 @@
   "new_password": "Nuova Password",
   "confirm_password": "Conferma Password",
   "messages": "Messaggi",
+  "messages.placeholder_name": "Nome",
+  "messages.placeholder_school": "Scuola",
   "schools": "Scuole",
   "my_schools": "Le Mie Scuole",
   "select_school": "Seleziona Scuola",
@@ -133,6 +137,65 @@
   "confirm_training": "Conferma formazione",
   "monitor_photo": "Foto del monitor",
   "notifications": "Notifiche",
+  "unread": "Non lette",
+  "read": "Letto",
+  "all": "Tutte",
+  "no_notifications": "Nessuna notifica",
+  "mark_as_read": "Segna tutto come letto",
+  "notification_types": {
+
+      "booking_created": {
+        "title": "Corso assegnato",
+        "body": "Corso assegnato alla tua agenda per {{when}}."
+      },
+      "booking_updated": {
+        "title": "Corso modificato",
+        "body": "Il corso previsto per {{when}} è stato modificato."
+      },
+      "booking_cancelled": {
+        "title": "Corso eliminato",
+        "body": "Il corso del {{when}} è stato rimosso dalla tua agenda."
+      },
+      "group_assigned": {
+        "title": "Corso assegnato",
+        "body": "Corso assegnato alla tua agenda per {{when}}."
+      },
+      "private_assigned": {
+        "title": "Corso assegnato",
+        "body": "Corso assegnato alla tua agenda per {{when}}."
+      },
+      "group_removed": {
+        "title": "Corso eliminato dalla tua agenda",
+        "body": "Sei stato rimosso dal corso {{booking}}."
+      },
+      "private_removed": {
+        "title": "Corso eliminato dalla tua agenda",
+        "body": "Sei stato rimosso dal corso {{booking}}."
+      },
+    "subgroup_changed": {
+      "title": "Sottogruppo aggiornato",
+      "body": "Il tuo sottogruppo e stato aggiornato per {{when}}."
+    },
+    "nwd_created": {
+      "title": "Blocco creato",
+      "body": "Un {{nwd_type}} e stato creato per {{when}}."
+    },
+    "nwd_updated": {
+      "title": "Blocco aggiornato",
+      "body": "Un {{nwd_type}} e stato aggiornato per {{when}}."
+    },
+    "nwd_deleted": {
+      "title": "Blocco rimosso",
+      "body": "Un {{nwd_type}} e stato rimosso per {{when}}."
+    }
+  },
+  "notification_nwd_types": {
+    "paid": "blocco pagato",
+    "unpaid": "blocco non pagato",
+    "absence": "assenza"
+  },
+
+  "unread_notifications": "Notifiche non lette",
   "activity": "Attività",
   "scan": "Scansione",
   "no_reservations_today": "Non hai prenotazioni oggi",
@@ -143,6 +206,7 @@
   "statistics": "Statistiche",
   "total_hours": "Ore totali",
   "activity_report": "Rapporto di attività",
+  "emergency_call": "Chiamata di emergenza",
   "block_paid_abbrev": "B. Pagato",
   "total": "Totale",
   "choose_file": "Scegli file",
@@ -475,6 +539,63 @@
   "scan_booking.booking_id": "ID prenotazione",
   "scan_booking.booking_status": "Stato prenotazione",
   "scan_booking.paid": "Pagato",
-  "scan_booking.payment_status": "Stato pagamento"
+  "scan_booking.payment_status": "Stato pagamento",
+  "scan_booking.payment_status_labels.paid": "Pagato",
+  "scan_booking.payment_status_labels.unpaid": "Non pagato",
+  "scan_booking.payment_status_labels.link_send": "Link inviato",
+  "scan_booking.payment_status_labels.link_expired": "Link scaduto",
+  "scan_booking.payment_status_labels.confirmed_without_payment": "Confermato senza pagamento",
+  "scan_booking.payment_status_labels.no_refund": "Nessun rimborso",
+  "scan_booking.status.active": "Attiva",
+  "scan_booking.status.partial_cancel": "Parzialmente annullata",
+  "scan_booking.status.total_cancel": "Annullata",
+  "scan_booking.status.finished": "Terminata",
+  "progress": "Progresso",
+  "not_started": "Non iniziato",
+  "achieved": "Raggiunto",
+  "photos": "foto",
+  "videos": "video",
+  "photos_videos": "Foto e video",
+  "monitor_comments": "Commenti del monitor",
+  "add_comment": "Aggiungi commento",
+  "add": "Aggiungi",
+  "upload_files": "Carica file",
+  "history": "Storico",
+  "history_changes": "modifiche",
+  "history_no_changes": "Nessuna modifica per ora",
+  "view_history": "Vedi storico",
+  "view_more": "Vedi di più",
+  "show_less": "Vedi meno",
+  "loading": "Caricamento",
+  "no_comments": "Nessun commento",
+  "no_files": "Nessun file",
+  "history_change_goal_created": "Obiettivo creato",
+  "history_change_goal_updated": "Obiettivo aggiornato",
+  "history_change_goal_deleted": "Obiettivo eliminato",
+  "history_change_observation_updated": "Osservazioni aggiornate",
+  "history_change_file_added": "File aggiunto",
+  "history_change_file_deleted": "File rimosso",
+  "history_change_comment_added": "Commento aggiunto",
+  "history_change_goal_label": "Obiettivo",
+  "history_change_status_label": "Stato",
+  "history_change_comment_label": "Commento",
+  "history_change_course_label": "Corso",
+  "current_level": "Livello attuale",
+  "selected_level": "Livello selezionato",
+  "history_change_previous_label": "Precedente",
+  "history_change_new_label": "Nuovo",
+  "history_change_file_label": "File",
+  "history_change_system": "Sistema",
+  "history_change_generic": "Modifica",
+  "history_role_admin": "Admin",
+  "history_role_monitor": "Monitor",
+  "evaluation_completed_edit_title": "Livello completato",
+  "evaluation_completed_edit_message": "Questo livello e gia completato. Vuoi modificarlo?",
+  "level_in_progress": "Livello in corso",
+  "previous_level": "Livello precedente",
+  "next_level": "Livello successivo"
 }
+
+
+
 

@@ -68,6 +68,20 @@ export class MeteoPage implements OnInit, OnDestroy {
     //console.log(this.monitorStation);
   }
 
+  getStationCoverImage(): string {
+    const stationImage = this.monitorStation?.image;
+    if (!stationImage) {
+      return 'assets/images/test-station.jpg';
+    }
+
+    const normalized = String(stationImage).toLowerCase();
+    if (normalized.includes('pistemap') || normalized.includes('piste-map') || normalized.includes('snow-forecast.com')) {
+      return 'assets/images/test-station.jpg';
+    }
+
+    return stationImage;
+  }
+
   async getMeteo() {
     try {
       const data: any = await this.teachService.getData('teach/weather', null, { station_id: this.monitorData.active_station }).toPromise();

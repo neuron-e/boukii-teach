@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MonitorRealtimeService } from '../../services/monitor-realtime.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-menu',
@@ -30,10 +31,27 @@ export class MenuComponent  implements OnInit {
   showMenu$ = this.menuService.showMenu$;
 
   showLang:boolean=false;
+  unreadCount = 0;
 
-  constructor(public menuService: MenuService, private router: Router, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private toastr: ToastrService, private spinnerService: SpinnerService, public translate: TranslateService, private changeDetectorRef: ChangeDetectorRef, private monitorRealtimeService: MonitorRealtimeService) {}
+  constructor(
+    public menuService: MenuService,
+    private router: Router,
+    private monitorDataService: MonitorDataService,
+    private sharedDataService: SharedDataService,
+    private toastr: ToastrService,
+    private spinnerService: SpinnerService,
+    public translate: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private monitorRealtimeService: MonitorRealtimeService,
+    private notificationService: NotificationService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.notificationService.unreadCount$.subscribe((count) => {
+      this.unreadCount = count;
+    });
+    this.notificationService.refreshUnreadCount();
+  }
 
   onClose() {
     this.close.emit();
@@ -44,6 +62,10 @@ export class MenuComponent  implements OnInit {
     localStorage.setItem('appLang', lang);
     this.changeDetectorRef.detectChanges();
     this.showLang = false;
+  }
+
+  emergencyCall() {
+    window.location.href = 'tel:112';
   }
 
   deleteAccount() {

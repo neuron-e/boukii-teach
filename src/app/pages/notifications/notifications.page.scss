@@ -34,6 +34,33 @@
 .flex-buttons-button {
     display:flex;align-items:center;justify-content:center;font-size:14px;width: 100%;padding: 6px 0px;border-radius: 4px;
 }
+.notifications-actions {
+    display:flex;flex-direction:column;gap:12px;margin: 12px 0 20px 0;
+}
+.notification-unread .box-selector-title {
+    font-weight: 700;
+}
+.filters-row {
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.filter-button {
+    min-width: 96px;height:32px;padding:0 14px;border-radius:16px;border:1px solid #3a424d;background:#2b303b;color:#fff;font-size:12px;
+}
+.mark-read-button {
+    align-self:flex-end;height:32px;padding:0 14px;border-radius:16px;border:1px solid #3a424d;background:#2b303b;color:#fff;font-size:12px;
+}
+.date-filter {
+    position: relative;flex:1;min-width:160px;
+}
+.date-filter input {
+    appearance:none;background:#1d232b;border:1px solid #3a424d;color:#fff;border-radius:16px;padding:6px 32px 6px 14px;font-size:12px;width:100%;height:32px;
+}
+.date-filter input::-webkit-calendar-picker-indicator {
+    filter: invert(1);opacity:0.8;
+}
+.btn-clear {
+    position: absolute;right: 10px;top: 50%;transform: translateY(-50%);background: transparent;border: none;color: #b5bdc7;font-size: 12px;
+}
 
 .list-box-selector-c {
     display:flex;flex-direction:column;gap:12px;
@@ -44,8 +71,11 @@
 .box-selector-top {
     display:flex;align-items:center;justify-content:space-between;width:100%;
 }
-.box-bullet {
-    width:12px;height:12px;border-radius:12px;background:var(--ion-color-primary);
+.notification-status {
+    font-size:11px;padding:3px 10px;border-radius:10px;background:#2b303b;color:#c8c8c8;
+}
+.notification-status.is-unread {
+    background:var(--ion-color-primary);color:#fff;
 }
 .box-selector-middle {
     display:flex;align-items:flex-start;justify-content:space-between;width:100%;

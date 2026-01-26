@@ -8,6 +8,7 @@ import { TeachService } from '../../services/teach.service';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../services/spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
 
 @Component({
@@ -33,8 +34,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   todayDate:string = moment().format('YYYY-MM-DD');
   todayDateFull:string;
-
-  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {
+  unreadCount$ = this.notificationService.unreadCount$;
+  constructor(private router: Router, private menuService: MenuService, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService, private notificationService: NotificationService) {
     this.translate.onLangChange.subscribe((lang:any) => {
       this.updateDate(lang.lang);
     });
@@ -79,6 +80,20 @@ export class HomePage implements OnInit, OnDestroy {
 
   async getSchool() {
     this.monitorSchool = this.schools.find(school => school.id === this.monitorData.active_school);
+  }
+
+  getStationCoverImage(): string {
+    const stationImage = this.monitorStation?.image;
+    if (!stationImage) {
+      return 'assets/images/test-station.jpg';
+    }
+
+    const normalized = String(stationImage).toLowerCase();
+    if (normalized.includes('pistemap') || normalized.includes('piste-map') || normalized.includes('snow-forecast.com')) {
+      return 'assets/images/test-station.jpg';
+    }
+
+    return stationImage;
   }
 
   async getMeteo() {

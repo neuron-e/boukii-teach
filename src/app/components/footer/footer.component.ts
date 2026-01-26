@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 export class FooterComponent  implements OnInit {
 
   @Input() section: string;
-
   constructor(private router: Router) {}
 
   ngOnInit() {}

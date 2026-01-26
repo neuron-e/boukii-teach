@@ -3,7 +3,7 @@
 
       <div class="content-img-wrapper">
         <div class="wrapper-back"></div>
-        <img *ngIf="monitorStation && monitorStation.image" [src]="monitorStation.image" class="content-img-back" />
+        <img *ngIf="monitorStation" [src]="getStationCoverImage()" class="content-img-back" />
         <div class="box-icon-left cursor-pointer" (click)="goTo('home')">
           <img src="assets/icon/arrow-left.svg" />
         </div>

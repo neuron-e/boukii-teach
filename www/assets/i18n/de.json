@@ -2,6 +2,8 @@
     "working_day": "Arbeitstag",
     "meteo": "Wetter",
     "diary": "Terminkalender",
+    "courses_today": "Kurse heute",
+    "no_courses_today": "Keine Kurse heute",
     "collective": "Kollektiv",
     "private": "Privat",
     "other": "Andere",
@@ -87,7 +89,9 @@
     "current_password": "Aktuelles Passwort",
     "new_password": "Neues Passwort",
     "confirm_password": "Passwort bestätigen",
-    "messages": "Nachrichten",
+  "messages": "Nachrichten",
+  "messages.placeholder_name": "Name",
+  "messages.placeholder_school": "Schule",
     "schools": "Schulen",
     "my_schools": "Meine Schulen",
     "select_school": "Schule Auswählen",
@@ -133,6 +137,65 @@
     "confirm_training": "Ausbildung bestätigen",
     "monitor_photo": "Foto des Monitors",
     "notifications": "Benachrichtigungen",
+    "unread": "Ungelesen",
+    "read": "Gelesen",
+    "all": "Alle",
+    "no_notifications": "Keine Benachrichtigungen",
+    "mark_as_read": "Alle als gelesen markieren",
+  "notification_types": {
+
+    "booking_created": {
+      "title": "Kurs zugewiesen",
+      "body": "Kurs fuer {{when}} deinem Kalender hinzugefuegt."
+    },
+    "booking_updated": {
+      "title": "Kurs aktualisiert",
+      "body": "Der Kurs am {{when}} wurde angepasst."
+    },
+    "booking_cancelled": {
+      "title": "Kurs entfernt",
+      "body": "Der Kurs am {{when}} wurde aus deinem Kalender entfernt."
+    },
+    "group_assigned": {
+      "title": "Kurs zugewiesen",
+      "body": "Kurs fuer {{when}} deinem Kalender hinzugefuegt."
+    },
+    "private_assigned": {
+      "title": "Kurs zugewiesen",
+      "body": "Kurs fuer {{when}} deinem Kalender hinzugefuegt."
+    },
+    "group_removed": {
+      "title": "Kurs aus deinem Kalender entfernt",
+      "body": "Du wurdest vom Kurs {{booking}} entfernt."
+    },
+    "private_removed": {
+      "title": "Kurs aus deinem Kalender entfernt",
+      "body": "Du wurdest vom Kurs {{booking}} entfernt."
+    },
+    "subgroup_changed": {
+      "title": "Untergruppe aktualisiert",
+      "body": "Deine Untergruppe wurde fuer {{when}} aktualisiert."
+    },
+    "nwd_created": {
+      "title": "Block erstellt",
+      "body": "Ein {{nwd_type}} wurde fuer {{when}} erstellt."
+    },
+    "nwd_updated": {
+      "title": "Block aktualisiert",
+      "body": "Ein {{nwd_type}} wurde fuer {{when}} aktualisiert."
+    },
+    "nwd_deleted": {
+      "title": "Block entfernt",
+      "body": "Ein {{nwd_type}} wurde fuer {{when}} entfernt."
+    }
+  },
+  "notification_nwd_types": {
+    "paid": "bezahlter Block",
+    "unpaid": "unbezahlter Block",
+    "absence": "Abwesenheit"
+  },
+
+    "unread_notifications": "Ungelesene Benachrichtigungen",
     "activity": "Aktivität",
     "scan": "Scannen",
     "no_reservations_today": "Sie haben heute keine Reservierungen",
@@ -143,6 +206,7 @@
     "statistics": "Statistiken",
     "total_hours": "Gesamtstunden",
     "activity_report": "Aktivitätsbericht",
+  "emergency_call": "Notruf",
     "block_paid_abbrev": "B. Bezahlt",
     "total": "Gesamt",
     "choose_file": "Datei wählen",
@@ -475,6 +539,60 @@
   "scan_booking.booking_id": "Buchungs-ID",
   "scan_booking.booking_status": "Buchungsstatus",
   "scan_booking.paid": "Bezahlt",
-  "scan_booking.payment_status": "Zahlungsstatus"
+  "scan_booking.payment_status": "Zahlungsstatus",
+  "scan_booking.payment_status_labels.paid": "Bezahlt",
+  "scan_booking.payment_status_labels.unpaid": "Nicht bezahlt",
+  "scan_booking.payment_status_labels.link_send": "Link gesendet",
+  "scan_booking.payment_status_labels.link_expired": "Link abgelaufen",
+  "scan_booking.payment_status_labels.confirmed_without_payment": "BestÃ¤tigt ohne Zahlung",
+  "scan_booking.payment_status_labels.no_refund": "Keine RÃ¼ckerstattung",
+  "scan_booking.status.active": "Aktiv",
+  "scan_booking.status.partial_cancel": "Teilweise storniert",
+  "scan_booking.status.total_cancel": "Storniert",
+  "scan_booking.status.finished": "Abgeschlossen",
+  "progress": "Fortschritt",
+  "not_started": "nicht gestartet",
+  "achieved": "Erreicht",
+  "photos": "Fotos",
+  "videos": "Videos",
+  "photos_videos": "Fotos und Videos",
+  "monitor_comments": "Kommentare des Trainers",
+  "add_comment": "Kommentar hinzufuegen",
+  "add": "Hinzufuegen",
+  "upload_files": "Dateien hochladen",
+  "history": "Historie",
+  "history_changes": "Aenderungen",
+  "history_no_changes": "Noch keine Aenderungen",
+  "view_history": "Historie anzeigen",
+  "view_more": "Mehr anzeigen",
+  "show_less": "Weniger anzeigen",
+  "loading": "Wird geladen",
+  "no_comments": "Noch keine Kommentare",
+  "no_files": "Noch keine Dateien",
+  "history_change_goal_created": "Ziel erstellt",
+  "history_change_goal_updated": "Ziel aktualisiert",
+  "history_change_goal_deleted": "Ziel geloescht",
+  "history_change_observation_updated": "Beobachtungen aktualisiert",
+  "history_change_file_added": "Datei hinzugefuegt",
+  "history_change_file_deleted": "Datei entfernt",
+  "history_change_comment_added": "Kommentar hinzugefuegt",
+  "history_change_goal_label": "Ziel",
+  "history_change_status_label": "Status",
+  "history_change_comment_label": "Kommentar",
+  "history_change_course_label": "Kurs",
+  "current_level": "Aktuelles Niveau",
+  "selected_level": "Ausgewähltes Niveau",
+  "history_change_previous_label": "Vorher",
+  "history_change_new_label": "Neu",
+  "history_change_file_label": "Datei",
+  "history_change_system": "System",
+  "history_change_generic": "Aenderung",
+  "history_role_admin": "Admin",
+  "history_role_monitor": "Monitor",
+  "evaluation_completed_edit_title": "Level abgeschlossen",
+  "evaluation_completed_edit_message": "Dieses Level ist bereits abgeschlossen. Moechtest du es bearbeiten?",
+  "level_in_progress": "Aktuelles Level",
+  "previous_level": "Vorheriges Level",
+  "next_level": "Naechstes Level"
 }
 

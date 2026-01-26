@@ -359,7 +359,9 @@ export class CalendarAvailablePage implements OnInit, OnDestroy {
     }
 
     let lastDayOfWeek = new Date(this.currentYear, this.currentMonth, daysInMonth).getDay();
-    for (let k = lastDayOfWeek; k <= 6 && lastDayOfWeek !== 6; k++) {
+    let adjustedLastDay = lastDayOfWeek - 1;
+    if (adjustedLastDay < 0) adjustedLastDay = 6;
+    for (let k = adjustedLastDay; k < 6; k++) {
       this.days.push({ number: null, selected: false });
     }
 
