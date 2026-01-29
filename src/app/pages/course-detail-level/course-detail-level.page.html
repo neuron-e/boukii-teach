@@ -1,4 +1,4 @@
-<ion-content>
+﻿<ion-content>
   <div class="content-size content-background-image status-bar-overlap">
 
     <div class="background-color-dark padding-wrapper">
@@ -18,9 +18,9 @@
           <div class="header-user-data-text-top">
             <div class="color-light">
               <ng-container *ngIf="clientMonitor.main.language1_id">
-                {{getLanguageById(clientMonitor.main.language1_id)}} ·
+                {{getLanguageById(clientMonitor.main.language1_id)}} Â·
               </ng-container>
-              {{getCountryById(clientMonitor.main.country)}} · {{getBirthYears(clientMonitor.main.birth_date)}} {{ 'years' | translate }}
+              {{getCountryById(clientMonitor.main.country)}} Â· {{getBirthYears(clientMonitor.main.birth_date)}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -54,9 +54,9 @@
           <div class="header-user-data-text-top">
             <div class="color-light">
               <ng-container *ngIf="clientMonitor.language1_id">
-                {{getLanguageById(clientMonitor.language1_id)}} ·
+                {{getLanguageById(clientMonitor.language1_id)}} Â·
               </ng-container>
-              {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
+              {{getCountryById(clientMonitor.country)}} Â· {{clientMonitor.birth_years}} {{ 'years' | translate }}
             </div>
           </div>
           <div class="header-user-data-text-title">
@@ -95,9 +95,9 @@
             <div class="header-user-data-text-top">
               <div class="color-light">
                 <ng-container *ngIf="clientMonitor.language1_id">
-                  {{getLanguageById(clientMonitor.language1_id)}} ·
+                  {{getLanguageById(clientMonitor.language1_id)}} Â·
                 </ng-container>
-                {{getCountryById(clientMonitor.country)}} · {{clientMonitor.birth_years}} {{ 'years' | translate }}
+                {{getCountryById(clientMonitor.country)}} Â· {{clientMonitor.birth_years}} {{ 'years' | translate }}
               </div>
             </div>
             <div class="header-user-data-text-title">
@@ -165,56 +165,114 @@
         </div>
       </div>
 
-      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
+      <div class="flex-title-selector mt-32 mb-8">
         <div class="flex-title-selector-interior">
           <div class="background-color-dark flex-title-selector-icon">
             <img src="assets/icon/icon-observations.png" />
           </div>
           <div class="flex-title-selector-text">
             {{ 'observations' | translate }}
-          </div>
-        </div>
-      </div>
-
-      <div class="background-color-dark box-radius box-observations">
-        <div *ngIf="clientMonitor && clientMonitor.observations.general" class="montserrat color-light text-observations">
-          {{clientMonitor.observations.general}}
-        </div>
-        <ng-container *ngIf="clientMonitor && clientMonitor.observations.notes">
-          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'school_notes' | translate }}</div>
-          <div class="montserrat color-light text-observations">
-            {{clientMonitor.observations.notes}}
-          </div>
-        </ng-container>
-        <ng-container *ngIf="getEvaluationForSelectedLevel()?.observations">
-          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'evaluation_observations' | translate }}</div>
-          <div class="montserrat color-light text-observations">
-            {{ getEvaluationForSelectedLevel()?.observations }}
-          </div>
-        </ng-container>
-
-        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'monitor_comments' | translate }}</div>
-        <div *ngIf="commentsLoading" class="mini-empty">
-          {{ 'loading' | translate }}
-        </div>
-        <ng-container *ngIf="!commentsLoading">
-          <div *ngIf="getVisibleComments().length === 0" class="mini-empty">
-            {{ 'no_comments' | translate }}
-          </div>
-          <div class="comment-mini" *ngFor="let comment of getVisibleComments()">
-            <div class="comment-mini-text">{{ comment.comment }}</div>
-            <div class="comment-mini-meta">
-              <span class="comment-mini-author">{{ getCommentAuthor(comment) }}</span>
-              <span>{{ comment.created_at | date:'short' }}</span>
+            <ion-icon
+              name="information-circle-outline"
+              class="info-icon"
+              (click)="toggleObservationsInfo($event)">
+            </ion-icon>
+            <div *ngIf="showObservationsInfo" class="observations-tooltip">
+              {{ 'observations_sources_description' | translate }}
             </div>
           </div>
-          <button *ngIf="evaluationComments.length > commentsPreviewLimit" class="mini-toggle" (click)="toggleCommentsView()">
-            {{ showAllComments ? ('show_less' | translate) : ('view_more' | translate) }}
-          </button>
-        </ng-container>
+        </div>
       </div>
 
-      <div class="flex-title-selector mt-32 mb-8 cursor-pointer">
+      <div class="observations-card" (click)="showObservationsInfo = false">
+        <div class="observations-panel" [class.open]="showBookingNotes">
+          <div class="panel-heading" (click)="toggleBookingNotes()">
+            <div class="panel-title">{{ 'booking_notes' | translate }}</div>
+            <ion-icon [name]="showBookingNotes ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </div>
+          <div *ngIf="showBookingNotes" class="panel-body">
+            {{ selectedBooking?.booking?.notes || ('not_assigned' | translate) }}
+          </div>
+        </div>
+
+        <div class="observations-panel" [class.open]="showSchoolNotes">
+          <div class="panel-heading" (click)="toggleSchoolNotes()">
+            <div class="panel-title">{{ 'school_notes' | translate }}</div>
+            <ion-icon [name]="showSchoolNotes ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </div>
+          <div *ngIf="showSchoolNotes" class="panel-body">
+            {{ selectedBooking?.booking?.notes_school || ('not_assigned' | translate) }}
+          </div>
+        </div>
+
+        <div class="observations-panel" [class.open]="showClientObservations">
+          <div class="panel-heading" (click)="toggleClientObservations()">
+            <div class="panel-title">{{ 'client_observations' | translate }}</div>
+            <ion-icon [name]="showClientObservations ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </div>
+          <div *ngIf="showClientObservations" class="panel-body">
+            <div *ngIf="clientObservationHistory.length > 0; else noClientObservations">
+              <div *ngFor="let obs of clientObservationHistory" class="observation-entry">
+                {{ obs }}
+              </div>
+            </div>
+            <ng-template #noClientObservations>
+              <div class="observation-empty">{{ 'not_assigned' | translate }}</div>
+            </ng-template>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex-title-selector mt-32 mb-8">
+        <div class="flex-title-selector-interior">
+          <div class="background-color-dark flex-title-selector-icon">
+            <img src="assets/icon/icon-award-level-grey.svg" />
+          </div>
+          <div class="flex-title-selector-text">
+            {{ 'evaluation_section' | translate }}
+          </div>
+        </div>
+      </div>
+
+      <div class="observations-card evaluation-card">
+        <div class="observations-panel" [class.open]="showEvaluationObservations">
+          <div class="panel-heading" (click)="toggleEvaluationObservations()">
+            <div class="panel-title">{{ 'evaluation_observations' | translate }}</div>
+            <ion-icon [name]="showEvaluationObservations ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </div>
+          <div *ngIf="showEvaluationObservations" class="panel-body">
+            {{ getEvaluationForSelectedLevel()?.observations || ('not_assigned' | translate) }}
+          </div>
+        </div>
+
+        <div class="observations-panel" [class.open]="showMonitorComments">
+          <div class="panel-heading" (click)="toggleMonitorComments()">
+            <div class="panel-title">{{ 'monitor_comments' | translate }}</div>
+            <ion-icon [name]="showMonitorComments ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </div>
+          <div *ngIf="showMonitorComments" class="panel-body">
+            <div *ngIf="commentsLoading" class="mini-empty">{{ 'loading' | translate }}</div>
+            <div *ngIf="!commentsLoading">
+              <div *ngIf="getVisibleComments().length === 0" class="mini-empty">
+                {{ 'no_comments' | translate }}
+              </div>
+              <div class="comment-mini" *ngFor="let comment of getVisibleComments()">
+                <div class="comment-mini-text">{{ comment.comment }}</div>
+                <div class="comment-mini-meta">
+                  <span class="comment-mini-author">{{ getCommentAuthor(comment) }}</span>
+                  <span>{{ comment.created_at | date:'short' }}</span>
+                </div>
+              </div>
+              <button *ngIf="evaluationComments.length > commentsPreviewLimit" class="mini-toggle" (click)="toggleCommentsView()">
+                {{ showAllComments ? ('show_less' | translate) : ('view_more' | translate) }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-title-selector mt-32 mb-8">
         <div class="flex-title-selector-interior">
           <div class="background-color-dark flex-title-selector-icon">
             <img src="assets/icon/icon-historic.png" />
@@ -225,32 +283,37 @@
         </div>
       </div>
 
-      <div class="background-color-dark box-radius box-observations mb-24">
-        <div *ngIf="clientMonitor && clientMonitor.observations.historical" class="montserrat color-light text-observations">
-          {{clientMonitor.observations.historical}}
-        </div>
-        <div class="mt-12 pt-8 pb-8 title-observations">{{ 'history' | translate }}</div>
-        <div *ngIf="historyLoading" class="mini-empty">
-          {{ 'loading' | translate }}
-        </div>
-        <ng-container *ngIf="!historyLoading">
-          <div *ngIf="getVisibleHistory().length === 0" class="mini-empty">
-            {{ 'history_no_changes' | translate }}
+      <div class="history-card">
+        <div class="history-panel" [class.open]="showHistoryPanel">
+          <div class="panel-heading" (click)="toggleHistoryPanel()">
+            <div class="panel-title">{{ 'history' | translate }}</div>
+            <ion-icon [name]="showHistoryPanel ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
           </div>
-          <div class="history-mini" *ngFor="let entry of getVisibleHistory()">
-            <div class="history-mini-title">{{ getHistoryTitle(entry) }}</div>
-            <div class="history-mini-meta">
-              {{ getHistoryUserLabel(entry) }} · {{ entry.created_at | date:'short' }}
+          <div *ngIf="showHistoryPanel" class="history-body">
+            <div *ngIf="historyLoading" class="mini-empty">
+              {{ 'loading' | translate }}
             </div>
-            <div class="history-mini-detail" *ngIf="getHistorySummary(entry)">
-              {{ getHistorySummary(entry) }}
-            </div>
+            <ng-container *ngIf="!historyLoading">
+              <div *ngIf="getVisibleHistory().length === 0" class="mini-empty">
+                {{ 'history_no_changes' | translate }}
+              </div>
+              <div class="history-mini" *ngFor="let entry of getVisibleHistory()">
+                <div class="history-mini-title">{{ getHistoryTitle(entry) }}</div>
+                <div class="history-mini-meta">
+                  {{ getHistoryUserLabel(entry) }} · {{ entry.created_at | date:'short' }}
+                </div>
+                <div class="history-mini-detail" *ngIf="getHistorySummary(entry)">
+                  {{ getHistorySummary(entry) }}
+                </div>
+              </div>
+              <button *ngIf="evaluationHistory.length > historyPreviewLimit" class="mini-toggle" (click)="toggleHistoryView()">
+                {{ showAllHistory ? ('show_less' | translate) : ('view_more' | translate) }}
+              </button>
+            </ng-container>
           </div>
-          <button *ngIf="evaluationHistory.length > historyPreviewLimit" class="mini-toggle" (click)="toggleHistoryView()">
-            {{ showAllHistory ? ('show_less' | translate) : ('view_more' | translate) }}
-          </button>
-        </ng-container>
+        </div>
       </div>
+
       
     </div>
 

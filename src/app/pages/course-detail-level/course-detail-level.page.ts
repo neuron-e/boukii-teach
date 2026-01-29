@@ -41,11 +41,19 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
   languages: any[] = [];
 
   selectedBooking:any;
+  showBookingNotes = true;
+  showSchoolNotes = true;
+  showClientObservations = true;
+  showEvaluationObservations = true;
+  showMonitorComments = true;
+  showObservationsInfo = false;
+  showHistoryPanel = true;
   bookingId:any;
   dateBooking:any;
   clientIdBooking:any;
   sportIdBooking:any;
   clientMonitor:any;
+  clientObservationHistory: string[] = [];
   clientEvaluations: any[] = [];
   selectedLevelId: number | null = null;
   evaluationComments: any[] = [];
@@ -210,6 +218,10 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
           }
           this.clientMonitor = client;
           this.clientEvaluations = client.evaluations || [];
+          this.clientObservationHistory = (client.observations || [])
+            .filter((obs: any) => obs.school_id === this.monitorData?.active_school)
+            .map((obs: any) => this.normalizeObservationText(obs))
+            .filter((text: string) => text.length > 0);
           this.setSelectedLevel(this.clientMonitor?.degree_sport || this.sportDegrees[0]?.id || null);
           //console.log(this.clientMonitor);
         } else {
@@ -364,6 +376,35 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
     return '-';
   }
 
+  toggleBookingNotes(): void {
+    this.showBookingNotes = !this.showBookingNotes;
+  }
+
+  toggleSchoolNotes(): void {
+    this.showSchoolNotes = !this.showSchoolNotes;
+  }
+
+  toggleClientObservations(): void {
+    this.showClientObservations = !this.showClientObservations;
+  }
+
+  toggleMonitorComments(): void {
+    this.showMonitorComments = !this.showMonitorComments;
+  }
+
+  toggleEvaluationObservations(): void {
+    this.showEvaluationObservations = !this.showEvaluationObservations;
+  }
+
+  toggleHistoryPanel(): void {
+    this.showHistoryPanel = !this.showHistoryPanel;
+  }
+
+  toggleObservationsInfo(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showObservationsInfo = !this.showObservationsInfo;
+  }
+
   goToPreviousLevel(): void {
     if (!this.sportDegrees?.length || !this.selectedLevelId) return;
     const index = this.sportDegrees.findIndex(item => item.id === this.selectedLevelId);
@@ -467,6 +508,24 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  private normalizeObservationText(obs: any): string {
+    if (!obs) return '';
+    const parts: string[] = [];
+    const notes = (obs.notes || '').trim();
+    const general = (obs.general || '').trim();
+    const historical = (obs.historical || '').trim();
+    if (notes) {
+      parts.push(notes);
+    }
+    if (general) {
+      parts.push(`General: ${general}`);
+    }
+    if (historical) {
+      parts.push(`Historial: ${historical}`);
+    }
+    return parts.join('\n').trim();
   }
 
   goToClientLevelSelected(): void {

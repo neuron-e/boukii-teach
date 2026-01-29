@@ -215,16 +215,16 @@
       </div>
 
       <div class="background-color-dark box-radius box-observations">
-        <!-- Observaciones generales del cliente (por escuela) -->
-        <div *ngIf="currentObservation && currentObservation.general" class="montserrat color-light text-observations">
-          {{currentObservation.general}}
-        </div>
-        <ng-container *ngIf="currentObservation && currentObservation.notes">
-          <div class="montserrat mt-12 pt-8 pb-8 title-observations">{{ 'school_notes' | translate }}</div>
-          <div class="montserrat color-light text-observations">
-            {{currentObservation.notes}}
+        <div *ngIf="currentObservationHistory.length > 0; else noClientObservations" class="montserrat color-light text-observations">
+          <div *ngFor="let obs of currentObservationHistory" class="mb-8" style="white-space: pre-line;">
+            {{ obs }}
           </div>
-        </ng-container>
+        </div>
+        <ng-template #noClientObservations>
+          <div class="montserrat color-light text-observations">
+            {{ 'not_assigned' | translate }}
+          </div>
+        </ng-template>
 
         <!-- Observaciones de evaluaciones (por deporte/nivel) -->
         <ng-container *ngIf="getEvaluationsForCurrentSport().length > 0">

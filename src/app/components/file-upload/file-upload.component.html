@@ -18,8 +18,19 @@
     
     <!-- Preview Section -->
     <div *ngIf="filePreview" class="mt-24 mb-32">
-      <img *ngIf="!isVideo" [src]="filePreview" class="preview">
-      <video *ngIf="isVideo" [src]="filePreview" class="preview" muted playsinline></video>
+      <div class="preview-wrapper">
+        <img *ngIf="!isVideo" [src]="filePreview" class="preview">
+        <video
+          *ngIf="isVideo"
+          [src]="filePreview"
+          class="preview"
+          controls
+          playsinline>
+        </video>
+        <div *ngIf="isVideo" class="preview-hint">
+          {{ 'tap_to_play' | translate }}
+        </div>
+      </div>
       <button (click)="saveFile()" class="content-button btn-back-primary montserrat mt-24">{{ 'save' | translate }}</button>
     </div>
   </div>

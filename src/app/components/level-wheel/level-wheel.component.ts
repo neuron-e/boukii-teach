@@ -24,18 +24,7 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   ngOnInit() {
     // Ensure levels are sorted by degree_order asc (fallback to id)
     this.allLevels = this.sortLevels(this.allLevels);
-    if(this.currentLevel){
-      let index = this.allLevels.findIndex(obj => obj.id === this.currentLevel);
-      if (index === -1) {
-        this.currentLevel = 0;
-      }
-      else{
-        this.currentLevel = index;
-      }
-    }
-    else{
-      this.currentLevel = 0;
-    }
+    this.normalizeCurrentLevel();
   }
 
   ngAfterViewInit() {
@@ -45,14 +34,11 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['allLevels']) {
       this.allLevels = this.sortLevels(this.allLevels);
-      // If currentLevel is an id, map it again to index
-      if (changes['currentLevel'] && typeof this.currentLevel !== 'number') {
-        const idx = this.allLevels.findIndex(obj => obj.id === this.currentLevel);
-        this.currentLevel = idx === -1 ? 0 : idx;
-      }
+      this.normalizeCurrentLevel();
       this.initializeCircleRotation();
     }
     if (changes['currentLevel'] && !changes['currentLevel'].firstChange) {
+        this.normalizeCurrentLevel();
         this.initializeCircleRotation();
     }
   }
@@ -159,6 +145,28 @@ export class LevelWheelComponent  implements OnInit, OnChanges {
     const rotationAmount = 360 / this.allLevels.length;
     const rotation = (this.currentLevel) * rotationAmount;
     this.circleSVG.nativeElement.style.transform = `rotate(${-rotation}deg)`;
+  }
+
+  private normalizeCurrentLevel(): void {
+    const total = Array.isArray(this.allLevels) ? this.allLevels.length : 0;
+    if (!total) {
+      this.currentLevel = 0;
+      return;
+    }
+    const idx = Number(this.currentLevel);
+    if (!Number.isFinite(idx)) {
+      this.currentLevel = 0;
+      return;
+    }
+    if (idx < 0) {
+      this.currentLevel = 0;
+      return;
+    }
+    if (idx >= total) {
+      this.currentLevel = total - 1;
+      return;
+    }
+    this.currentLevel = idx;
   }
 
   private sortLevels(levels: any[]): any[] {

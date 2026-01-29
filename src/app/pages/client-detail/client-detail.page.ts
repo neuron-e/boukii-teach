@@ -46,6 +46,7 @@ export class ClientDetailPage implements OnInit, OnDestroy {
   languages: any[] = [];
   clientEvaluations: any[] = [];
   currentObservation: any = null;
+  currentObservationHistory: string[] = [];
   selectedLevelId: number | null = null;
   evaluationComments: any[] = [];
   evaluationHistory: any[] = [];
@@ -199,24 +200,37 @@ export class ClientDetailPage implements OnInit, OnDestroy {
     client.degree_sport = enrichedSports[0]?.pivot?.degree_id ?? 0;
   }
 
+
   filterObservationsBySchool() {
     if (this.clientMonitor && this.clientMonitor.observations && this.monitorData) {
-      // Buscar la observación de la escuela activa
-      this.currentObservation = this.clientMonitor.observations.find(
-        (obs: any) => obs.school_id === this.monitorData.active_school
-      );
+      const observations = this.clientMonitor.observations
+        .filter((obs: any) => obs.school_id === this.monitorData.active_school);
+      this.currentObservationHistory = observations
+        .map((obs: any) => this.normalizeObservationText(obs))
+        .filter((text: string) => text.length > 0);
 
-      if (!this.currentObservation) {
-        // Si no existe, crear un objeto vacío
-        this.currentObservation = {
-          general: '',
-          notes: '',
-          historical: ''
-        };
-      }
+      this.currentObservation = observations.length > 0 ? observations[0] : null;
 
-      console.log('CLIENT DETAIL DEBUG: Current observation for school:', this.currentObservation);
+      console.log('CLIENT DETAIL DEBUG: Observations history for school:', this.currentObservationHistory.length);
     }
+  }
+
+  private normalizeObservationText(obs: any): string {
+    if (!obs) return '';
+    const parts: string[] = [];
+    const notes = (obs.notes || '').trim();
+    const general = (obs.general || '').trim();
+    const historical = (obs.historical || '').trim();
+    if (notes) {
+      parts.push(notes);
+    }
+    if (general) {
+      parts.push(`General: ${general}`);
+    }
+    if (historical) {
+      parts.push(`Historial: ${historical}`);
+    }
+    return parts.join('\n').trim();
   }
 
   async getClientEvaluations() {

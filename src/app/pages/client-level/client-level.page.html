@@ -17,7 +17,7 @@
   </div>
     
         <app-level-wheel *ngIf="clientMonitor && sportDegrees && sportDegrees.length" [allLevels]="sportDegrees" 
-          [currentLevel]="clientMonitor.degree_sport" (currentLevelChange)="onCurrentLevelChange($event)"></app-level-wheel>
+          [currentLevel]="newLevel" (currentLevelChange)="onCurrentLevelChange($event)"></app-level-wheel>
 
 
         <div *ngIf="clientMonitor" class="level-current-banner background-color-dark mt-12 level-current-clickable" (click)="resetToCurrentLevel()">
