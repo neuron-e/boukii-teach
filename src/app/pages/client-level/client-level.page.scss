@@ -354,6 +354,10 @@ ion-range {
 .goal-status {
     padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;
 }
+.goal-status--clickable {
+    cursor: pointer;
+    text-decoration: underline;
+}
 .goal-status--none {
     background:#3a414f;color:#cbd5f5;
 }

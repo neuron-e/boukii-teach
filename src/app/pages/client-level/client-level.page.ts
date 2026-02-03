@@ -46,6 +46,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   clientEvaluations:any;
   clientDegreeEvaluation:any;
   allGoalScores:any[] = [];
+  hasEvaluationForCurrentLevel = false;
   courseId: number | null = null;
   courseName: string | null = null;
   requestedLevelId: number | null = null;
@@ -179,7 +180,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           goal.score = this.normalizeGoalScore(matchingGoal.score);
           goal.update_id = matchingGoal.id;
         } else {
-          goal.score = 0;
+          goal.score = null;
           goal.update_id = 0;
         }
       });
@@ -266,6 +267,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
           this.allMultimedia = this.clientDegreeEvaluation.files;
         }
 
+        this.hasEvaluationForCurrentLevel = !!this.clientDegreeEvaluation?.id;
         this.loadEvaluationActivity();
   }
 
@@ -311,7 +313,7 @@ export class ClientLevelPage implements OnInit, OnDestroy {
   }
 
   getGoalsNotStartedCount(): number {
-    return this.filteredGoals.filter(goal => (goal.score || 0) === 0).length;
+    return this.filteredGoals.filter(goal => goal.score === null || goal.score === undefined).length;
   }
 
   getMediaCounts(): { images: number; videos: number } {
@@ -332,14 +334,47 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     goal.score = score;
   }
 
-  getGoalStatusLabel(score: number): string {
-    return this.normalizeGoalScore(score) >= 10
+  async setGoalNotStarted(goal: any): Promise<void> {
+    await this.clearGoalScore(goal);
+  }
+
+  async clearGoalScore(goal: any): Promise<void> {
+    if (!goal || goal.score === null || goal.score === undefined) {
+      return;
+    }
+
+    const canEdit = await this.confirmEditCompletedLevel();
+    if (!canEdit) return;
+
+    goal.score = null;
+    if (goal.update_id) {
+      try {
+        await this.teachService
+          .deleteData('evaluation-fulfilled-goals', goal.update_id, this.buildCourseContextPayload())
+          .toPromise();
+      } catch (error) {
+        console.error('Error clearing goal score:', error);
+      }
+      goal.update_id = 0;
+    }
+  }
+
+  getGoalStatusLabel(score: number | null | undefined): string {
+    if (score === null || score === undefined) {
+      return this.translate.instant('not_started');
+    }
+    const normalized = this.normalizeGoalScore(score) ?? 0;
+    return normalized >= 10
       ? this.translate.instant('achieved')
       : this.translate.instant('to_improve');
   }
 
-  getGoalStatusClass(score: number): string {
-    return this.normalizeGoalScore(score) >= 10 ? 'goal-status--done' : 'goal-status--partial';
+  getGoalStatusClass(score: number | null | undefined): string {
+    if (score === null || score === undefined) {
+      return 'goal-status--none';
+    }
+    const normalized = this.normalizeGoalScore(score) ?? 0;
+    return normalized >= 10 ? 'goal-status--done' : 'goal-status--partial';
   }
 
   getProgressBarClass(): string {
@@ -775,7 +810,10 @@ export class ClientLevelPage implements OnInit, OnDestroy {
     return goal?.name || '';
   }
 
-  private normalizeGoalScore(score: number): number {
+  private normalizeGoalScore(score: number | null | undefined): number | null {
+    if (score === null || score === undefined) {
+      return null;
+    }
     return Number(score) >= 10 ? 10 : 0;
   }
 

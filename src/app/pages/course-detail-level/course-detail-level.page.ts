@@ -64,6 +64,7 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
   showAllHistory = false;
   readonly commentsPreviewLimit = 3;
   readonly historyPreviewLimit = 3;
+  readonly emptyNotesValue = '';
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private monitorDataService: MonitorDataService, private sharedDataService: SharedDataService, private teachService: TeachService, private toastr: ToastrService, private spinnerService: SpinnerService, private translate: TranslateService) {}
 
@@ -239,6 +240,18 @@ export class CourseDetailLevelPage implements OnInit, OnDestroy {
   getBirthYears(date:string) {
     const birthDate = moment(date);
     return moment().diff(birthDate, 'years');
+  }
+
+  getBookingNotesText(): string {
+    const raw = this.selectedBooking?.notes ?? this.selectedBooking?.booking?.notes ?? this.emptyNotesValue;
+    const value = typeof raw === 'string' ? raw.trim() : String(raw ?? '').trim();
+    return value.length ? value : this.translate.instant('not_assigned');
+  }
+
+  getSchoolNotesText(): string {
+    const raw = this.selectedBooking?.notes_school ?? this.selectedBooking?.booking?.notes_school ?? this.emptyNotesValue;
+    const value = typeof raw === 'string' ? raw.trim() : String(raw ?? '').trim();
+    return value.length ? value : this.translate.instant('not_assigned');
   }
 
   getEvaluationForSelectedLevel(): any {

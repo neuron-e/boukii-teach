@@ -191,7 +191,7 @@
             <ion-icon [name]="showBookingNotes ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
           </div>
           <div *ngIf="showBookingNotes" class="panel-body">
-            {{ selectedBooking?.booking?.notes || ('not_assigned' | translate) }}
+            {{ getBookingNotesText() }}
           </div>
         </div>
 
@@ -201,7 +201,7 @@
             <ion-icon [name]="showSchoolNotes ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
           </div>
           <div *ngIf="showSchoolNotes" class="panel-body">
-            {{ selectedBooking?.booking?.notes_school || ('not_assigned' | translate) }}
+            {{ getSchoolNotesText() }}
           </div>
         </div>
 

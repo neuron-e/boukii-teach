@@ -52,11 +52,14 @@
             <div class="goal-card" *ngFor="let goal of filteredGoals">
               <div class="goal-header">
                 <div class="montserrat goal-name">{{ goal.name }}</div>
-                <div class="goal-status" [ngClass]="getGoalStatusClass(goal.score || 0)">
-                  {{ getGoalStatusLabel(goal.score || 0) }}
+                <div class="goal-status" [ngClass]="getGoalStatusClass(goal.score)" [class.goal-status--clickable]="goal.score !== null && goal.score !== undefined" (click)="clearGoalScore(goal)">
+                  {{ getGoalStatusLabel(goal.score) }}
                 </div>
               </div>
               <div class="goal-actions">
+                <button class="goal-action" [class.active]="goal.score === null || goal.score === undefined" (click)="setGoalNotStarted(goal)">
+                  {{ 'not_started' | translate }}
+                </button>
                 <button class="goal-action" [class.active]="goal.score === 0" (click)="setGoalScore(goal, 0)">
                   {{ 'to_improve' | translate }}
                 </button>
